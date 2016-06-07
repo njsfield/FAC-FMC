@@ -1,0 +1,26 @@
+{
+  "name": "FAC-FMC",
+  "version": "1.0.0",
+  "description": "[![Join the chat at https://gitter.im/ipcortex/FAC-FMC](https://badges.gitter.im/ipcortex/FAC-FMC.svg)](https://gitter.im/ipcortex/FAC-FMC?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) FAC Find My Calls",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server/serverStarter.js",
+    "startmon": "nodemon ./src/server/serverStarter.js",
+    "test": "node ./src/tests/testRunner.js",
+    "testmon": "nodemon ./src/tests/testRunner.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipcortex/FAC-FMC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ipcortex/FAC-FMC/issues"
+  },
+  "homepage": "https://github.com/ipcortex/FAC-FMC#readme",
+  "dependencies": {
+    "hapi": "^13.4.1"
+  }
+}
