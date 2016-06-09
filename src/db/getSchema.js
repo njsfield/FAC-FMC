@@ -1,7 +1,7 @@
 const pg = require('pg')
 const fs = require('fs')
 
-const postgresURL = 'postgres://Rob:postgrespassword@localhost/template1'
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
 const sql = fs.readFileSync(__dirname + '/schema.txt').toString()
 
 const testing = () => pg.connect(postgresURL, (err, client, done) => {
