@@ -2,6 +2,7 @@ const Hapi = require('hapi')
 const Server = new Hapi.Server()
 const port = process.env.PORT || 3000
 const plugins = []
+const schema = require('../db/getSchema.js')
 
 Server.connection({port})
 
@@ -16,10 +17,12 @@ const routes = [
   require('../routes/tagCall.js')
 ]
 
-// Server.register(plugins, (error) => {
-//   if (error) throw error
+Server.register(plugins, (error) => {
+  if (error) throw error
 
   Server.route(routes)
-// })
+})
 
 module.exports = Server
+
+schema.testing()
