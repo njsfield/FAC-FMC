@@ -1,0 +1,156 @@
+BEGIN;
+DROP TABLE IF EXISTS company CASCADE;
+DROP TABLE IF EXISTS recording CASCADE;
+DROP TABLE IF EXISTS call CASCADE;
+DROP TABLE IF EXISTS participant CASCADE;
+DROP TABLE IF EXISTS tag CASCADE;
+DROP TABLE IF EXISTS tag_to_call_map CASCADE;
+
+DROP SEQUENCE IF EXISTS company_seq;
+DROP SEQUENCE IF EXISTS call_seq;
+DROP SEQUENCE IF EXISTS party_seq;
+DROP SEQUENCE IF EXISTS recording_seq;
+DROP SEQUENCE IF EXISTS tag_seq;
+
+/****** COMPANY TABLE ******/
+CREATE SEQUENCE company_seq start 100 increment 1 cache 50;
+CREATE TABLE company (
+    company_id   BIGINT DEFAULT nextval('company_seq'::text),
+    company_name VARCHAR,
+    CONSTRAINT company_pk PRIMARY KEY(company_id)
+)
+WITHOUT OIDS;
+
+/****** RECORDING TABLE ******/
+CREATE SEQUENCE recording_seq start 100 increment 1 cache 50;
+CREATE TABLE recording (
+    recording_id BIGINT DEFAULT nextval('recording_seq'::text),
+    label        VARCHAR,
+    audio        BYTEA,
+    CONSTRAINT rec_pk PRIMARY KEY(recording_id)
+)
+WITHOUT OIDS;
+
+/****** CALLS
+ ****** Each recording can be referenced by a number of calls, each for a different company
+ ******/
+CREATE SEQUENCE call_seq start 100 increment 1 cache 50;      
+CREATE TABLE call (
+    company_id   BIGINT NOT NULL,
+    call_id      BIGINT DEFAULT nextval('call_seq'::text),
+    recording_id BIGINT NOT NULL,
+    label        VARCHAR,
+    CONSTRAINT call_pk PRIMARY KEY(company_id, call_id)
+)
+WITHOUT OIDS;
+
+/****** Calls reference recordings and companies ******/
+ALTER TABLE call ADD CONSTRAINT call_recording_fk
+      FOREIGN KEY (recording_id) 
+      REFERENCES recording(recording_id) 
+      ON DELETE CASCADE;
+
+ALTER TABLE call ADD CONSTRAINT call_company_fk
+      FOREIGN KEY (company_id) 
+      REFERENCES company(company_id) 
+      ON DELETE CASCADE;
+
+/****** PARTICIPANT
+ ****** Each call is referenced by one or more participants. Initially this will be 2 but 
+ ****** in future CDR processing may increase the number. Each participant is EITHER 
+ ****** INTERNAL to this company or EXTERNAL. Internal participants identifies extensions
+ ****** and optionally PEOPLE (contacts) resident in this companies PABX instance
+ ******/
+CREATE SEQUENCE party_seq start 100 increment 1 cache 50;      
+CREATE TABLE participant (
+    company_id   BIGINT  NOT NULL,
+    party_id     BIGINT  DEFAULT nextval('party_seq'::text),
+    call_id      BIGINT  NOT NULL,
+    internal     BOOLEAN DEFAULT FALSE NOT NULL,
+    party_roll   VARCHAR,
+    who          VARCHAR NOT NULL,
+    contact_id   BIGINT,
+    CONSTRAINT party_pk PRIMARY KEY(company_id, party_id)
+)
+WITHOUT OIDS;
+
+/****** The participant table references the company table and call table. If the
+ ****** company or the call is deleted then we want to delete the associated participants
+ ******/
+ALTER TABLE participant ADD CONSTRAINT party_call_fk
+      FOREIGN KEY (company_id, call_id) 
+      REFERENCES call(company_id, call_id) 
+      ON DELETE CASCADE;
+
+ALTER TABLE call ADD CONSTRAINT party_company_fk
+      FOREIGN KEY (company_id) 
+      REFERENCES company(company_id) 
+      ON DELETE CASCADE;
+
+/****** Call tagging.  ******/
+/* CREATE SEQUENCE tag_seq START 100 INCREMENT 1 CACHE 50; */
+CREATE TABLE tag (
+    /* Tags are owned by companies */
+    company_id BIGINT NOT NULL,
+    tag        VARCHAR NOT NULL,
+    tag_id     BIGSERIAL UNIQUE,
+
+    -- Make tags unique within a company
+    CONSTRAINT tag_pk PRIMARY KEY(company_id, tag)
+)
+WITHOUT OIDS;
+
+-- Make the company/tag_id unique
+CREATE UNIQUE INDEX tag_id_key ON tag (
+	company_id,
+	tag_id
+);
+
+
+/***** AND TAGS ARE ASSIGNED TO CALLS WITHIN IN COMPANY *****/
+CREATE TABLE tag_to_call_map (
+    company_id BIGINT NOT NULL,
+    tag_id     BIGINT NOT NULL,
+    call_id    BIGINT NOT NULL,
+    
+    CONSTRAINT tag_call_map_pk PRIMARY KEY(company_id, tag_id, call_id)
+)
+WITHOUT OIDS;
+
+/*** Link the tag map entry to the tag table and to the call table. ***/
+ALTER TABLE tag_to_call_map ADD CONSTRAINT tag_to_tag_map_fk
+      FOREIGN KEY (company_id, tag_id) 
+      REFERENCES tag(company_id, tag_id) 
+      ON DELETE CASCADE;
+
+ALTER TABLE tag_to_call_map ADD CONSTRAINT cal_to_tag_map_fk
+      FOREIGN KEY (company_id,call_id) 
+      REFERENCES call(company_id,call_id) 
+      ON DELETE CASCADE;
+
+
+
+
+
+
+
+
+
+/***** ADD SOME DUMMY DAA *****/
+INSERT INTO company(company_name) VALUES('test_comp');
+INSERT INTO recording(label,audio) VALUES('A','ccc');
+INSERT INTO recording(label,audio) VALUES('B','     ');
+
+/***** Create a call referencing this recording *****/
+
+/* REF A CALL */
+INSERT INTO call(company_id, recording_id, label) SELECT comp.company_id, rec.recording_id, 'TEST-CALL-1' FROM company comp NATURAL JOIN recording rec WHERE rec.label='B';
+/*
+INSERT INTO call(company_id, recording_id, label) VALUES((SELECT c.company_id FROM company c WHERE c.label='test_comp'),(SELECT recording_id FROM recording WHERE label='A'),'TEST-1');
+*/
+INSERT INTO participant(company_id, call_id, who) SELECT comp.company_id, call.call_id, 'Fred' FROM company comp NATURAL JOIN call call WHERE call.label='TEST-CALL-1';
+
+INSERT INTO tag(company_id,tag) VALUES(100,'finance');
+INSERT INTO tag_to_call_map(company_id,tag_id,call_id) VALUES(100,1,100);
+
+COMMIT;
