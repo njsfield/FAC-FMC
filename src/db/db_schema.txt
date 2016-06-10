@@ -64,7 +64,7 @@ CREATE TABLE participants (
     internal     BOOLEAN DEFAULT FALSE NOT NULL,
     participant_role   VARCHAR,
     number       VARCHAR NOT NULL,
-    contact_id   BIGINT,
+    user_id   BIGINT,
     CONSTRAINT participants_pk PRIMARY KEY(company_id, participant_id)
 )
 WITHOUT OIDS;
@@ -94,7 +94,6 @@ CREATE UNIQUE INDEX tag_id_key ON tags (
 
 /****** 6. TAGS_CALLS TABLE ******/
 CREATE TABLE tags_calls (
-    tag_call_id BIGINT DEFAULT nextval('tags_calls_seq'::text),
     company_id  BIGINT NOT NULL,
     tag_id      BIGINT NOT NULL,
     call_id     BIGINT NOT NULL,
@@ -116,8 +115,7 @@ WITHOUT OIDS;
 
 /****** 8. USERS TABLE ******/
 CREATE TABLE users (
-    user_id    BIGINT DEFAULT nextval('filters_seq'::text),
-    PBX        TEXT NOT NULL,
+    user_id    BIGINT NOT NULL,
     company_id BIGINT NOT NULL,
     user_role  TEXT NOT NULL,
 
@@ -132,15 +130,16 @@ WITHOUT OIDS;
 /****** Calls reference files and companies ******/
 
 /****** 1. calls TABLE FOREIGN KEYS: ******/
+/* Do we want to keep the call record if the file is deleted */
 ALTER TABLE calls ADD CONSTRAINT calls_files_fk
       FOREIGN KEY (file_id)
       REFERENCES files (file_id)
-      ON DELETE RESTRICT;
+      ON DELETE CASCADE;
 
 ALTER TABLE calls ADD CONSTRAINT calls_companies_fk
       FOREIGN KEY (company_id)
       REFERENCES companies (company_id)
-      ON DELETE RESTRICT;
+      ON DELETE CASCADE;
 
 /****** 2. participants TABLE FOREIGN KEYS: ******/
 /****** The participants table references the company table and call table. If the
@@ -149,16 +148,11 @@ ALTER TABLE calls ADD CONSTRAINT calls_companies_fk
 ALTER TABLE participants ADD CONSTRAINT participants_calls_fk
       FOREIGN KEY (call_id)
       REFERENCES calls(call_id)
-      ON DELETE RESTRICT;
+      ON DELETE CASCADE;
 
 /****** 3. tags_calls TABLE FOREIGN KEYS: ******/
 /****** What is entered next to REFERENCES will affect what is entered next to ALTER TABLE ******/
 /*** Link the tags entry to the tags table and to the calls table. ***/
-
-ALTER TABLE tags_calls ADD CONSTRAINT tags_calls_to_companies_fk
-      FOREIGN KEY (company_id)
-      REFERENCES companies (company_id)
-      ON DELETE RESTRICT;
 
 ALTER TABLE tags_calls ADD CONSTRAINT tags_calls_to_tags_fk
       FOREIGN KEY (tag_id)
@@ -176,7 +170,7 @@ ALTER TABLE tags_calls ADD CONSTRAINT tags_calls_to_calls_fk
 ALTER TABLE users ADD CONSTRAINT users_companies_fk
       FOREIGN KEY (company_id)
       REFERENCES companies(company_id)
-      ON DELETE RESTRICT;
+      ON DELETE CASCADE;
 
 /****** 5. filters TABLE FOREIGN KEYS: ******/
 
@@ -201,7 +195,7 @@ we resolve? What is the syntax for deleting the file only when all calls referen
 ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       FOREIGN KEY (company_id)
       REFERENCES companies(company_id)
-      ON DELETE RESTRICT;
+      ON DELETE CASCADE;
 
 /* ADD SOME DUMMY DATA */
       INSERT INTO companies (company_name) VALUES ('test_comp_A');
@@ -210,6 +204,6 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
 /* Create a call referencing this file */
 
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-05 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_1'), '345678904356345');
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES((SELECT call_id FROM calls WHERE calls.date='2016-01-05 12:43:35'), 2, '474378598698', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES((SELECT call_id FROM calls WHERE calls.date='2016-01-05 12:43:35'), 2, '474378598698', true, 'SOURCE', 4387735);
 
 COMMIT;
