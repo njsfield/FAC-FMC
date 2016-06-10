@@ -1,15 +1,11 @@
 const pg = require('pg')
-const fs = require('fs')
 
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
-const sql = fs.readFileSync(__dirname + '/schema.txt').toString()
-
-const testing = () => pg.connect(postgresURL, (err, client, done) => {
+const getSchema = (postgresURL, stringifiedSchema) => pg.connect(postgresURL, (err, client, done) => {
   if (err) throw err
-  client.query(sql)
+  client.query(stringifiedSchema)
   done()
 })
 
 module.exports = {
-  testing
+  getSchema
 }
