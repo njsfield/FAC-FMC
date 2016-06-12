@@ -2,6 +2,6 @@ module.exports = {
   method: 'GET',
   path: '/',
   handler: (request, reply) => {
-    reply('loginPage')
+    reply.view('login')
   }
 }
