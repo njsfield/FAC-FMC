@@ -1,9 +1,12 @@
 const Hapi = require('hapi')
 const Server = new Hapi.Server()
 const port = process.env.PORT || 3000
-const plugins = []
 
 Server.connection({port})
+const plugins = [
+  require('inert'),
+  require('vision')
+]
 
 const routes = [
   require('../routes/dashboard.js'),
