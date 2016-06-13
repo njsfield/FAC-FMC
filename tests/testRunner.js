@@ -7,3 +7,4 @@ schema.getSchema(connectionString, sql)
 
 // require in files
 require('./db/db.tests.js')
+require('./pollingTests/pollingDb.tests.js')
