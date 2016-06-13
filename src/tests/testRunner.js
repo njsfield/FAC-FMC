@@ -1,3 +1,4 @@
+'use strict'
 // Set up test database
 const fs = require('fs')
 const schema = require('../db/getSchema.js')

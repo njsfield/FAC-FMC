@@ -2,6 +2,7 @@
 const tape = require('tape')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
 const fetchCalls = require('../../db/dbFetchCalls.js')
+const pg = require('pg')
 
 tape('test if one can check the participants table by user name and company', (t) => {
   t.plan(1)
@@ -17,25 +18,88 @@ tape('test if one can check the participants table by user name and company', (t
 
 tape('restructureCallsResults function prepares data for response', (t) => {
   t.plan(1)
-  let data
-  const user_id = '4387735'
-  const company_id = '100'
-  fetchCalls.checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
-    data = result
-    const expected = restructuredCallsResults
-    const actual = fetchCalls.restructureCallsResults(data)
+  const expected = restructuredCallsResults
+  fetchCalls.restructureCallsResults(partipantsQueryResult, postgresURL, (results) => {
+    const actual = results
     t.deepEqual(actual, expected, 'calls results restructured')
   })
 })
 
-tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
-  t.plan(1)
-  const expected = callsResultsWithAllParties
-  fetchCalls.findOtherParticipant(postgresURL, restructuredCallsResults, (result) => {
-    const actual = result
-    t.deepEqual(actual, expected, 'caller or callee located')
+// tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
+//   t.plan(1)
+//   const expected = callsResultsWithAllParties
+//   fetchCalls.findOtherParticipant(postgresURL, restructuredCallsResults, (result) => {
+//     const actual = result
+//     t.deepEqual(actual, expected, 'caller or callee located')
+//   })
+// })
+
+tape('find file_id, duration and time for the call', (t) => {
+  const data = {
+    call_id: '102',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: true,
+        number: '9',
+        user: false
+      }
+    }
+  }
+  const expected = {
+    call_id: '102',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: true,
+        number: '9',
+        user: false
+      }
+    },
+    duration: '345678904356',
+    time: '2016-01-06 12:43:35',
+    file_id: '2'
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    fetchCalls.findCallDetails(postgresURL, client, done, callsResultsWithAllParties, (results) => {
+      const actual = results
+      t.deepEqual(expected, actual, 'congrats full response complete')
+    })
   })
 })
+
+const partipantsQueryResult =
+  [ { company_id: '100',
+    participant_id: '100',
+    call_id: '100',
+    internal: true,
+    participant_role: 'SOURCE',
+    number: '8',
+    user_id: '4387735' },
+  { company_id: '100',
+    participant_id: '104',
+    call_id: '102',
+    internal: true,
+    participant_role: 'SOURCE',
+    number: '8',
+    user_id: '4387735' },
+  { company_id: '100',
+    participant_id: '108',
+    call_id: '104',
+    internal: true,
+    participant_role: 'DESTINATION',
+    number: '8',
+    user_id: '4387735' } ]
 
 const restructuredCallsResults = [
   {
@@ -121,6 +185,66 @@ const callsResultsWithAllParties = [
         user: false
       }
     }
+  }
+]
+
+const fullResponse = [
+  {
+    call_id: '100',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: false,
+        number: '7',
+        user: false
+      },
+      duration: '345678904356345',
+      date: '2016-01-05 12:43:35',
+      file_id: '1'
+    }
+  },
+  {
+    call_id: '102',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: true,
+        number: '9',
+        user: false
+      }
+    },
+    duration: '345678904356',
+    time: '2016-01-06 12:43:35',
+    file_id: '2'
+  },
+  {
+    call_id: '104',
+    company_id: '100',
+    participants: {
+      destination: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      source: {
+        internal: false,
+        number: '7',
+        user: false
+      }
+    },
+    duration: '2016-01-07 12:43:35',
+    time: '345678904',
+    file_id: '3',
   }
 ]
 // const resultArr = [
