@@ -4,17 +4,15 @@ const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
 const fetchCalls = require('../../db/dbFetchCalls.js')
 
 tape('test if one can check the participants table by user name and company', (t) => {
+  t.plan(1)
   const user_id = '4387735'
   const company_id = '100'
   let actual
+  const expected = 'object'
   fetchCalls.checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
     actual = typeof result
-  })
-  const expected = 'object'
-  t.plan(1)
-  setTimeout(() => {
     t.equals( actual, expected, 'grabbed the participants rows for a user')
-  }, 500)
+  })
 })
 
 tape('restructureCallsResults', (t) => {
@@ -24,12 +22,10 @@ tape('restructureCallsResults', (t) => {
   const company_id = '100'
   fetchCalls.checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
     data = result
-  })
-  setTimeout(() => {
     const expected = restructuredCallsResults
     const actual = fetchCalls.restructureCallsResults(data)
     t.deepEqual(actual, expected, 'calls results restructured')
-  }, 500 )
+  })
 })
 
 const resultArr = [
