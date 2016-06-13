@@ -23,8 +23,8 @@ tape('tests if file exists in files table', (t) => {
 
 tape('tests that file does NOT exist in files table and then adds it', (t) => {
   const obj = {
-    file_index: 2,
-    file_name: 'recording_2'
+    file_index: 44,
+    file_name: 'recording_44'
   }
 
   pg.connect(postgresURL, (err, client, done) => {
@@ -32,7 +32,7 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
     pollingFuncs.checkFilesTable(postgresURL, obj, (res) => {
       const expected = 'INSERT'
       const actual = res.command
-      t.deepEqual(actual, expected, 'file_name recording_2 has been added to files table')
+      t.deepEqual(actual, expected, 'file_name recording_44 has been added to files table')
       done()
       t.end()
     })
