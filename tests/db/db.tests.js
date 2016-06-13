@@ -1,11 +1,16 @@
 const tape = require('tape')
 const pg = require('pg')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
+const pollingFuncs = require('../../polling/dbFunctions/checkingTables.js')
 
 // test that the fmctest database is made
 
 tape('test that the fmctest database and tables exists', (t) => {
-  t.plan(5)
+  const obj = {
+    file_index: 1,
+    file_name: 'recording_1'
+  }
+  t.plan(6)
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     client.query('SELECT * FROM calls;', function(error, results) {
@@ -38,7 +43,12 @@ tape('test that the fmctest database and tables exists', (t) => {
       }
       t.ok(results, 'companies table exists')
     })
-    done()
-    pg.end()
+    pollingFuncs.checkFilesTable(postgresURL, client, obj, (res) => {
+      const expected = true
+      const actual = res.rows[0].exists
+      t.deepEqual(actual, expected, 'file_name recording_1 is in files table')
+      done()
+      pg.end()
+    })
   })
 })

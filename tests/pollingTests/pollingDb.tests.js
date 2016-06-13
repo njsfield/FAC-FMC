@@ -13,6 +13,7 @@ tape('tests if file exists in files table', (t) => {
     if (err) throw err
     pollingFuncs.checkFilesTable(postgresURL, client, obj, (res) => {
       const expected = true
+      console.log(res, '<======')
       const actual = res.rows[0].exists
       t.deepEqual(actual, expected, 'file_name recording_1 is in files table')
       done()
