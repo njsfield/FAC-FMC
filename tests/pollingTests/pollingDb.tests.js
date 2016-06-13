@@ -32,7 +32,6 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     pollingFuncs.checkFilesTable(postgresURL, client, obj, (res) => {
-      console.log(res, '<================')
       const expected = 'INSERT'
       const actual = res.command
       t.deepEqual(actual, expected, 'file_name recording_44 has been added to files table')
