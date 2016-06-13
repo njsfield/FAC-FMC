@@ -16,6 +16,7 @@ tape('tests if file exists in files table', (t) => {
       const actual = res.rows[0].exists
       t.deepEqual(actual, expected, 'file_name recording_1 is in files table')
       done()
+      pg.end()
       t.end()
     })
   })
@@ -34,6 +35,7 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
       const actual = res.command
       t.deepEqual(actual, expected, 'file_name recording_44 has been added to files table')
       done()
+      pg.end()
       t.end()
     })
   })
