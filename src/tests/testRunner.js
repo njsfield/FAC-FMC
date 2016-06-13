@@ -1,4 +1,3 @@
-
 // Set up test database
 const fs = require('fs')
 const schema = require('../db/getSchema.js')
@@ -7,6 +6,4 @@ const sql = fs.readFileSync(`${__dirname}/../db/db_schema.txt`).toString()
 schema.getSchema(connectionString, sql)
 
 // require in files
-
-require('./server.tests.js')
-require('./db/fetchCalls.tests.js')
+require('./db/db.tests.js')
