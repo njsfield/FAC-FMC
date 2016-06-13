@@ -203,9 +203,26 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       INSERT INTO companies (company_name) VALUES ('test_comp_A');
       INSERT INTO companies (company_name) VALUES ('test_comp_B');
       INSERT INTO files (file_index, file_name) VALUES(1, 'recording_1');
+      INSERT INTO files (file_index, file_name) VALUES(2, 'recording_2');
+      INSERT INTO files (file_index, file_name) VALUES(3, 'recording_3');
+
 /* Create a call referencing this file */
 
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-05 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_1'), '345678904356345');
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES((SELECT call_id FROM calls WHERE calls.date='2016-01-05 12:43:35'), 2, '474378598698', true, 'SOURCE', 4387735);
+INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-05 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_B'),(SELECT file_id FROM files WHERE file_name='recording_1'), '345678904356345');
+INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-06 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_2'), '345678904356');
+INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_B'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
+INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
+
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '100', '100', '8', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '100', '100', '7', false, 'DESTINATION', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '101', '101', '7', true, 'DESTINATION', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '101', '101', '8', false, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '102', '100', '8', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '102', '100', '9', true, 'DESTINATION', 4387738);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '103', '101', '7', true, 'SOURCE', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '103', '101', '8', false, 'DESTINATION', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
 
 COMMIT;
