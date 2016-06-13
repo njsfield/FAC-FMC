@@ -84,11 +84,13 @@ CREATE TABLE tags (
 )
 WITHOUT OIDS;
 
+/**
 -- Make the company_id/tag_id unique
 CREATE UNIQUE INDEX tag_id_key ON tags (
 	company_id,
 	tag_id
 );
+**/
 
 /***** AND TAGS ARE ASSIGNED TO CALLS WITHIN A COMPANY *****/
 
