@@ -15,7 +15,7 @@ tape('test if one can check the participants table by user name and company', (t
   })
 })
 
-tape('restructureCallsResults', (t) => {
+tape('restructureCallsResults function prepares data for response', (t) => {
   t.plan(1)
   let data
   const user_id = '4387735'
@@ -28,29 +28,19 @@ tape('restructureCallsResults', (t) => {
   })
 })
 
-const resultArr = [
-  {
-    company_id: '2',
-    call_id: '100',
-    participants: {
-      source: {
-        internal: true,
-        number: '4387735'
-      },
-      destination: {
-        internal: false,
-        number: '3222'
-      }
-    },
-    time: '2016-01-05 12:43:35',
-    duration: '345678904356345',
-    file_id: '100'
-  }
-]
+tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
+  t.plan(1)
+  const expected = callsResultsWithAllParties
+  fetchCalls.findOtherParticipant(postgresURL, restructuredCallsResults, (result) => {
+    const actual = result
+    t.deepEqual(actual, expected, 'caller or callee located')
+  })
+})
 
 const restructuredCallsResults = [
   {
     call_id: '100',
+    company_id: '100',
     participants: {
       source: {
         internal: true,
@@ -61,6 +51,7 @@ const restructuredCallsResults = [
   },
   {
     call_id: '102',
+    company_id: '100',
     participants: {
       source: {
         internal: true,
@@ -71,6 +62,7 @@ const restructuredCallsResults = [
   },
   {
     call_id: '104',
+    company_id: '100',
     participants: {
       destination: {
         internal: true,
@@ -80,3 +72,73 @@ const restructuredCallsResults = [
     }
   }
 ]
+
+const callsResultsWithAllParties = [
+  {
+    call_id: '100',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: false,
+        number: '7',
+        user: false
+      }
+    }
+  },
+  {
+    call_id: '102',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: true,
+        number: '9',
+        user: false
+      }
+    }
+  },
+  {
+    call_id: '104',
+    company_id: '100',
+    participants: {
+      destination: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      source: {
+        internal: false,
+        number: '7',
+        user: false
+      }
+    }
+  }
+]
+// const resultArr = [
+//   {
+//     company_id: '2',
+//     call_id: '100',
+//     participants: {
+//       source: {
+//         internal: true,
+//         number: '4387735'
+//       },
+//       destination: {
+//         internal: false,
+//         number: '3222'
+//       }
+//     },
+//     time: '2016-01-05 12:43:35',
+//     duration: '345678904356345',
+//     file_id: '100'
+//   }
+// ]
