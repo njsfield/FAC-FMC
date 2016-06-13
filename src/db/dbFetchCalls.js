@@ -9,14 +9,18 @@ const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
     client.query('SELECT * FROM participants WHERE company_id = $1 AND user_id = $2',
     [company_id, user_id], (error, result) => {
       if (error) throw error
-      console.log(result.rows)
       callback(result.rows)
     })
     done()
   })
 }
 
+const restructureCallsResults = () => {
+  return 'hey'
+}
+
 module.exports = {
   fetchCalls,
-  checkPartipicantsTable
+  checkPartipicantsTable,
+  restructureCallsResults
 }
