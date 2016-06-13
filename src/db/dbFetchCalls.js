@@ -15,8 +15,27 @@ const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
   })
 }
 
-const restructureCallsResults = () => {
-  return 'hey'
+const restructureCallsResults = (data) => {
+  let callArray = []
+
+  data.forEach((callParticipant) => {
+    let callObj = {
+      participants: {},
+      call_id: callParticipant.call_id,
+      company_id: callParticipant.company_id
+    }
+    callParticipant.participant_role === 'SOURCE' ? callObj.participants.source = {
+      number: callParticipant.number,
+      internal: true,
+      user: true
+    } : callObj.participants.destination = {
+      number: callParticipant.number,
+      internal: true,
+      user: true
+    }
+    callArray = callArray.concat([callObj])
+  })
+  return callArray
 }
 
 module.exports = {
