@@ -1,9 +1,12 @@
 const Hapi = require('hapi')
 const Server = new Hapi.Server()
 const port = process.env.PORT || 3000
-const plugins = []
+const views = require('./views.js')
 
-Server.connection({port})
+const plugins = [
+  require('inert'),
+  require('vision')
+]
 
 const routes = [
   require('../routes/dashboard.js'),
@@ -14,11 +17,16 @@ const routes = [
   require('../routes/login.js'),
   require('../routes/logout.js'),
   require('../routes/schema.js'),
-  require('../routes/tagCall.js')
+  require('../routes/tagCall.js'),
+  require('../routes/publicdir.js')
 ]
+
+Server.connection({port})
 
 Server.register(plugins, (error) => {
   if (error) throw error
+
+  Server.views(views)
 
   Server.route(routes)
 })
