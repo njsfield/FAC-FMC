@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node ./src/server/serverStarter.js",
     "startmon": "nodemon ./src/server/serverStarter.js",
-    "test": "node ./src/tests/testRunner.js",
-    "testmon": "nodemon ./src/tests/testRunner.js"
+    "test": "node ./tests/testRunner.js",
+    "testmon": "nodemon ./tests/testRunner.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "hapi-auth-jwt2": "^7.0.1",
     "inert": "^4.0.0",
     "pg": "^5.0.0",
+    "tape": "^4.5.1",
     "vision": "^4.1.0"
   }
 }
