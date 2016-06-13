@@ -18,7 +18,7 @@ tape('test if one can check the participants table by user name and company', (t
 
 tape('restructureCallsResults function prepares data for response', (t) => {
   t.plan(1)
-  const expected = restructuredCallsResults
+  const expected = fullResponse
   fetchCalls.restructureCallsResults(partipantsQueryResult, postgresURL, (results) => {
     const actual = results
     t.deepEqual(actual, expected, 'calls results restructured')
@@ -51,28 +51,11 @@ tape('find file_id, duration and time for the call', (t) => {
       }
     }
   }
-  const expected = {
-    call_id: '102',
-    company_id: '100',
-    participants: {
-      source: {
-        internal: true,
-        number: '8',
-        user: true
-      },
-      destination: {
-        internal: true,
-        number: '9',
-        user: false
-      }
-    },
-    duration: '345678904356',
-    time: '2016-01-06 12:43:35',
-    file_id: '2'
-  }
+
   pg.connect(postgresURL, (err, client, done) => {
-    fetchCalls.findCallDetails(postgresURL, client, done, callsResultsWithAllParties, (results) => {
-      const actual = results
+    fetchCalls.findCallDetails(data, client, done, (results) => {
+      const expected = '345678904356'
+      const actual = results[0].duration
       t.deepEqual(expected, actual, 'congrats full response complete')
     })
   })
