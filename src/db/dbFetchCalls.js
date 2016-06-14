@@ -73,14 +73,15 @@ const findOtherParticipant = (callObj, client, done, callback) => {
 
 // step 5: gets call metadata.
 const findCallDetails = (callObj, client, done, callback) => {
-  client.query('SELECT file_id, duration, date FROM calls WHERE call_id = $1',
+  client.query('SELECT file_id, duration, EXTRACT(EPOCH FROM date) FROM calls WHERE call_id = $1',
   [callObj.call_id], (error, result) => {
     if (error) throw error
     done()
     const response = result.rows
+    const date = response[0].date_part
     callObj.file_id = response[0].file_id
     callObj.duration = response[0].duration
-    callObj.date = response[0].date
+    callObj.date = new Date(date * 1000)
     callback(callObj)
   })
 }
