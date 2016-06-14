@@ -1,4 +1,3 @@
-const pg = require('pg')
 const insertData = require('./insertData.js')
 
 const checkFilesTable = (url, cli, obj, cb) => {
