@@ -1,7 +1,7 @@
 'use strict'
 const tape = require('tape')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
-const fetchCalls = require('../../db/dbFetchCalls.js')
+const fetchCalls = require('../../src/db/dbFetchCalls.js')
 const pg = require('pg')
 
 tape('test if one can check the participants table by user name and company', (t) => {

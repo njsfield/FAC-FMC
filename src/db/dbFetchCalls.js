@@ -13,7 +13,7 @@ const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
   })
 }
 
-// step 2: reformats data into response object
+// step 2: reformats data into response object.
 const restructureCallsResults = (data, postgresURL, callback) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
@@ -40,7 +40,7 @@ const restructureCallsResults = (data, postgresURL, callback) => {
   })
 }
 
-// step 3: structure the data
+// step 3: structures the data.
 const responseFormatting = (call_id, company_id) => {
   return {
     participants: {},
@@ -52,7 +52,7 @@ const responseFormatting = (call_id, company_id) => {
   }
 }
 
-// step 4: locate caller or callee
+// step 4: locates caller or callee.
 const findOtherParticipant = (callObj, client, done, callback) => {
   const participant = callObj.participants.source ? 'DESTINATION' : 'SOURCE'
   client.query('SELECT number, internal, participant_role FROM participants ' +
@@ -71,7 +71,7 @@ const findOtherParticipant = (callObj, client, done, callback) => {
     })
 }
 
-// step 5: get call metadata
+// step 5: gets call metadata.
 const findCallDetails = (callObj, client, done, callback) => {
   client.query('SELECT file_id, duration, date FROM calls WHERE call_id = $1',
   [callObj.call_id], (error, result) => {
