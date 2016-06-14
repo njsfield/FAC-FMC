@@ -36,7 +36,8 @@ tape('test that the fmctest database and tables exists', (t) => {
         return console.error('error running query', err)
       }
       t.ok(results, 'companies table exists')
-      client.end()
+      done()
+      pg.end()
     })
   })
 })
