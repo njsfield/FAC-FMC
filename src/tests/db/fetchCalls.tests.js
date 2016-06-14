@@ -25,14 +25,43 @@ tape('restructureCallsResults function prepares data for response', (t) => {
   })
 })
 
-// tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
-//   t.plan(1)
-//   const expected = callsResultsWithAllParties
-//   fetchCalls.findOtherParticipant(postgresURL, restructuredCallsResults, (result) => {
-//     const actual = result
-//     t.deepEqual(actual, expected, 'caller or callee located')
-//   })
-// })
+tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
+  t.plan(1)
+  const data = {
+    call_id: '100',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      }
+    }
+  }
+  const expected = {
+    call_id: '100',
+    company_id: '100',
+    participants: {
+      source: {
+        internal: true,
+        number: '8',
+        user: true
+      },
+      destination: {
+        internal: false,
+        number: '7',
+        user: false
+      }
+    }
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    fetchCalls.findOtherParticipant(data, client, done, (result) => {
+      const actual = result
+      t.deepEqual(actual, expected, 'caller or callee located')
+    })
+  })
+})
 
 tape('find file_id, duration and time for the call', (t) => {
   const data = {
@@ -53,9 +82,10 @@ tape('find file_id, duration and time for the call', (t) => {
   }
 
   pg.connect(postgresURL, (err, client, done) => {
+    t.plan(1)
     fetchCalls.findCallDetails(data, client, done, (results) => {
       const expected = '345678904356'
-      const actual = results[0].duration
+      const actual = results.duration
       t.deepEqual(expected, actual, 'congrats full response complete')
     })
   })
