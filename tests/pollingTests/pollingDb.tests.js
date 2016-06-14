@@ -115,3 +115,21 @@ tape('test if call exists in calls table', (t) => {
     pg.end()
   })
 })
+
+// tape('test if call does not exist in calls table and inserts it', (t) => {
+//   const obj = {
+//     company_name: 'test_comp_c',
+//     file_name: 'recording_1'
+//   }
+//   pg.connect(postgresURL, (err, client, done) => {
+//     if (err) throw err
+//     pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
+//       const actual = res.command
+//       const expected = 'INSERT'
+//       t.deepEqual(actual, expected, 'this call is in the files table')
+//       done()
+//     })
+//     t.end()
+//     pg.end()
+//   })
+// })
