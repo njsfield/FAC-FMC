@@ -4,13 +4,15 @@ const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
 const pollingFuncs = require('../../polling/dbFunctions/checkingTables.js')
 
 tape('tests if file exists in files table', (t) => {
-  const arrayOfObj = [{
-    file_index: 1,
-    file_name: 'recording_1'
-  }, {
-    file_index: 2,
-    file_name: 'recording_2'
-  }]
+  const arrayOfObj = [
+    {
+      file_index: 1,
+      file_name: 'recording_1'
+    }, {
+      file_index: 2,
+      file_name: 'recording_2'
+    }
+  ]
 
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
@@ -29,13 +31,15 @@ tape('tests if file exists in files table', (t) => {
 })
 
 tape('tests that file does NOT exist in files table and then adds it', (t) => {
-  const arrayOfObj = [{
-    file_index: 44,
-    file_name: 'recording_44'
-  }, {
-    file_index: 45,
-    file_name: 'recording_45'
-  }]
+  const arrayOfObj = [
+    {
+      file_index: 44,
+      file_name: 'recording_44'
+    }, {
+      file_index: 45,
+      file_name: 'recording_45'
+    }
+  ]
 
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
@@ -53,11 +57,13 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
 })
 
 tape('tests if company exists in companies table', (t) => {
-  const arrayOfObj = [{
-    company_name: 'test_comp_A',
-  }, {
-    company_name: 'test_comp_B',
-  }]
+  const arrayOfObj = [
+    {
+      company_name: 'test_comp_A',
+    }, {
+      company_name: 'test_comp_B',
+    }
+  ]
 
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
@@ -76,11 +82,13 @@ tape('tests if company exists in companies table', (t) => {
 })
 
 tape('tests that company does NOT exist in companies table and then adds it', (t) => {
-  const arrayOfObj = [{
-    company_name: 'comp_A',
-  }, {
-    company_name: 'comp_B',
-  }]
+  const arrayOfObj = [
+    {
+      company_name: 'comp_A',
+    }, {
+      company_name: 'comp_B',
+    }
+  ]
 
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
