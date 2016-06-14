@@ -1,9 +1,7 @@
 'use strict'
 const pg = require('pg')
 // grab all calls for an individual user
-const fetchCalls = (user, quantity) => {
-  return user, quantity
-}
+// step 1: grabs the rows from the participants table which involve the user and their company.
 const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
   pg.connect(postgresURL, (err, client, done) => {
     client.query('SELECT * FROM participants WHERE company_id = $1 AND user_id = $2',
@@ -15,74 +13,79 @@ const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
   })
 }
 
+// step 2: reformats data into response object
 const restructureCallsResults = (data, postgresURL, callback) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
-    const newArray = data.map((callParticipant) => {
-      let callObj = {
-        participants: {},
-        call_id: callParticipant.call_id,
-        company_id: callParticipant.company_id,
-        file_id: '',
-        duration: '',
-        date: ''
-      }
-      if (callParticipant.participant_role === 'SOURCE') {
-        callObj.participants.source = {
-          number: callParticipant.number,
-          internal: true,
-          user: true
-        }
-      } else {
-        callObj.participants.destination = {
-          number: callParticipant.number,
-          internal: true,
-          user: true
-        }
+
+    let callList = []
+
+    data.forEach((callParticipant, i) => {
+      let callObj = responseFormatting(callParticipant.call_id, callParticipant.company_id)
+      callObj.participants[callParticipant.participant_role.toLowerCase()] = {
+        number: callParticipant.number,
+        internal: true,
+        user: true
       }
       findOtherParticipant(callObj, client, done, (result) => {
-        const participant_role = result[0].participant_role.toLowerCase()
-        callObj.participants[participant_role] = {
-          user: false,
-          number: result[0].number,
-          internal: result[0].internal
-        }
+        findCallDetails(result, client, done, (response) => {
+          console.log(response)
+          callList = callList.concat([response])
+          if (i === data.length - 1) {
+            callback(callList)
+          }
+        })
       })
-      findCallDetails(callObj, client, done, (result) => {
-        console.log(result)
-        callObj.file_id = result[0].file_id
-        callObj.duration = result[0].duration
-        callObj.date = result[0].date
-      })
-      return callObj
     })
-    setTimeout(callback(newArray), 5000)
   })
-
 }
 
-const findOtherParticipant = (call, client, done, callback) => {
-  const participant = call.participants.source ? 'DESTINATION' : 'SOURCE'
+// step 3: structure the data
+const responseFormatting = (call_id, company_id) => {
+  return {
+    participants: {},
+    call_id: call_id,
+    company_id: company_id,
+    file_id: '',
+    duration: '',
+    date: ''
+  }
+}
+
+// step 4: locate caller or callee
+const findOtherParticipant = (callObj, client, done, callback) => {
+  const participant = callObj.participants.source ? 'DESTINATION' : 'SOURCE'
   client.query('SELECT number, internal, participant_role FROM participants ' +
     'WHERE company_id = $1 AND call_id = $2 AND participant_role = $3',
-    [call.company_id, call.call_id, participant], (error, result) => {
+    [callObj.company_id, callObj.call_id, participant], (error, result) => {
       if (error) throw error
       done()
-      callback(result.rows)
+      const response = result.rows
+      const participant_role = response[0].participant_role.toLowerCase()
+      callObj.participants[participant_role] = {
+        user: false,
+        number: response[0].number,
+        internal: response[0].internal
+      }
+      callback(callObj)
     })
 }
 
-const findCallDetails = (call, client, done, callback) => {
+// step 5: get call metadata
+const findCallDetails = (callObj, client, done, callback) => {
   client.query('SELECT file_id, duration, date FROM calls WHERE call_id = $1',
-  [call.call_id], (error, result) => {
+  [callObj.call_id], (error, result) => {
     if (error) throw error
     done()
-    callback(result.rows)
+    const response = result.rows
+    callObj.file_id = response[0].file_id
+    callObj.duration = response[0].duration
+    callObj.date = response[0].date
+    callback(callObj)
   })
 }
 
 module.exports = {
-  fetchCalls,
   checkPartipicantsTable,
   restructureCallsResults,
   findOtherParticipant,
