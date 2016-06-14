@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/ipcortex/FAC-FMC#readme",
   "dependencies": {
-    "chai": "^3.5.0",
     "eslint": "^2.11.1",
     "expect": "^1.20.1",
     "handlebars": "^4.0.5",
