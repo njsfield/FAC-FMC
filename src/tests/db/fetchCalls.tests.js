@@ -16,14 +16,14 @@ tape('test if one can check the participants table by user name and company', (t
   })
 })
 
-tape('restructureCallsResults function prepares data for response', (t) => {
-  t.plan(1)
-  const expected = fullResponse
-  fetchCalls.restructureCallsResults(partipantsQueryResult, postgresURL, (results) => {
-    const actual = results
-    t.deepEqual(actual, expected, 'calls results restructured')
-  })
-})
+// tape('restructureCallsResults function prepares data for response', (t) => {
+//   t.plan(1)
+//   const expected = fullResponse
+//   fetchCalls.restructureCallsResults(partipantsQueryResult, postgresURL, (results) => {
+//     const actual = results
+//     t.deepEqual(actual, expected, 'calls results restructured')
+//   })
+// })
 
 tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
   t.plan(1)
