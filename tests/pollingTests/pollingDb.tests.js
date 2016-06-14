@@ -97,14 +97,21 @@ tape('tests that company does NOT exist in companies table and then adds it', (t
   })
 })
 
-pg.connect(postgresURL, (err, client, done) => {
+tape('test if call exists in calls table', (t) => {
   const obj = {
     company_name: 'test_comp_A',
-    file_name: 'file123'
+    file_name: 'recording_1'
   }
-  if (err) throw err
-  pollingFuncs.checkCallsTable(postgresURL, client, obj, () => {
-    done()
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
+      const boolKey = Object.keys(res.rows[0])[0]
+      const actual = res.rows[0][boolKey]
+      const expected = true
+      t.deepEqual(actual, expected, 'this call is in the files table')
+      done()
+    })
+    t.end()
+    pg.end()
   })
-  pg.end()
 })
