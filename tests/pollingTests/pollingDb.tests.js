@@ -3,23 +3,21 @@ const tape = require('tape')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
 const pollingFuncs = require('../../polling/dbFunctions/checkingTables.js')
 
-tape('tests if file exists in files table', (t) => {
+tape('tests if company exists in companies table', (t) => {
   const arrayOfObj = [{
-    file_index: 1,
-    file_name: 'recording_1'
+    company_name: 'test_comp_A',
   }, {
-    file_index: 2,
-    file_name: 'recording_2'
+    company_name: 'test_comp_B',
   }]
 
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     arrayOfObj.map(e => {
-      pollingFuncs.checkFilesTable(postgresURL, client, e, (res) => {
+      pollingFuncs.checkCompaniesTable(postgresURL, client, e, (res) => {
         const expected = true
         const boolKey = Object.keys(res.rows[0])[0]
         const actual = res.rows[0][boolKey]
-        t.deepEqual(actual, expected, 'file_name recording_1 is in files table')
+        t.deepEqual(actual, expected, 'company_name test_comp_A and test_comp_B are in companies table')
         done()
       })
     })
