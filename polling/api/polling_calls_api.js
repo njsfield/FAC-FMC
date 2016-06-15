@@ -38,6 +38,7 @@ const updateFileNames = (companyId, callback) => {
 const retrieveWav = (fileName, callback) => {
   const options = { method: 'POST',
   url: pbxUrl + '/rest/call/download/recording',
+  encoding: null,
   headers:
   { 'cache-control': 'no-cache',
   'content-type': 'application/json' },
