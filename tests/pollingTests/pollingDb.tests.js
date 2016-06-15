@@ -178,3 +178,41 @@ tape('test if new company_name and file_name exist in relevant tables, inserts t
     pg.end()
   })
 })
+
+tape('test if user exists in users table and if not, inserts it', (t) => {
+  const obj = {
+    user_name: 'guillaume',
+    company_name: 'test_comp_supertest',
+    user_role: 'yes'
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkUsersTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'user inserted into users table')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})
+
+tape('test if user exists in users table and if not, inserts it', (t) => {
+  const obj = {
+    user_name: 'guillaume',
+    company_name: 'test_comp_A',
+    user_role: 'yes'
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkUsersTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'user inserted into users table')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})

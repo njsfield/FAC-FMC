@@ -9,6 +9,7 @@ const fetchAudio = (postgresURL, file_id, callback) => {
     })
     done()
   })
+  // pg.end()
 }
 
 module.exports = {

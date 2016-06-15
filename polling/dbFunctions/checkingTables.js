@@ -97,7 +97,9 @@ const checkUsersTable = (url, cli, obj, cb) => {
     if (err) throw err
     const boolKey = Object.keys(res.rows[0])[0]
     if (res.rows[0][boolKey] === false) {
-      insertData.addToUsersTable(url, cli, obj, cb)
+      checkCompaniesTable(url, cli, obj, () => {
+        insertData.addToUsersTable(url, cli, obj, cb)
+      })
     } else {
       cb(res)
     }

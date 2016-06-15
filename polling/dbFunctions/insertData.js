@@ -27,7 +27,7 @@ const addToCallsTable = (url, client, object, callback) => {
 }
 
 const addToUsersTable = (url, client, object, callback) => {
-  const queryArray = [object.login, object.company_name, object.perms.user]
+  const queryArray = [object.user_name, object.company_name, object.user_role]
   client.query('INSERT INTO users (user_name, company_id, user_role) VALUES ($1, (SELECT company_id FROM companies WHERE company_name=$2), $3)', queryArray, (error, response) => {
     if (error) throw error
     callback(response)
