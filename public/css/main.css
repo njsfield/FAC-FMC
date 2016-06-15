@@ -10,7 +10,11 @@ font-family: 'Lato', sans-serif;
 #call-container {
   background-color: #00416F;
   padding: 2em;
-  border-radius: 2em;
+  border-radius: 4px;
+}
+
+#search-bar {
+  padding-bottom: 2em;
 }
 body {
   font-family: 'Lato', sans-serif;
