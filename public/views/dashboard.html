@@ -1,3 +1,13 @@
-<h1>dashboard page</h1>
-{{> call}}
-{{> filters}}
+<div class='container'>
+  <div class="row">
+    <h1> Find My Call </h1>
+  </div>
+  <div class='row' id='call-container'>
+    <div class="col-xs-4">
+      {{> filters}}
+    </div>
+    <div class="col-xs-8">
+      {{> call}}
+    </div>
+  </div>
+</div>
