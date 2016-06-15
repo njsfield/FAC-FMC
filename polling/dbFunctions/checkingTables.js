@@ -27,8 +27,8 @@ const checkFilesTable = (url, cli, obj, cb) => {
 }
 
 const checkCallsTable = (url, cli, obj, cb) => {
-  let companyID
-  let fileID
+  var companyID
+  var fileID
   //checks if company_name exists in companies table
   cli.query('SELECT EXISTS (SELECT company_id FROM companies WHERE company_name=($1))', [obj.company_name], (err, res) => {
     if (err) throw err
