@@ -116,20 +116,65 @@ tape('test if call exists in calls table', (t) => {
   })
 })
 
-// tape('test if call does not exist in calls table and inserts it', (t) => {
-//   const obj = {
-//     company_name: 'test_comp_c',
-//     file_name: 'recording_1'
-//   }
-//   pg.connect(postgresURL, (err, client, done) => {
-//     if (err) throw err
-//     pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
-//       const actual = res.command
-//       const expected = 'INSERT'
-//       t.deepEqual(actual, expected, 'this call is in the files table')
-//       done()
-//     })
-//     t.end()
-//     pg.end()
-//   })
-// })
+tape('test if new company_name exists in companies table, inserts if not and then inserts to calls table', (t) => {
+  const obj = {
+    file_index: 10,
+    date: 1465984211,
+    company_name: 'test_comp_new',
+    file_name: 'recording_1',
+    duration: 123
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'company and call inserted into relevant tables')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})
+
+tape('test if new file_name exists in files table, inserts if not and then inserts to calls table', (t) => {
+  const obj = {
+    file_index: 10,
+    date: 1465984211,
+    company_name: 'test_comp_A',
+    file_name: 'recording_new',
+    duration: 123
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'file and call inserted into relevant tables')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})
+
+tape('test if new company_name and file_name exist in relevant tables, inserts them if not and then inserts into calls table', (t) => {
+  const obj = {
+    file_index: 10,
+    date: 1465984211,
+    company_name: 'test_comp_fake',
+    file_name: 'recording_fake',
+    duration: 123
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'company, file and call inserted into relevant tables')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})
