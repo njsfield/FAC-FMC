@@ -26,8 +26,17 @@ const addToCallsTable = (url, client, object, callback) => {
   })
 }
 
+const addToUsersTable = (url, client, object, callback) => {
+  const queryArray = [object.login, object.company_name, object.perms.user]
+  client.query('INSERT INTO users (user_name, company_id, user_role) VALUES ($1, (SELECT company_id FROM companies WHERE company_name=$2), $3)', queryArray, (error, response) => {
+    if (error) throw error
+    callback(response)
+  })
+}
+
 module.exports = {
   addToCompaniesTable,
   addToFilesTable,
-  addToCallsTable
+  addToCallsTable,
+  addToUsersTable
 }

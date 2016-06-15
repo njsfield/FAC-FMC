@@ -118,6 +118,7 @@ WITHOUT OIDS;
 /****** 8. USERS TABLE ******/
 CREATE TABLE users (
     user_id    BIGINT NOT NULL,
+    user_name  TEXT NOT NULL,
     company_id BIGINT NOT NULL,
     user_role  TEXT NOT NULL,
 
