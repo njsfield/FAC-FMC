@@ -5,7 +5,8 @@ const views = require('./views.js')
 
 const plugins = [
   require('inert'),
-  require('vision')
+  require('vision'),
+  require('hapi-auth-jwt2')
 ]
 
 const routes = [
@@ -29,6 +30,16 @@ Server.register(plugins, (error) => {
   Server.views(views)
 
   Server.route(routes)
+
+
+
+  Server.auth.strategy('jwt', 'jwt',
+    { key: 'NeverShareYourSecret',          // Never Share your secret key
+      validateFunc: validate,            // validate function defined above
+      verifyOptions: { algorithms: [ 'HS256' ] } // pick a strong algorithm
+    })
+
+  server.auth.default('jwt')
 })
 
 module.exports = Server
