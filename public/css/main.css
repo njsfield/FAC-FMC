@@ -1,7 +1,21 @@
 html {
-  background-color: rgb(143, 35, 86);
 }
 
 #content {
-background-color: orange;
+font-family: 'Lato', sans-serif;
+}
+
+/*dashboard layout*/
+
+#call-container {
+  background-color: #00416F;
+  padding: 2em;
+  border-radius: 2em;
+}
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.font {
+  font-family: 'Lato', sans-serif;
 }
