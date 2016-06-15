@@ -1,6 +1,14 @@
 'use strict'
 const pg = require('pg')
 // grab all calls for an individual user
+const fetchCalls = (user_id, company_id, postgresURL, callback) => {
+  checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
+    restructureCallsResults(result, postgresURL, (response) => {
+      callback(response)
+    })
+
+  })
+}
 // step 1: grabs the rows from the participants table which involve the user and their company.
 const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
   pg.connect(postgresURL, (err, client, done) => {
@@ -90,5 +98,6 @@ module.exports = {
   checkPartipicantsTable,
   restructureCallsResults,
   findOtherParticipant,
-  findCallDetails
+  findCallDetails,
+  fetchCalls
 }
