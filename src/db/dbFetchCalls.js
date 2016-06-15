@@ -26,10 +26,10 @@ const restructureCallsResults = (data, postgresURL, callback) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
 
-    let callList = []
+    var callList = []
 
     data.forEach((callParticipant, i) => {
-      let callObj = responseFormatting(callParticipant.call_id, callParticipant.company_id)
+      var callObj = responseFormatting(callParticipant.call_id, callParticipant.company_id)
       callObj.participants[callParticipant.participant_role.toLowerCase()] = {
         number: callParticipant.number,
         internal: true,

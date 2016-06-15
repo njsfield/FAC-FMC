@@ -8,7 +8,7 @@ tape('test if one can check the participants table by user name and company', (t
   t.plan(1)
   const user_id = '4387735'
   const company_id = '100'
-  let actual
+  var actual
   const expected = 'object'
   fetchCalls.checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
     actual = typeof result

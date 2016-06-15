@@ -34,3 +34,30 @@ const updateFileNames = (companyId, callback) => {
   })
 }
 
+// once we have file_names, fetches the ACTUAL wav file.
+const retrieveWav = (fileName, callback) => {
+  const options = { method: 'POST',
+  url: pbxUrl + '/rest/call/download/recording',
+  encoding: null,
+  headers:
+  { 'cache-control': 'no-cache',
+  'content-type': 'application/json' },
+  body:
+  { type: 'recording',
+  scope:
+  { company: 'default',
+  file: fileName },
+  auth: { type: 'auth', key: apiKey } },
+  json: true }
+
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error)
+
+    callback(body)
+  })
+}
+
+module.exports = {
+  updateFileNames,
+  retrieveWav
+}
