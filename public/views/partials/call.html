@@ -1,44 +1,37 @@
 <div class="panel-group font" id="accordion">
+  {{#each calls}}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-        Collapsible Group 1</a>
-      </h4>
+      <div class='row'>
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}">
+        <div class='col-xs-3'>
+          <h5 class="panel-title">
+            {{participants.source.number}}
+          </h5>
+        </div>
+        <div class='col-xs-3'>
+          <h5 class="panel-title">
+            {{participants.destination.number}}
+          </h5>
+        </div>
+        <div class='col-xs-3'>
+          <h5 class="panel-title">
+            {{date}}
+          </h5>
+        </div>
+        <div class='col-xs-3'>
+          <h5 class="panel-title">
+            {{duration}}
+          </h5>
+        </div>
+        </a>
+      </div>
     </div>
-    <div id="collapse1" class="panel-collapse collapse in">
-      <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat.</div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-        Collapsible Group 2</a>
-      </h4>
-    </div>
-    <div id="collapse2" class="panel-collapse collapse">
-      <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat.</div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-        Collapsible Group 3</a>
-      </h4>
-    </div>
-    <div id="collapse3" class="panel-collapse collapse">
-      <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-      minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat.</div>
+    <div "#collapse{{@index}}" class="panel-collapse collapse in">
+      <div class="panel-body">
+        listen to the call: {{file_id}}
+      </div>
     </div>
   </div>
+  {{/each}}
 </div>
