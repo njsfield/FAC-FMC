@@ -1,36 +1,28 @@
-<div class="panel-group font" id="accordion">
+<div class="panel-group" id="accordion">
   {{#each calls}}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div class='row'>
+      <div class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}">
-        <div class='col-xs-3'>
-          <h5 class="panel-title">
-            {{participants.source.number}}
-          </h5>
-        </div>
-        <div class='col-xs-3'>
-          <h5 class="panel-title">
-            {{participants.destination.number}}
-          </h5>
-        </div>
-        <div class='col-xs-3'>
-          <h5 class="panel-title">
-            {{date}}
-          </h5>
-        </div>
-        <div class='col-xs-3'>
-          <h5 class="panel-title">
-            {{duration}}
-          </h5>
-        </div>
+          <div class='row'>
+            <div class="col-xs-3">
+              {{ participants.source.number}}
+            </div>
+            <div class="col-xs-3">
+              {{participants.destination.number}}
+            </div>
+            <div class="col-xs-3">
+              {{date}}
+            </div>
+            <div class="col-xs-3">
+              {{duration}}
+            </div>
+          </div>
         </a>
       </div>
     </div>
-    <div "#collapse{{@index}}" class="panel-collapse collapse in">
-      <div class="panel-body">
-        listen to the call: {{file_id}}
-      </div>
+    <div id="collapse{{@index}}" class="panel-collapse collapse">
+      <div class="panel-body">Listen to your calls : {{ file_id}}</div>
     </div>
   </div>
   {{/each}}
