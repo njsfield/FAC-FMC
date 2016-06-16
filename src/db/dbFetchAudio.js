@@ -1,15 +1,10 @@
 'use strict'
-const pg = require('pg')
-
-const fetchAudio = (postgresURL, file_id, callback) => {
-  pg.connect(postgresURL, (err, client, done) => {
-    client.query('SELECT * FROM files WHERE file_id = $1', [file_id], (error, result) => {
-      if (error) throw error
-      callback(result.rows)
-    })
-    done()
+const fetchAudio = (client, done, file_id, callback) => {
+  client.query('SELECT * FROM files WHERE file_id = $1', [file_id], (error, result) => {
+    if (error) throw error
+    callback(result.rows)
   })
-  // pg.end()
+  done()
 }
 
 module.exports = {

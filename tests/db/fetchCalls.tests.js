@@ -10,18 +10,25 @@ tape('test if one can check the participants table by user name and company', (t
   const company_id = '100'
   var actual
   const expected = 'object'
-  fetchCalls.checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
-    actual = typeof result
-    t.equals( actual, expected, 'grabbed the participants rows for a user')
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    fetchCalls.checkPartipicantsTable(client, done, user_id, company_id, (result) => {
+      actual = typeof result
+      t.equals( actual, expected, 'grabbed the participants rows for a user')
+    })
   })
+  pg.end()
 })
 
 tape('restructureCallsResults function prepares data for response', (t) => {
   t.plan(1)
   const expected = fullResponse.toString()
-  fetchCalls.restructureCallsResults(partipantsQueryResult, postgresURL, (results) => {
-    const actual = results.toString()
-    t.deepEqual(actual, expected, 'calls results restructured')
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    fetchCalls.restructureCallsResults(partipantsQueryResult, client, done, (results) => {
+      const actual = results.toString()
+      t.deepEqual(actual, expected, 'calls results restructured')
+    })
   })
 })
 
@@ -114,93 +121,6 @@ const partipantsQueryResult =
     number: '8',
     user_id: '4387735' } ]
 
-const restructuredCallsResults = [
-  {
-    call_id: '100',
-    company_id: '100',
-    participants: {
-      source: {
-        internal: true,
-        number: '8',
-        user: true
-      }
-    }
-  },
-  {
-    call_id: '102',
-    company_id: '100',
-    participants: {
-      source: {
-        internal: true,
-        number: '8',
-        user: true
-      }
-    }
-  },
-  {
-    call_id: '104',
-    company_id: '100',
-    participants: {
-      destination: {
-        internal: true,
-        number: '8',
-        user: true
-      }
-    }
-  }
-]
-
-const callsResultsWithAllParties = [
-  {
-    call_id: '100',
-    company_id: '100',
-    participants: {
-      source: {
-        internal: true,
-        number: '8',
-        user: true
-      },
-      destination: {
-        internal: false,
-        number: '7',
-        user: false
-      }
-    }
-  },
-  {
-    call_id: '102',
-    company_id: '100',
-    participants: {
-      source: {
-        internal: true,
-        number: '8',
-        user: true
-      },
-      destination: {
-        internal: true,
-        number: '9',
-        user: false
-      }
-    }
-  },
-  {
-    call_id: '104',
-    company_id: '100',
-    participants: {
-      destination: {
-        internal: true,
-        number: '8',
-        user: true
-      },
-      source: {
-        internal: false,
-        number: '7',
-        user: false
-      }
-    }
-  }
-]
-
 const fullResponse = [
   {
     call_id: '100',
@@ -260,22 +180,3 @@ const fullResponse = [
     file_id: '3',
   }
 ]
-// const resultArr = [
-//   {
-//     company_id: '2',
-//     call_id: '100',
-//     participants: {
-//       source: {
-//         internal: true,
-//         number: '4387735'
-//       },
-//       destination: {
-//         internal: false,
-//         number: '3222'
-//       }
-//     },
-//     time: '2016-01-05 12:43:35',
-//     duration: '345678904356345',
-//     file_id: '100'
-//   }
-// ]
