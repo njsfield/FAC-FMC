@@ -1,8 +1,8 @@
 // fetches array of file_names
 'use strict'
+require('env2')('config.env')
 const request = require('request')
-//TODO config.env
-const apiKey = 'tywfu4765fw74ie6b5fow4387f5bw7346bf5'
+const apiKey = process.env.API_KEY
 const pbxUrl = 'https://fac1.ipcortex.net'
 
 // searches for filenames by companyId
