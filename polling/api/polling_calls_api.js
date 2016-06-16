@@ -57,7 +57,7 @@ const retrieveWav = (fileName, callback) => {
   })
 }
 
-const retrieveCallerDetails = (company_name, extensionNumber, callback) => {
+const retrieveCallerDetails = (company_name, extensionList, callback) => {
   const options = {
     url: pbxUrl + '/rest/dialplan/read',
     encoding: null,
@@ -66,8 +66,9 @@ const retrieveCallerDetails = (company_name, extensionNumber, callback) => {
     'content-type': 'application/json' },
     body: {
       'type': 'extension',
-      'scope': {
-        'scoped_exten': extensionNumber
+      'scope': {     // eg "400"
+        'scoped_exten': extensionList,    // eg "400_company",
+        'company': company_name
       },
       'columns': [
         'virt_exten',
@@ -78,7 +79,7 @@ const retrieveCallerDetails = (company_name, extensionNumber, callback) => {
     }
   }
   request(options, function (error, response, body) {
-    if (error) throw new Error(error)
+    if (error) throw error
     callback(body)
   })
 

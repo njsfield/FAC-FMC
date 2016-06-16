@@ -5,6 +5,7 @@ const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
 const pg = require('pg')
 
 pollCalls.updateFileNames('default', (files) => {
+  const company_name = 'default'
   const participantsList = []
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
@@ -21,8 +22,10 @@ pollCalls.updateFileNames('default', (files) => {
   //         => no: create a hash of extension numbers
       })
       done()
-      if(i = files.length - 1) {
-        pollCalls.retrieveCallerDetails(company_name, extensionNumber, callback)        
+      if(i === files.length - 1) {
+        pollCalls.retrieveCallerDetails(company_name, participantsList, (response) => {
+          console.log(response)
+        })
       }
     })
 
