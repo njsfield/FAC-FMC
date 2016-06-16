@@ -1,7 +1,7 @@
 // fetches array of file_names
 'use strict'
+require('env2')('config.env')
 const request = require('request')
-//TODO config.env
 const apiKey = process.env.API_KEY
 const pbxUrl = 'https://fac1.ipcortex.net'
 
