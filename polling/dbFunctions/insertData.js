@@ -26,8 +26,26 @@ const addToCallsTable = ( client, object, callback) => {
   })
 }
 
+const addToUsersTable = (url, client, object, callback) => {
+  const queryArray = [object.user_name, object.company_name, object.user_role]
+  client.query('INSERT INTO users (user_name, company_id, user_role) VALUES ($1, (SELECT company_id FROM companies WHERE company_name=$2), $3)', queryArray, (error, response) => {
+    if (error) throw error
+    callback(response)
+  })
+}
+
+const addToParticipantsTable = (url, client, object, callback) => {
+  const queryArray = [object.call_id, object.number, object.internal, object.participant_role, object.user_id]
+  client.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role, user_id) VALUES ($1, (SELECT company_id FROM calls WHERE call_id=$1), $2, $3, $4, $5)', queryArray, (error, response) => {
+    if (error) throw error
+    callback(response)
+  })
+}
+
 module.exports = {
   addToCompaniesTable,
   addToFilesTable,
-  addToCallsTable
+  addToCallsTable,
+  addToUsersTable,
+  addToParticipantsTable
 }
