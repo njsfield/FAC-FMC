@@ -1,5 +1,6 @@
 const pollCalls = require('./api/polling_calls_api.js')
 const checkTables = require('./dbFunctions/checkingTables.js')
+const checkIds = require('./api/check_caller_identification_api.js')
 const fs = require('fs')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
 const pg = require('pg')
@@ -36,4 +37,9 @@ pollCalls.updateFileNames('default', (files) => {
     // })
 
   })
+})
+
+checkIds.checkLoginDeets('default', (body) => {
+  console.log(body)
+  return body
 })
