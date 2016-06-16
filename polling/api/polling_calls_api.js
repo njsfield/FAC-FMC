@@ -6,7 +6,7 @@ const apiKey = 'tywfu4765fw74ie6b5fow4387f5bw7346bf5'
 const pbxUrl = 'https://fac1.ipcortex.net'
 
 // searches for filenames by companyId
-const updateFileNames = (companyId, callback) => {
+const updateFileNames = (company_name, callback) => {
   const options = {
     method: 'POST',
     url: pbxUrl + '/rest/call/list',
@@ -15,7 +15,7 @@ const updateFileNames = (companyId, callback) => {
     'content-type': 'application/json' },
     body:
     { type: 'recording',
-    scope: { company: companyId },
+    scope: { company: company_name },
     auth: { type: 'auth', key: apiKey } },
     json: true }
 
@@ -23,7 +23,7 @@ const updateFileNames = (companyId, callback) => {
     if (error) throw new Error(error)
     const files = body.values.map((el) => {
       delete el.size
-      el.company_id = companyId
+      el.company_name = company_name
       el.date = el.start
       delete el.start
       el.file_name = el.file
