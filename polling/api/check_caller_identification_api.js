@@ -17,8 +17,8 @@ const checkLoginDeets = (companyId, callback) => {
     {
       auth: {
         type: 'auth',
-        username: 'fac19b',
-        password: '5n51uc8p'
+        username: 'fac30a',
+        password: 'gh2ig32z'
       }
     },
     json: true }
