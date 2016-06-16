@@ -2,6 +2,7 @@ const pg = require('pg')
 const tape = require('tape')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
 const pollingFuncs = require('../../polling/dbFunctions/checkingTables.js')
+const insertFuncs = require('../../polling/dbFunctions/insertData.js')
 
 tape('tests if company exists in companies table', (t) => {
   const arrayOfObj = [{
@@ -210,6 +211,27 @@ tape('test if user exists in users table and if not, inserts it', (t) => {
       const actual = res.command
       const expected = 'INSERT'
       t.deepEqual(actual, expected, 'user inserted into users table')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})
+
+tape('test if participant get inserted in participants table', (t) => {
+  const obj = {
+    call_id: '100',
+    number: '4657897980',
+    internal: true,
+    participant_role: 'admin',
+    user_id: 100
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    insertFuncs.addToParticipantsTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'participant inserted into participants table')
       done()
     })
     t.end()
