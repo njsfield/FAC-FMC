@@ -91,8 +91,24 @@ const checkCallsTable = (url, cli, obj, cb) => {
     //returns res of if company_name does not exist
 }
 
+const checkUsersTable = (url, cli, obj, cb) => {
+  const queryArray = [obj.login]
+  cli.query('SELECT EXISTS (SELECT * FROM users WHERE user_name=($1))', queryArray, (err, res) => {
+    if (err) throw err
+    const boolKey = Object.keys(res.rows[0])[0]
+    if (res.rows[0][boolKey] === false) {
+      checkCompaniesTable(url, cli, obj, () => {
+        insertData.addToUsersTable(url, cli, obj, cb)
+      })
+    } else {
+      cb(res)
+    }
+  })
+}
+
 module.exports = {
   checkFilesTable,
   checkCompaniesTable,
-  checkCallsTable
+  checkCallsTable,
+  checkUsersTable
 }
