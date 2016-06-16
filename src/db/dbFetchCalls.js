@@ -1,5 +1,4 @@
 'use strict'
-const pg = require('pg')
 // grab all calls for an individual user
 const fetchCalls = (user_id, company_id, postgresURL, callback) => {
   checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
