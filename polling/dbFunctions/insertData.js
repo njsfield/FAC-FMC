@@ -42,10 +42,19 @@ const addToParticipantsTable = (url, client, object, callback) => {
   })
 }
 
+const addToTagsTable = (url, client, object, callback) => {
+  const queryArray = [object.tag, object.user_id]
+  client.query('INSERT INTO tags (tag, company_id) VALUES ($1, (SELECT company_id FROM users WHERE user_id=$2))', queryArray, (error, response) => {
+    if (error) throw error
+    callback(response)
+  })
+}
+
 module.exports = {
   addToCompaniesTable,
   addToFilesTable,
   addToCallsTable,
   addToUsersTable,
-  addToParticipantsTable
+  addToParticipantsTable,
+  addToTagsTable
 }
