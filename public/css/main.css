@@ -11,10 +11,12 @@ font-family: 'Lato', sans-serif;
   background-color: #00416F;
   padding: 2em;
   border-radius: 4px;
+  height: 600px;
+  margin-bottom: 1em;
 }
 
 #search-bar {
-  padding-bottom: 2em;
+  padding-bottom: 1em;
 }
 body {
   font-family: 'Lato', sans-serif;
@@ -22,4 +24,13 @@ body {
 
 .font {
   font-family: 'Lato', sans-serif;
+}
+
+.call-headings {
+  color: white;
+}
+.call-heading {
+  margin-top: -13px;
+  margin-bottom: 0;
+  margin-left: 1px;
 }

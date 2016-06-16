@@ -1,7 +1,12 @@
+const dbFetchAudio = require('../db/dbFetchAudio.js')
 module.exports = {
   method: 'GET',
-  path: '/fetch-audio',
+  path: '/fetch-audio/{file_id}',
   handler: (request, reply) => {
-    reply('fetchAudio')
+    const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
+    const file_id = request.params.file_id
+    dbFetchAudio.fetchAudio(postgresURL, file_id, (results) => {
+      reply(results)
+    })
   }
 }
