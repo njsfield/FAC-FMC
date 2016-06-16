@@ -238,3 +238,21 @@ tape('test if participant get inserted in participants table', (t) => {
     pg.end()
   })
 })
+
+tape('test if tag exists in tags table and if not, inserts it', (t) => {
+  const obj = {
+    tag: 'meeting',
+    user_id: 100
+  }
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err
+    pollingFuncs.checkTagsTable(postgresURL, client, obj, (res) => {
+      const actual = res.command
+      const expected = 'INSERT'
+      t.deepEqual(actual, expected, 'tag inserted into tags table')
+      done()
+    })
+    t.end()
+    pg.end()
+  })
+})
