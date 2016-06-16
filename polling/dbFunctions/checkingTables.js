@@ -1,32 +1,32 @@
 const insertData = require('./insertData.js')
 
-const checkCompaniesTable = (url, cli, obj, cb) => {
+const checkCompaniesTable = ( cli, obj, cb) => {
   const queryArray = [obj.company_name]
   cli.query('SELECT EXISTS (SELECT * FROM companies WHERE company_name=($1))', queryArray, (err, res) => {
     if (err) throw err
     const boolKey = Object.keys(res.rows[0])[0]
     if (res.rows[0][boolKey] === false) {
-      insertData.addToCompaniesTable(url, cli, obj, cb)
+      insertData.addToCompaniesTable( cli, obj, cb)
     } else {
       cb(res)
     }
   })
 }
 
-const checkFilesTable = (url, cli, obj, cb) => {
+const checkFilesTable = ( cli, obj, cb) => {
   const queryArray = [obj.file_name]
   cli.query('SELECT EXISTS (SELECT * FROM files WHERE file_name=($1))', queryArray, (err, res) => {
     if (err) throw err
     const boolKey = Object.keys(res.rows[0])[0]
     if (res.rows[0][boolKey] === false) {
-      insertData.addToFilesTable(url, cli, obj, cb)
+      insertData.addToFilesTable( cli, obj, cb)
     } else {
       cb(res)
     }
   })
 }
 
-const checkCallsTable = (url, cli, obj, cb) => {
+const checkCallsTable = (cli, obj, cb) => {
   var companyID
   var fileID
   //checks if company_name exists in companies table
@@ -54,7 +54,7 @@ const checkCallsTable = (url, cli, obj, cb) => {
                 const boolKey5 = Object.keys(res5.rows[0])[0]
                 if (res5.rows[0][boolKey5] === false) {
                   //if not insert them into the calls table
-                  insertData.addToCallsTable(url, cli, obj, cb)
+                  insertData.addToCallsTable( cli, obj, cb)
                 } else {
                   //else return the call
                   cb(res5)
@@ -64,24 +64,24 @@ const checkCallsTable = (url, cli, obj, cb) => {
           })
             //if company exists but file does not add file and call
         } else {
-          insertData.addToFilesTable(url, cli, obj, () => {
-            insertData.addToCallsTable(url, cli, obj, cb)
+          insertData.addToFilesTable( cli, obj, () => {
+            insertData.addToCallsTable( cli, obj, cb)
           })
         }
       })
           //returns res of if company_name exists but file_name does not
           // if company_name does not exist in companies table
     } else {
-      insertData.addToCompaniesTable(url, cli, obj, () => {
+      insertData.addToCompaniesTable( cli, obj, () => {
         cli.query('SELECT EXISTS (SELECT file_id FROM files WHERE file_name=($1))', [obj.file_name], (err3, res3) => {
           if (err3) throw err3
           const boolKey2 = Object.keys(res3.rows[0])[0]
           if (res3.rows[0][boolKey2] === true) {
-            insertData.addToCallsTable(url, cli, obj, cb)
+            insertData.addToCallsTable( cli, obj, cb)
           }
           else {
-            insertData.addToFilesTable(url, cli, obj, () => {
-              insertData.addToCallsTable(url, cli, obj, cb)
+            insertData.addToFilesTable( cli, obj, () => {
+              insertData.addToCallsTable( cli, obj, cb)
             })
           }
         })
