@@ -57,7 +57,35 @@ const retrieveWav = (fileName, callback) => {
   })
 }
 
+const retrieveCallerDetails = (company_name, extensionNumber, callback) => {
+  const options = {
+    url: pbxUrl + '/rest/dialplan/read',
+    encoding: null,
+    headers:
+    { 'cache-control': 'no-cache',
+    'content-type': 'application/json' },
+    body: {
+      'type': 'extension',
+      'scope': {
+        'scoped_exten': extensionNumber
+      },
+      'columns': [
+        'virt_exten',
+        'company',
+        'scoped_exten',
+        'owner'
+      ]
+    }
+  }
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error)
+    callback(body)
+  })
+
+}
+
 module.exports = {
   updateFileNames,
-  retrieveWav
+  retrieveWav,
+  retrieveCallerDetails
 }
