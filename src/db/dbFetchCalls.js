@@ -10,39 +10,32 @@ const fetchCalls = (user_id, company_id, postgresURL, callback) => {
   })
 }
 // step 1: grabs the rows from the participants table which involve the user and their company.
-const checkPartipicantsTable = (postgresURL, user_id, company_id, callback) => {
-  pg.connect(postgresURL, (err, client, done) => {
-    client.query('SELECT * FROM participants WHERE company_id = $1 AND user_id = $2',
-    [company_id, user_id], (error, result) => {
-      if (error) throw error
-      callback(result.rows)
-    })
-    done()
+const checkPartipicantsTable = (client, done, user_id, company_id, callback) => {
+  client.query('SELECT * FROM participants WHERE company_id = $1 AND user_id = $2',
+  [company_id, user_id], (error, result) => {
+    if (error) throw error
+    callback(result.rows)
   })
+  done()
 }
 
 // step 2: reformats data into response object.
-const restructureCallsResults = (data, postgresURL, callback) => {
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-
-    var callList = []
-
-    data.forEach((callParticipant, i) => {
-      var callObj = responseFormatting(callParticipant.call_id, callParticipant.company_id)
-      callObj.participants[callParticipant.participant_role.toLowerCase()] = {
-        number: callParticipant.number,
-        internal: true,
-        user: true
-      }
-      findOtherParticipant(callObj, client, done, (result) => {
-        findCallDetails(result, client, done, (response) => {
-          console.log(response)
-          callList = callList.concat([response])
-          if (i === data.length - 1) {
-            callback(callList)
-          }
-        })
+const restructureCallsResults = (data, client, done, callback) => {
+  var callList = []
+  data.forEach((callParticipant, i) => {
+    var callObj = responseFormatting(callParticipant.call_id, callParticipant.company_id)
+    callObj.participants[callParticipant.participant_role.toLowerCase()] = {
+      number: callParticipant.number,
+      internal: true,
+      user: true
+    }
+    findOtherParticipant(callObj, client, done, (result) => {
+      findCallDetails(result, client, done, (response) => {
+        console.log(response)
+        callList = callList.concat([response])
+        if (i === data.length - 1) {
+          callback(callList)
+        }
       })
     })
   })
