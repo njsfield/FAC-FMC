@@ -24,7 +24,7 @@ const checkLoginDeets = (companyId, callback) => {
     json: true }
 
   request(options, function (error, response, body) {
-    if (error) throw new Error(error)
+    if (error) throw (error)
 
     callback(body)
   })

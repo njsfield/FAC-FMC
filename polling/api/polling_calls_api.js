@@ -51,7 +51,7 @@ const retrieveWav = (fileName, callback) => {
   json: true }
 
   request(options, function (error, response, body) {
-    if (error) throw new Error(error)
+    if (error) throw (error)
 
     callback(body)
   })
@@ -76,7 +76,8 @@ const retrieveCallerDetails = (company_name, extensionList, callback) => {
         'scoped_exten',
         'owner'
       ]
-    }
+    },
+    json: true
   }
   request(options, function (error, response, body) {
     if (error) throw error

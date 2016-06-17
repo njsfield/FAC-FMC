@@ -62,15 +62,16 @@ const getFile_id = (cli, obj, cb) => {
 
 const pollerFlow = (cli, obj, cb) => {
   //checks if file_name exists in files table
-  checkFilesTable(cli, obj, () => {
-    getCompany_id(cli, obj, (res2) => {
-      obj.company_id = res2
-      getFile_id(cli, obj, (res3) => {
-        obj.file_id = res3
-        checkCallsTable(cli, obj, cb)
-      })
-    })
-  })
+  checkFilesTable(cli, obj, cb)
+  //  => {
+  //   getCompany_id(cli, obj, (res2) => {
+  //     obj.company_id = res2
+  //     getFile_id(cli, obj, (res3) => {
+  //       obj.file_id = res3
+  //       checkCallsTable(cli, obj, cb)
+  //     })
+  //   })
+  // })
 }
 
 const checkUsersTable = (url, cli, obj, cb) => {

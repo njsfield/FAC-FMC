@@ -7,8 +7,8 @@ const sql = fs.readFileSync(`${__dirname}/../src/db/db_schema.txt`).toString()
 schema.getSchema(connectionString, sql)
 
 // require in files
-require('./db/db.tests.js')
-require('./db/fetchCalls.tests.js')
+// require('./db/db.tests.js')
+// require('./db/fetchCalls.tests.js')
 require('./pollingTests/pollingDb.tests.js')
-require('./db/fetchAudio.tests.js')
-require('./pollingTests/polling.test.js')
+// require('./db/fetchAudio.tests.js')
+// require('./pollingTests/polling.test.js')
