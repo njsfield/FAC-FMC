@@ -67,7 +67,7 @@ const retrieveCallerDetails = (company_name, extensionList, callback) => {
     body: {
       'type': 'extension',
       'scope': {     // eg "400"
-        'scoped_exten': extensionList,    // eg "400_company",
+        'virt_exten': extensionList,    // eg "400_company",
         'company': company_name
       },
       'columns': [
