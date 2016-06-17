@@ -58,8 +58,8 @@ const retrieveWav = (fileName, callback) => {
 }
 
 const retrieveCallerDetails = (company_name, extensionList, callback) => {
-  console.log(extensionList)
   const options = {
+    method: 'post',
     url: pbxUrl + '/rest/dialplan/read',
     encoding: null,
     headers: {
