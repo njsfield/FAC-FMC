@@ -4,7 +4,6 @@ const pbxUrl = 'https://fac1.ipcortex.net'
 'use strict'
 const request = require('request')
 
-
   // searches for filenames by companyId
 const checkLoginDeets = (companyId, callback) => {
   const options = {
@@ -21,7 +20,8 @@ const checkLoginDeets = (companyId, callback) => {
         password: 'gh2ig32z'
       }
     },
-    json: true }
+    json: true
+  }
 
   request(options, function (error, response, body) {
     if (error) throw (error)
