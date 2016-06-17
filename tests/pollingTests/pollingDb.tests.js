@@ -74,10 +74,8 @@ tape('tests if file exists in files table', (t) => {
 
 tape('tests that file does NOT exist in files table and then adds it', (t) => {
   const arrayOfObj = [{
-    file_index: 44,
     file_name: 'recording_44'
   }, {
-    file_index: 45,
     file_name: 'recording_45'
   }]
 
@@ -96,27 +94,27 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
   })
 })
 
-tape('tests that file does NOT exist in files table and then adds it', (t) => {
-  const arrayOfObj = [{
-    file_name: '2016.06.14.16.08.58-1465916938-webrtc674-241.wav'
-  }, {
-    file_name: '2016.06.15.14.36.01-1465997761-239-238.wav'
-  }]
-
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-    arrayOfObj.map(e => {
-      pollingFuncs.checkFilesTable(client, e, (res) => {
-        const expected = 'INSERT'
-        const actual = res.command
-        t.deepEqual(actual, expected, 'file_name recording_44 has been added to files table')
-        done()
-      })
-    })
-    t.end()
-    pg.end()
-  })
-})
+// tape('tests that file does NOT exist in files table and then adds it', (t) => {
+//   const arrayOfObj = [{
+//     file_name: '2016.06.14.16.08.58-1465916938-webrtc674-241.wav'
+//   }, {
+//     file_name: '2016.06.15.14.36.01-1465997761-239-238.wav'
+//   }]
+//
+//   pg.connect(postgresURL, (err, client, done) => {
+//     if (err) throw err
+//     arrayOfObj.map(e => {
+//       pollingFuncs.checkFilesTable(client, e, (res) => {
+//         const expected = 'INSERT'
+//         const actual = res.command
+//         t.deepEqual(actual, expected, 'file_name recording_44 has been added to files table')
+//         done()
+//       })
+//     })
+//     t.end()
+//     pg.end()
+//   })
+// })
 //
 // tape('test if call exists in calls table', (t) => {
 //   const obj = {
