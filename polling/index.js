@@ -44,6 +44,7 @@ pollCalls.updateFileNames('default', (files) => {
   })
 })
 
-// checkIds.checkLoginDeets('default', (body) => {
-//   return body
-// })
+checkIds.checkLoginDeets('default', (body) => {
+  console.log(body)
+  return body
+})
