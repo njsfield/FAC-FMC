@@ -9,7 +9,7 @@ pollCalls.updateFileNames('default', (files) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     files.forEach((file, i) => {
-      checkTables.pollerFlow(done, client, file, (result) => {
+      checkTables.pollerFlow(client, done, file, (result) => {
         if( result.command === 'INSERT') {
           if (participantsList.indexOf(file.callee) < 0 ) participantsList = participantsList.concat([file.callee])
           if (participantsList.indexOf(file.caller) < 0 ) participantsList = participantsList.concat([file.caller])
@@ -17,8 +17,24 @@ pollCalls.updateFileNames('default', (files) => {
         done()
         if (i === files.length -1 ) {
           pollCalls.retrieveCallerDetails(company_name, participantsList, (response) => {
-            console.log(response)
-          })
+            const result2 = {
+              result: 'success',
+              values:
+               [ { virt_exten: '241',
+                   company: 'default',
+                   scoped_exten: '241',
+                   owner: 261 },
+                 { virt_exten: '238',
+                   company: 'default',
+                   scoped_exten: '238',
+                   owner: 255 },
+                 { virt_exten: '239',
+                   company: 'default',
+                   scoped_exten: '239',
+                   owner: 257 } ],
+              numrows: 3 }
+            })
+
         }
 
       })
