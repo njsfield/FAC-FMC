@@ -1,5 +1,5 @@
 const dbFetchCalls = require('../db/dbFetchCalls.js')
-const pg = 'pg'
+const pg = require('pg')
 module.exports = {
   method: 'GET',
   path: '/dashboard/{user_id}/{company_id}',

@@ -1,8 +1,8 @@
 'use strict'
 // grab all calls for an individual user
-const fetchCalls = (user_id, company_id, postgresURL, callback) => {
-  checkPartipicantsTable(postgresURL, user_id, company_id, (result) => {
-    restructureCallsResults(result, postgresURL, (response) => {
+const fetchCalls = (client, done, user_id, company_id, callback) => {
+  checkPartipicantsTable(client, done, user_id, company_id, (result) => {
+    restructureCallsResults(client, done, result, (response) => {
       callback(response)
     })
 
@@ -19,7 +19,7 @@ const checkPartipicantsTable = (client, done, user_id, company_id, callback) => 
 }
 
 // step 2: reformats data into response object.
-const restructureCallsResults = (data, client, done, callback) => {
+const restructureCallsResults = (client, done, data, callback) => {
   var callList = []
   data.forEach((callParticipant, i) => {
     var callObj = responseFormatting(callParticipant.call_id, callParticipant.company_id)
