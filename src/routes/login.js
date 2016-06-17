@@ -28,8 +28,10 @@ module.exports = {
           const secret = 'guigihfkhfkh'
 
           const token = JWT.sign(body.user, secret) // synchronous
-
-          reply.redirect('/dashboard').state('token', token)
+          console.log(body, '<<<<<<<<<<<<<<<<<<<<<<<')
+          const user = '4387735' // const user = body.user.login (what it would be)
+          const comp = '100'
+          reply.redirect(`/dashboard/${user}/${comp}`).state('token', token)
         } else {
           reply.redirect('/')
         }
