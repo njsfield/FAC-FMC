@@ -6,7 +6,7 @@ const apiKey = process.env.API_KEY
 const pbxUrl = 'https://fac1.ipcortex.net'
 
 // searches for filenames by companyId
-const updateFileNames = (companyId, callback) => {
+const updateFileNames = (company_name, callback) => {
   const options = {
     method: 'POST',
     url: pbxUrl + '/rest/call/list',
@@ -15,7 +15,7 @@ const updateFileNames = (companyId, callback) => {
     'content-type': 'application/json' },
     body:
     { type: 'recording',
-    scope: { company: companyId },
+    scope: { company: company_name },
     auth: { type: 'auth', key: apiKey } },
     json: true }
 
@@ -23,7 +23,7 @@ const updateFileNames = (companyId, callback) => {
     if (error) throw new Error(error)
     const files = body.values.map((el) => {
       delete el.size
-      el.company_id = companyId
+      el.company_name = company_name
       el.date = el.start
       delete el.start
       el.file_name = el.file
@@ -51,13 +51,43 @@ const retrieveWav = (fileName, callback) => {
   json: true }
 
   request(options, function (error, response, body) {
-    if (error) throw new Error(error)
+    if (error) throw (error)
 
     callback(body)
   })
 }
 
+const retrieveCallerDetails = (company_name, extensionList, callback) => {
+  const options = {
+    url: pbxUrl + '/rest/dialplan/read',
+    encoding: null,
+    headers:
+    { 'cache-control': 'no-cache',
+    'content-type': 'application/json' },
+    body: {
+      'type': 'extension',
+      'scope': {     // eg "400"
+        'virt_exten': extensionList,    // eg "400_company",
+        'company': company_name
+      },
+      'columns': [
+        'virt_exten',
+        'company',
+        'scoped_exten',
+        'owner'
+      ]
+    },
+    json: true
+  }
+  request(options, function (error, response, body) {
+    if (error) throw error
+    callback(body)
+  })
+
+}
+
 module.exports = {
   updateFileNames,
-  retrieveWav
+  retrieveWav,
+  retrieveCallerDetails
 }

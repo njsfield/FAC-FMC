@@ -30,7 +30,6 @@ WITHOUT OIDS;
 CREATE SEQUENCE files_seq start 100 increment 1 cache 50;
 CREATE TABLE files (
     file_id      BIGINT DEFAULT nextval('files_seq'::text),
-    file_index   BIGINT NOT NULL,
     file_name    VARCHAR,
     CONSTRAINT files_pk PRIMARY KEY(file_id)
 )
@@ -203,9 +202,10 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
 /* ADD SOME DUMMY DATA */
       INSERT INTO companies (company_name) VALUES ('test_comp_A');
       INSERT INTO companies (company_name) VALUES ('test_comp_B');
-      INSERT INTO files (file_index, file_name) VALUES(1, 'recording_1');
-      INSERT INTO files (file_index, file_name) VALUES(2, 'recording_2');
-      INSERT INTO files (file_index, file_name) VALUES(3, 'recording_3');
+      INSERT INTO companies (company_name) VALUES ('default');
+      INSERT INTO files (file_name) VALUES('recording_1');
+      INSERT INTO files (file_name) VALUES('recording_2');
+      INSERT INTO files (file_name) VALUES('recording_3');
 
 /* Create a call referencing this file */
 
