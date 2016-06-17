@@ -1,6 +1,6 @@
 const insertData = require('./insertData.js')
 
-const checkCompaniesTable = ( cli, obj, cb) => {
+const checkCompaniesTable = (cli, obj, cb) => {
   const queryArray = [obj.company_name]
   cli.query('SELECT EXISTS (SELECT * FROM companies WHERE company_name=($1))', queryArray, (err, res) => {
     if (err) throw err
@@ -60,7 +60,7 @@ const getFile_id = (cli, obj, cb) => {
   })
 }
 
-const pollerFlow = (done, cli, obj, cb) => {
+const pollerFlow = (cli, done, obj, cb) => {
   //checks if file_name exists in files table
   checkFilesTable(cli, obj, () => {
     done()
@@ -76,14 +76,14 @@ const pollerFlow = (done, cli, obj, cb) => {
   })
 }
 
-const checkUsersTable = (url, cli, obj, cb) => {
+const checkUsersTable = (cli, done, obj, cb) => {
   const queryArray = [obj.login]
   cli.query('SELECT EXISTS (SELECT * FROM users WHERE user_name=($1))', queryArray, (err, res) => {
     if (err) throw err
     const boolKey = Object.keys(res.rows[0])[0]
     if (res.rows[0][boolKey] === false) {
-      checkCompaniesTable(url, cli, obj, () => {
-        insertData.addToUsersTable(url, cli, obj, cb)
+      checkCompaniesTable(cli, obj, () => {
+        insertData.addToUsersTable(cli, obj, cb)
       })
     } else {
       cb(res)

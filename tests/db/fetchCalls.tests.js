@@ -25,11 +25,12 @@ tape('restructureCallsResults function prepares data for response', (t) => {
   const expected = fullResponse.toString()
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
-    fetchCalls.restructureCallsResults(partipantsQueryResult, client, done, (results) => {
+    fetchCalls.restructureCallsResults(client, done, partipantsQueryResult, (results) => {
       const actual = results.toString()
       t.deepEqual(actual, expected, 'calls results restructured')
     })
   })
+  pg.end()
 })
 
 tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
@@ -96,6 +97,7 @@ tape('find file_id, duration and time for the call', (t) => {
       t.deepEqual(expected, actual, 'congrats full response complete')
     })
   })
+  pg.end()
 })
 
 const partipantsQueryResult =

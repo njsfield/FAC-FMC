@@ -30,7 +30,6 @@ const restructureCallsResults = (client, done, data, callback) => {
     }
     findOtherParticipant(callObj, client, done, (result) => {
       findCallDetails(result, client, done, (response) => {
-        console.log(response)
         callList = callList.concat([response])
         if (i === data.length - 1) {
           callback(callList)
