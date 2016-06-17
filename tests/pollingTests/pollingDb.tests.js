@@ -119,41 +119,18 @@ tape('test if call exists in calls table', (t) => {
   })
 })
 
-tape('test if new company_name exists in companies table, inserts if not and then inserts to calls table', (t) => {
+tape('checks the poller flow with an already existing file_name', (t) => {
   const obj = {
-    file_index: 10,
-    date: 1465984211,
-    company_name: 'test_comp_new',
-    file_name: 'recording_1',
-    duration: 123
-  }
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
-      const actual = res.command
-      const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'company and call inserted into relevant tables')
-      done()
-    })
-    t.end()
-    pg.end()
-  })
-})
-
-tape('test if new file_name exists in files table, inserts if not and then inserts to calls table', (t) => {
-  const obj = {
-    file_index: 10,
-    date: 1465984211,
     company_name: 'test_comp_A',
-    file_name: 'recording_new',
-    duration: 123
+    file_name: 'recording_1'
   }
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
-    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
-      const actual = res.command
-      const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'file and call inserted into relevant tables')
+    pollingFuncs.pollerFlow(client, obj, (res) => {
+      const boolKey = Object.keys(res.rows[0])[0]
+      const actual = res.rows[0][boolKey]
+      const expected = true
+      t.deepEqual(actual, expected, 'this call is in the calls table')
       done()
     })
     t.end()
@@ -161,58 +138,19 @@ tape('test if new file_name exists in files table, inserts if not and then inser
   })
 })
 
-tape('test if new company_name and file_name exist in relevant tables, inserts them if not and then inserts into calls table', (t) => {
+tape('checks the poller flow with a new file_name', (t) => {
   const obj = {
-    file_index: 10,
-    date: 1465984211,
-    company_name: 'test_comp_fake',
-    file_name: 'recording_fake',
-    duration: 123
-  }
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
-      const actual = res.command
-      const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'company, file and call inserted into relevant tables')
-      done()
-    })
-    t.end()
-    pg.end()
-  })
-})
-
-tape('test if user exists in users table and if not, inserts it', (t) => {
-  const obj = {
-    user_name: 'guillaume',
-    company_name: 'test_comp_supertest',
-    user_role: 'yes'
-  }
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-    pollingFuncs.checkUsersTable(postgresURL, client, obj, (res) => {
-      const actual = res.command
-      const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'user inserted into users table')
-      done()
-    })
-    t.end()
-    pg.end()
-  })
-})
-
-tape('test if user exists in users table and if not, inserts it', (t) => {
-  const obj = {
-    user_name: 'guillaume',
+    date: 1466121509,
+    duration: 123456,
     company_name: 'test_comp_A',
-    user_role: 'yes'
+    file_name: 'recording_99'
   }
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
-    pollingFuncs.checkUsersTable(postgresURL, client, obj, (res) => {
+    pollingFuncs.pollerFlow(client, obj, (res) => {
       const actual = res.command
       const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'user inserted into users table')
+      t.deepEqual(actual, expected, 'the file and call have been added to the relevant tables')
       done()
     })
     t.end()
@@ -220,41 +158,79 @@ tape('test if user exists in users table and if not, inserts it', (t) => {
   })
 })
 
-tape('test if participant get inserted in participants table', (t) => {
-  const obj = {
-    call_id: '100',
-    number: '4657897980',
-    internal: true,
-    participant_role: 'admin',
-    user_id: 100
-  }
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-    insertFuncs.addToParticipantsTable(postgresURL, client, obj, (res) => {
-      const actual = res.command
-      const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'participant inserted into participants table')
-      done()
-    })
-    t.end()
-    pg.end()
-  })
-})
-
-tape('test if tag exists in tags table and if not, inserts it', (t) => {
-  const obj = {
-    tag: 'meeting',
-    user_id: 100
-  }
-  pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
-    pollingFuncs.checkTagsTable(postgresURL, client, obj, (res) => {
-      const actual = res.command
-      const expected = 'INSERT'
-      t.deepEqual(actual, expected, 'tag inserted into tags table')
-      done()
-    })
-    t.end()
-    pg.end()
-  })
-})
+// tape('test if user exists in users table and if not, inserts it', (t) => {
+//   const obj = {
+//     user_name: 'guillaume',
+//     company_name: 'test_comp_supertest',
+//     user_role: 'yes'
+//   }
+//   pg.connect(postgresURL, (err, client, done) => {
+//     if (err) throw err
+//     pollingFuncs.checkUsersTable(postgresURL, client, obj, (res) => {
+//       const actual = res.command
+//       const expected = 'INSERT'
+//       t.deepEqual(actual, expected, 'user inserted into users table')
+//       done()
+//     })
+//     t.end()
+//     pg.end()
+//   })
+// })
+//
+// tape('test if user exists in users table and if not, inserts it', (t) => {
+//   const obj = {
+//     user_name: 'guillaume',
+//     company_name: 'test_comp_A',
+//     user_role: 'yes'
+//   }
+//   pg.connect(postgresURL, (err, client, done) => {
+//     if (err) throw err
+//     pollingFuncs.checkUsersTable(postgresURL, client, obj, (res) => {
+//       const actual = res.command
+//       const expected = 'INSERT'
+//       t.deepEqual(actual, expected, 'user inserted into users table')
+//       done()
+//     })
+//     t.end()
+//     pg.end()
+//   })
+// })
+//
+// tape('test if participant get inserted in participants table', (t) => {
+//   const obj = {
+//     call_id: '100',
+//     number: '4657897980',
+//     internal: true,
+//     participant_role: 'admin',
+//     user_id: 100
+//   }
+//   pg.connect(postgresURL, (err, client, done) => {
+//     if (err) throw err
+//     insertFuncs.addToParticipantsTable(postgresURL, client, obj, (res) => {
+//       const actual = res.command
+//       const expected = 'INSERT'
+//       t.deepEqual(actual, expected, 'participant inserted into participants table')
+//       done()
+//     })
+//     t.end()
+//     pg.end()
+//   })
+// })
+//
+// tape('test if tag exists in tags table and if not, inserts it', (t) => {
+//   const obj = {
+//     tag: 'meeting',
+//     user_id: 100
+//   }
+//   pg.connect(postgresURL, (err, client, done) => {
+//     if (err) throw err
+//     pollingFuncs.checkTagsTable(postgresURL, client, obj, (res) => {
+//       const actual = res.command
+//       const expected = 'INSERT'
+//       t.deepEqual(actual, expected, 'tag inserted into tags table')
+//       done()
+//     })
+//     t.end()
+//     pg.end()
+//   })
+// })
