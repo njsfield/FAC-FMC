@@ -202,6 +202,7 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
 /* ADD SOME DUMMY DATA */
       INSERT INTO companies (company_name) VALUES ('test_comp_A');
       INSERT INTO companies (company_name) VALUES ('test_comp_B');
+      INSERT INTO companies (company_name) VALUES ('default');
       INSERT INTO files (file_name) VALUES('recording_1');
       INSERT INTO files (file_name) VALUES('recording_2');
       INSERT INTO files (file_name) VALUES('recording_3');
