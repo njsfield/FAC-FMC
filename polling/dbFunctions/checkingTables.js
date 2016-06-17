@@ -60,6 +60,16 @@ const getFile_id = (cli, obj, cb) => {
   })
 }
 
+const getCall_id = (cli, obj, cb) => {
+  const queryArray = [obj.company_id, obj.file_id]
+  cli.query('SELECT call_id FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err4, res4) => {
+    if (err4) throw err4
+    const boolKey4 = Object.keys(res4.rows[0])[0]
+    const call_id = res4.rows[0][boolKey4]
+    cb(call_id)
+  })
+}
+
 const pollerFlow = (cli, done, obj, cb) => {
   //checks if file_name exists in files table
   checkFilesTable(cli, obj, () => {
@@ -70,7 +80,18 @@ const pollerFlow = (cli, done, obj, cb) => {
       getFile_id(cli, obj, (res3) => {
         done()
         obj.file_id = res3
-        checkCallsTable(cli, obj, cb)
+        checkCallsTable(cli, obj, (res4) => {
+          // if doesnt exist add to partipants table
+          if (res4.command === 'INSERT') {
+            getCall_id(cli, obj, (res5) =>{
+              obj.call_id = res5
+              cb(res5)
+              done()
+            })
+          } else {
+            cb(res4)
+          }
+        })
       })
     })
   })
