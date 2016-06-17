@@ -14,7 +14,7 @@ tape('tests if company exists in companies table', (t) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     arrayOfObj.map(e => {
-      pollingFuncs.checkCompaniesTable(postgresURL, client, e, (res) => {
+      pollingFuncs.checkCompaniesTable(client, e, (res) => {
         const expected = true
         const boolKey = Object.keys(res.rows[0])[0]
         const actual = res.rows[0][boolKey]
@@ -37,7 +37,7 @@ tape('tests that company does NOT exist in companies table and then inserts it',
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     arrayOfObj.map(e => {
-      pollingFuncs.checkCompaniesTable(postgresURL, client, e, (res) => {
+      pollingFuncs.checkCompaniesTable(client, e, (res) => {
         const expected = 'INSERT'
         const actual = res.command
         t.deepEqual(actual, expected, 'company_name comp_A and comp_B have been added to companies table')
@@ -61,7 +61,7 @@ tape('tests if file exists in files table', (t) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     arrayOfObj.map(e => {
-      pollingFuncs.checkFilesTable(postgresURL, client, e, (res) => {
+      pollingFuncs.checkFilesTable(client, e, (res) => {
         const expected = true
         const boolKey = Object.keys(res.rows[0])[0]
         const actual = res.rows[0][boolKey]
@@ -86,7 +86,7 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     arrayOfObj.map(e => {
-      pollingFuncs.checkFilesTable(postgresURL, client, e, (res) => {
+      pollingFuncs.checkFilesTable(client, e, (res) => {
         const expected = 'INSERT'
         const actual = res.command
         t.deepEqual(actual, expected, 'file_name recording_44 has been added to files table')
@@ -100,12 +100,14 @@ tape('tests that file does NOT exist in files table and then adds it', (t) => {
 
 tape('test if call exists in calls table', (t) => {
   const obj = {
+    file_id: 100,
+    company_id: 100,
     company_name: 'test_comp_A',
     file_name: 'recording_1'
   }
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
-    pollingFuncs.checkCallsTable(postgresURL, client, obj, (res) => {
+    pollingFuncs.checkCallsTable(client, obj, (res) => {
       const boolKey = Object.keys(res.rows[0])[0]
       const actual = res.rows[0][boolKey]
       const expected = true
