@@ -85,8 +85,26 @@ const pollerFlow = (cli, done, obj, cb) => {
           if (res4.command === 'INSERT') {
             getCall_id(cli, obj, (res5) =>{
               obj.call_id = res5
-              cb(res5)
+              const callee = {
+                call_id: obj.call_id,
+                internal: false,
+                participant_role: 'destination',
+                number: obj.callee
+              }
+              const caller = {
+                call_id: obj.call_id,
+                internal: false,
+                participant_role: 'source',
+                number: obj.caller
+              }
+              insertData.addToParticipantsTable(cli, callee, (res6) => {
+                console.log(res6, 'RES6<<<<<<<<<<<<<<<<<<<<<')
+              })
+              insertData.addToParticipantsTable(cli, caller, (res7) => {
+                console.log(res7, 'RES7<<<<<<<<<<<<<<<<<<<<<')
+              })
               done()
+
             })
           } else {
             cb(res4)
