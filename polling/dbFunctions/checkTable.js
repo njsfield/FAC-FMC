@@ -15,7 +15,7 @@ const checkCompaniesTable = (cli, obj, cb) => {
   })
 }
 
-const checkFilesTable = ( cli, obj, cb) => {
+const checkFilesTable = (cli, obj, cb) => {
   const queryArray = [obj.file_name]
   cli.query('SELECT EXISTS (SELECT * FROM files WHERE file_name=($1))', queryArray, (err, res) => {
     if (err) throw err
@@ -44,65 +44,16 @@ const checkCallsTable = (cli, obj, cb) => {
   })
 }
 
-const checkUsersTable = (cli, done, obj, cb) => {
-  const queryArray = [obj.login]
+const checkUsersTable = (cli, obj, cb) => {
+  const queryArray = [obj.user_name]
   cli.query('SELECT EXISTS (SELECT * FROM users WHERE user_name=($1))', queryArray, (err, res) => {
     if (err) throw err
     const boolKey = Object.keys(res.rows[0])[0]
     if (res.rows[0][boolKey] === false) {
-      checkCompaniesTable(cli, obj, () => {
-        insertData.addToUsersTable(cli, obj, cb)
-      })
+      insertData.addToUsersTable(cli, obj, cb)
     } else {
       cb(res)
     }
-  })
-}
-
-//This is the complete flow. Checks all tables required and adds
-//data where necessary
-const pollerFlow = (cli, done, obj, cb) => {
-  //checks if file_name exists in files table
-  checkFilesTable(cli, obj, () => {
-    done()
-    getCompany_id(cli, obj, (res2) => {
-      done()
-      obj.company_id = res2
-      getFile_id(cli, obj, (res3) => {
-        done()
-        obj.file_id = res3
-        checkCallsTable(cli, obj, (res4) => {
-          // if doesnt exist add to partipants table
-          if (res4.command === 'INSERT') {
-            getCall_id(cli, obj, (res5) =>{
-              obj.call_id = res5
-              const callee = {
-                call_id: obj.call_id,
-                internal: false,
-                participant_role: 'destination',
-                number: obj.callee
-              }
-              const caller = {
-                call_id: obj.call_id,
-                internal: false,
-                participant_role: 'source',
-                number: obj.caller
-              }
-              insertData.addToParticipantsTable(cli, callee, (res6) => {
-                console.log(res6, 'RES6<<<<<<<<<<<<<<<<<<<<<')
-              })
-              insertData.addToParticipantsTable(cli, caller, (res7) => {
-                console.log(res7, 'RES7<<<<<<<<<<<<<<<<<<<<<')
-              })
-              done()
-
-            })
-          } else {
-            cb(res4)
-          }
-        })
-      })
-    })
   })
 }
 
@@ -124,6 +75,5 @@ module.exports = {
   checkCompaniesTable,
   checkCallsTable,
   checkUsersTable,
-  pollerFlow,
   checkTagsTable
 }
