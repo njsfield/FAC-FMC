@@ -26,6 +26,11 @@ const existingDataObj = {
   },
   usersT: {
     user_name: 'testUser'
+  },
+  participantsT: {
+    company_id: 100,
+    call_id: 100,
+    user_id: 3222
   }
 }
 
@@ -45,11 +50,19 @@ const newDataObj = {
     user_name: 'guillaume',
     company_id: 100,
     user_role: 'yes'
+  },
+  participantsT: {
+    company_id: 100,
+    call_id: 100,
+    internal: false,
+    participant_role: 'source',
+    number: 1,
+    user_id: 999
   }
 }
 
 tape('test the checkTable functions', (t) => {
-  t.plan(10)
+  t.plan(12)
   pg.connect(postgresURL, (err, client, done) => {
     const expected1 = true
     const expected2 = 'INSERT'
@@ -83,6 +96,12 @@ tape('test the checkTable functions', (t) => {
       t.deepEqual(actual, expected1, 'user_name exists in users table')
       done()
     })
+    checkTable.checkParticipantsTable(client, existingDataObj.participantsT, (res) => {
+      const boolKey = Object.keys(res.rows[0])[0]
+      const actual = res.rows[0][boolKey]
+      t.deepEqual(actual, expected1, 'data exists in participants table')
+      done()
+    })
     ///////////////////////// end /////////////////////
 
     /////////////// adds data to tables ///////////////
@@ -101,6 +120,11 @@ tape('test the checkTable functions', (t) => {
     checkTable.checkUsersTable(client, newDataObj.usersT, (res) => {
       const actual = res.command
       t.deepEqual(actual, expected2, 'guillaume added to users table')
+      done()
+    })
+    checkTable.checkParticipantsTable(client, newDataObj.participantsT, (res) => {
+      const actual = res.command
+      t.deepEqual(actual, expected2, 'new data added to participants table')
       done()
     })
     /////////////////////////// end /////////////////////////////
