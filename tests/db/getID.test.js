@@ -6,7 +6,8 @@ const obj = {
   company_name: 'test_comp_A',
   file_name: 'recording_1',
   company_id: 100,
-  file_id: 100
+  file_id: 100,
+  user_name: 'testUser'
 }
 
 tape('test the getID functions', (t) => {
