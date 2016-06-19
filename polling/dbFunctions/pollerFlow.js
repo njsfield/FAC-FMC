@@ -1,6 +1,7 @@
 const checkTable = require('./checkTable.js')
 const getID = require('./getID.js')
 const insertData = require('./insertData.js')
+
 //This is the complete flow. Checks all tables required and adds
 //data where necessary
 const pollerFlow = (cli, done, obj, cb) => {
@@ -13,41 +14,53 @@ const pollerFlow = (cli, done, obj, cb) => {
       getID.getFile_id(cli, obj, (res3) => {
         done()
         obj.file_id = res3
-        checkTable.checkCallsTable(cli, obj, (res4) => {
-          // if doesnt exist add to partipants table
-          if (res4.command === 'INSERT') {
-            getID.getCall_id(cli, obj, (res5) =>{
-              obj.call_id = res5
-              const callee = {
-                call_id: obj.call_id,
-                internal: false,
-                participant_role: 'destination',
-                number: obj.callee
-              }
-              const caller = {
-                call_id: obj.call_id,
-                internal: false,
-                participant_role: 'source',
-                number: obj.caller
-              }
-              insertData.addToParticipantsTable(cli, callee, (res6) => {
-                console.log(res6, 'RES6<<<<<<<<<<<<<<<<<<<<<')
+        checkTable.checkCallsTable(cli, obj, () => {
+          done()
+          getID.getCall_id(cli, obj, (res4) => {
+            done()
+            obj.call_id = res4
+            checkTable.checkUsersTable(cli, obj, () => {
+              getID.getUser_id(cli, obj, (res5) => {
+                obj.user_id = res5
+                
               })
-              insertData.addToParticipantsTable(cli, caller, (res7) => {
-                console.log(res7, 'RES7<<<<<<<<<<<<<<<<<<<<<')
-              })
-              done()
-
             })
-          } else {
-            cb(res4)
-          }
+          })
+          // if doesnt exist add to partipants table
         })
       })
     })
   })
 }
 
+// console.log(res4, 'RES4')
+// if (res4.command === 'INSERT') {
+//   getID.getCall_id(cli, obj, (res5) =>{
+//     obj.call_id = res5
+    // const callee = {
+    //   call_id: obj.call_id,
+    //   internal: false,
+    //   participant_role: 'destination',
+    //   number: obj.callee
+    // }
+    // const caller = {
+    //   call_id: obj.call_id,
+    //   internal: false,
+    //   participant_role: 'source',
+    //   number: obj.caller
+    // }
+//     insertData.addToParticipantsTable(cli, callee, (res6) => {
+//       console.log(res6, 'RES6<<<<<<<<<<<<<<<<<<<<<')
+//     })
+//     insertData.addToParticipantsTable(cli, caller, (res7) => {
+//       console.log(res7, 'RES7<<<<<<<<<<<<<<<<<<<<<')
+//     })
+//     done()
+//
+//   })
+// } else {
+//   cb(res4)
+// }
 module.exports = {
   pollerFlow
 }
