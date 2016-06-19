@@ -1,5 +1,5 @@
 const pollCalls = require('./api/polling_calls_api.js')
-const checkTables = require('./dbFunctions/checkingTables.js')
+const pollerFlow = require('./dbFunctions/pollerFlow.js').pollerFlow
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
 const pg = require('pg')
 
@@ -9,8 +9,10 @@ pollCalls.updateFileNames('default', (files) => {
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     files.forEach((file, i) => {
-      checkTables.pollerFlow(client, done, file, (result) => {
-        if( result.command === 'INSERT') {
+      console.log(file, 'files<<<<<<<<<<<<<<<<<<<')
+      pollerFlow(client, done, file, (result) => {
+        console.log(result, '<<<<<<<<<<<<<<<<<<<')
+        if(result.command === 'INSERT') {
           if (participantsList.indexOf(file.callee) < 0 ) participantsList = participantsList.concat([file.callee])
           if (participantsList.indexOf(file.caller) < 0 ) participantsList = participantsList.concat([file.caller])
         }
