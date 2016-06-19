@@ -132,27 +132,6 @@ tape('test the checkTable functions', (t) => {
   })
 })
 
-// tape('test if participant get inserted in participants table', (t) => {
-//   const obj = {
-//     call_id: '100',
-//     number: '4657897980',
-//     internal: true,
-//     participant_role: 'admin',
-//     user_id: 100
-//   }
-//   pg.connect(postgresURL, (err, client, done) => {
-//     if (err) throw err
-//     insertFuncs.addToParticipantsTable(client, obj, (res) => {
-//       const actual = res.command
-//       const expected = 'INSERT'
-//       t.deepEqual(actual, expected, 'participant inserted into participants table')
-//       done()
-//     })
-//     t.end()
-//     pg.end()
-//   })
-// })
-
 // tape('checks the poller flow with an already existing file_name', (t) => {
 //   const obj = {
 //     company_id: 100,
