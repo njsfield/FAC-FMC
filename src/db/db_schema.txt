@@ -226,4 +226,6 @@ INSERT INTO participants(call_id, company_id, number, internal, participant_role
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
 
+INSERT INTO users (user_name, company_id, user_role) VALUES('testUser', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'), 'Admin');
+
 COMMIT;
