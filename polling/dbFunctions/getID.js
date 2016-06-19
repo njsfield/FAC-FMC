@@ -29,7 +29,8 @@ const getCall_id = (cli, obj, cb) => {
 }
 
 const getUser_id = (cli, obj, cb) => {
-  cli.query(`SELECT user_id FROM users WHERE company_id=('${obj.company_id}')`, (err, res) => {
+  cli.query(`SELECT user_id FROM users WHERE user_name=('${obj.user_name}')`, (err, res) => {
+    console.log(obj.user_name)
     if (err) throw err
     const boolKey3 = Object.keys(res.rows[0])
     const company_id = res.rows[0][boolKey3]
