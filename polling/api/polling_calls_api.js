@@ -1,5 +1,4 @@
-// fetches array of file_names
-'use strict'
+  // fetches array of file_names
 require('env2')('config.env')
 const request = require('request')
 const apiKey = process.env.API_KEY
@@ -87,36 +86,7 @@ const retrieveCallerDetails = (company_name, extensionList, callback) => {
   }
   request(options, function (error, response, body) {
     if (error) throw error
-    body = {
-      result: 'success',
-      values:
-       [ { virt_exten: '241',
-           company: 'default',
-           scoped_exten: '241',
-           owner: 261 },
-         { virt_exten: '238',
-           company: 'default',
-           scoped_exten: '238',
-           owner: 255 },
-         { virt_exten: '239',
-           company: 'default',
-           scoped_exten: '239',
-           owner: 257 } ],
-      numrows: 3
-    }
-
-    var files = {
-      user_name: '',
-      number: '',
-      company_name: ''
-    }
-
-    body.values.map((el) => {
-      files.user_name= el.owner
-      files.number = el.scoped_exten
-      files.company_name = el.company
-    })
-    callback(files)
+    callback(body)
   })
 }
 

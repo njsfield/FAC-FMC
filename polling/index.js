@@ -1,62 +1,95 @@
 const pollCalls = require('./api/polling_calls_api.js')
 const pollerFlow = require('./dbFunctions/pollerFlow.js').pollerFlow
-const checkTable = require('./dbFunctions/checkTable.js')
-// const continuedPollerFlow = require('./dbFunctions/pollerFlow.js').continuedPollerFlow
+const continuedPollerFlow = require('./dbFunctions/pollerFlow.js').continuedPollerFlow
+const insertData = require('./dbFunctions/insertData.js')
+// const fs = require('fs')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
 const pg = require('pg')
+const company_name = 'default'
 
-const responseFromApi = {
-  result: 'success',
-  values:
-   [ { virt_exten: '241',
-       company: 'default',
-       scoped_exten: '241',
-       owner: 261 },
-     { virt_exten: '238',
-       company: 'default',
-       scoped_exten: '238',
-       owner: 255 },
-     { virt_exten: '239',
-       company: 'default',
-       scoped_exten: '239',
-       owner: 257 } ],
-  numrows: 3
-}
-
-pollCalls.updateFileNames('default', (files) => {
-  const company_name = 'default'
-  var participantsList = []
+pollCalls.updateFileNames(company_name, (files) => {
+  var calleeList = []
+  var callerList = []
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
     files.forEach((file, i) => {
       pollerFlow(client, done, file, (result) => {
         if(result.command === 'INSERT') {
-          if (participantsList.indexOf(file.callee) < 0 ) participantsList = participantsList.concat([file.callee])
-          if (participantsList.indexOf(file.caller) < 0 ) participantsList = participantsList.concat([file.caller])
+          if (calleeList.indexOf(file.callee) < 0 ) calleeList = calleeList.concat([file.callee])
+          if (callerList.indexOf(file.caller) < 0 ) callerList = callerList.concat([file.caller])
         }
         done()
         if (i === files.length -1 ) {
-          pollCalls.retrieveCallerDetails(company_name, participantsList, (res) => {
-            console.log(res, 'res<<<<<<<<<<<')
-            file.user_role = 'testUser'
-            file.user_name = res.user_name
-            checkTable.checkUsersTable(client, file, (res2) => {
-              console.log(res2, '<<<<<<<<<<<<<<<<<<')
+          if (callerList.length > 0) {
+            callerList.forEach((el) => {
+              pollCalls.retrieveCallerDetails(company_name, el, (res) => {
+                if (res.numrows !== 0) {
+                  const user = {
+                    user_role: 'testing', //hard coded data that will need to be changed <---------
+                    user_name: res.values[0].owner,
+                    company_id: file.company_id
+                  }
+                  continuedPollerFlow(client, done, user, (res2) => {
+                    const caller = {
+                      call_id: file.call_id,
+                      company_id: file.company_id,
+                      number: res.values[0].scoped_exten,
+                      internal: false,
+                      participant_role: 'source',
+                      user_id: res2
+                    }
+                    if (res.values[0].company === file.company_name) {
+                      caller.internal = true
+                    }
+                    insertData.addToParticipantsTable(client, caller, () => {
+                      done()
+                    })
+                  })
+                } else {
+                  console.log('numrows was 0')
+                }
+              })
             })
-            console.log(file, '<<<<<<<<<<<< file')
-
-          })
-
+          }
+          else {
+            console.log('callerList is empty')
+          }
+          if (calleeList.length > 0) {
+            calleeList.forEach((el) => {
+              pollCalls.retrieveCallerDetails(company_name, el, (res) => {
+                if (res.numrows !== 0) {
+                  const user = {
+                    user_role: 'testing', //hard coded data that will need to be changed <---------
+                    user_name: res.values[0].owner,
+                    company_id: file.company_id
+                  }
+                  continuedPollerFlow(client, done, user, (res2) => {
+                    const callee = {
+                      call_id: file.call_id,
+                      company_id: file.company_id,
+                      number: res.values[0].scoped_exten,
+                      internal: false,
+                      participant_role: 'destination',
+                      user_id: res2
+                    }
+                    if (res.values[0].company === file.company_name) {
+                      callee.internal = true
+                    }
+                    insertData.addToParticipantsTable(client, callee, () => {
+                      done()
+                    })
+                  })
+                } else {
+                  console.log('numrows was 0')
+                }
+              })
+            })
+          }
+          else {
+            console.log('callee list is empty as well')
+          }
         }
-
       })
     })
-    // pollCalls.retrieveWav(file.file_name, (data) => {
-    //   fs.writeFileSync(file.file_name, data)
-    // })
   })
 })
-
-// pollCalls.retrieveCallerDetails('default', '241', (res) => {
-//   console.log(res, '<<<<<<<<<<<<<<<<<<<<<<<')
-// })
