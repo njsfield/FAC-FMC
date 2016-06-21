@@ -1,14 +1,14 @@
-const Hapi = require('hapi')
-const Server = new Hapi.Server()
-const port = process.env.PORT || 3000
-const views = require('./views.js')
-const login = require('../routes/login.js')
+const Hapi = require('hapi');
+const Server = new Hapi.Server();
+const port = process.env.PORT || 3000;
+const views = require('./views.js');
+const login = require('../routes/login.js');
 
 const plugins = [
   require('inert'),
   require('vision'),
   require('hapi-auth-jwt2')
-]
+];
 
 const routes = [
   login.routeObj,
@@ -21,25 +21,25 @@ const routes = [
   require('../routes/schema.js'),
   require('../routes/tagCall.js'),
   require('../routes/publicdir.js')
-]
+];
 
-Server.connection({port})
+Server.connection({port});
 
 Server.register(plugins, (error) => {
-  if (error) throw error
+  if (error) throw error;
 
-  Server.views(views)
+  Server.views(views);
 
-  Server.route(routes)
+  Server.route(routes);
 
   Server.auth.strategy('jwt', 'jwt',
     { key: process.env.JWT_KEY,          // Never Share your secret key
       validateFunc: login.validate,
       verifyFunc: login.verify,       // validate function defined above
       verifyOptions: { algorithms: [ 'HS256' ] } // pick a strong algorithm
-    })
+    });
 
-  Server.auth.default('jwt')
-})
+  Server.auth.default('jwt');
+});
 
-module.exports = Server
+module.exports = Server;

@@ -3,6 +3,6 @@ module.exports = {
   path: '/',
   config: { auth: false },
   handler: (request, reply) => {
-    reply.view('login')
+    reply.view('login');
   }
-}
+};

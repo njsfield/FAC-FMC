@@ -17,7 +17,7 @@
   "rules": {
     "indent": [ 1, 2 ],
     "quotes": [ 1, "single" ],
-    "semi": [ 1, "never" ],
+    "semi": [ 1, "always"],
     "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "strict" }],
     "no-unused-vars": [1, { "vars": "local", "args": "after-used" }],
     "no-shadow": [2, { "builtinGlobals": true, "allow": ["_", "__", "done", "cb", "resolve", "reject"] }],
