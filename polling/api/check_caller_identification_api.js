@@ -1,8 +1,8 @@
-const pbxUrl = 'https://fac1.ipcortex.net'
+const pbxUrl = 'https://fac1.ipcortex.net';
 
   // fetches array of file_names
-'use strict'
-const request = require('request')
+'use strict';
+const request = require('request');
 
   // searches for filenames by companyId
 const checkLoginDeets = (companyId, callback) => {
@@ -21,15 +21,15 @@ const checkLoginDeets = (companyId, callback) => {
       }
     },
     json: true
-  }
+  };
 
   request(options, function (error, response, body) {
-    if (error) throw (error)
+    if (error) throw (error);
 
-    callback(body)
-  })
-}
+    callback(body);
+  });
+};
 
 module.exports = {
   checkLoginDeets
-}
+};

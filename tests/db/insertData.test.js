@@ -1,7 +1,7 @@
-const pg = require('pg')
-const tape = require('tape')
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
-const insertData = require('../../polling/dbFunctions/insertData.js')
+const pg = require('pg');
+const tape = require('tape');
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const insertData = require('../../polling/dbFunctions/insertData.js');
 const obj = {
   addToCompaniesTable: {
     company_name: 'new_company'
@@ -28,38 +28,38 @@ const obj = {
     participant_role: 'source',
     user_id: 12345
   }
-}
-const expected = 'INSERT'
+};
+const expected = 'INSERT';
 
 tape('test the insertData functions', (t) => {
-  t.plan(5)
+  t.plan(5);
   pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
+    if (err) throw err;
     insertData.addToCompaniesTable(client, obj.addToCompaniesTable, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected, 'added to companies table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to companies table');
+      done();
+    });
     insertData.addToFilesTable(client, obj.addToFilesTable, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected, 'added to files table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to files table');
+      done();
+    });
     insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected, 'added to calls table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to calls table');
+      done();
+    });
     insertData.addToUsersTable(client, obj.addToUsersTable, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected, 'added to users table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to users table');
+      done();
+    });
     insertData.addToParticipantsTable(client, obj.addToParticipantsTable, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected, 'added to participants table')
-      done()
-    })
-    pg.end()
-  })
-})
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to participants table');
+      done();
+    });
+    pg.end();
+  });
+});

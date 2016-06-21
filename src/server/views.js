@@ -1,4 +1,4 @@
-const handlebars = require('handlebars')
+const handlebars = require('handlebars');
 
 module.exports = {
   engines: { html: handlebars },
@@ -7,4 +7,4 @@ module.exports = {
   layoutPath: './views/layout',
   partialsPath: './views/partials',
   layout: 'default'
-}
+};
