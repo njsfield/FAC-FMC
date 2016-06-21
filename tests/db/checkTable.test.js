@@ -1,7 +1,7 @@
-const pg = require('pg')
-const tape = require('tape')
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
-const checkTable = require('../../polling/dbFunctions/checkTable.js')
+const pg = require('pg');
+const tape = require('tape');
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const checkTable = require('../../polling/dbFunctions/checkTable.js');
 
 const existingDataObj = {
   companiesT: [
@@ -32,7 +32,7 @@ const existingDataObj = {
     call_id: 100,
     contact_id: 3222
   }
-}
+};
 
 const newDataObj = {
   companiesT: [
@@ -59,78 +59,78 @@ const newDataObj = {
     number: 1,
     contact_id: 999
   }
-}
+};
 
 tape('test the checkTable functions', (t) => {
-  t.plan(12)
+  t.plan(12);
   pg.connect(postgresURL, (err, client, done) => {
-    const expected1 = true
-    const expected2 = 'INSERT'
-    if (err) throw err
+    const expected1 = true;
+    const expected2 = 'INSERT';
+    if (err) throw err;
     ////////////////// checks data is in tables //////////////////
     existingDataObj.companiesT.map((el) => {
       checkTable.checkCompaniesTable(client, el, (res) => {
-        const boolKey = Object.keys(res.rows[0])[0]
-        const actual = res.rows[0][boolKey]
-        t.deepEqual(actual, expected1, 'company_name test_comp_A and test_comp_B are in companies table')
-        done()
-      })
-    })
+        const boolKey = Object.keys(res.rows[0])[0];
+        const actual = res.rows[0][boolKey];
+        t.deepEqual(actual, expected1, 'company_name test_comp_A and test_comp_B are in companies table');
+        done();
+      });
+    });
     existingDataObj.filesT.map((el) => {
       checkTable.checkFilesTable(client, el, (res) => {
-        const boolKey = Object.keys(res.rows[0])[0]
-        const actual = res.rows[0][boolKey]
-        t.deepEqual(actual, expected1, 'file_names recording_1 and recording_2 are in files table')
-        done()
-      })
-    })
+        const boolKey = Object.keys(res.rows[0])[0];
+        const actual = res.rows[0][boolKey];
+        t.deepEqual(actual, expected1, 'file_names recording_1 and recording_2 are in files table');
+        done();
+      });
+    });
     checkTable.checkCallsTable(client, existingDataObj.callsT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0]
-      const actual = res.rows[0][boolKey]
-      t.deepEqual(actual, expected1, 'call exists in calls table')
-      done()
-    })
+      const boolKey = Object.keys(res.rows[0])[0];
+      const actual = res.rows[0][boolKey];
+      t.deepEqual(actual, expected1, 'call exists in calls table');
+      done();
+    });
     checkTable.checkUsersTable(client, existingDataObj.usersT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0]
-      const actual = res.rows[0][boolKey]
-      t.deepEqual(actual, expected1, 'user_name exists in users table')
-      done()
-    })
+      const boolKey = Object.keys(res.rows[0])[0];
+      const actual = res.rows[0][boolKey];
+      t.deepEqual(actual, expected1, 'user_name exists in users table');
+      done();
+    });
     checkTable.checkParticipantsTable(client, existingDataObj.participantsT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0]
-      const actual = res.rows[0][boolKey]
-      t.deepEqual(actual, expected1, 'data exists in participants table')
-      done()
-    })
+      const boolKey = Object.keys(res.rows[0])[0];
+      const actual = res.rows[0][boolKey];
+      t.deepEqual(actual, expected1, 'data exists in participants table');
+      done();
+    });
     ///////////////////////// end /////////////////////
 
     /////////////// adds data to tables ///////////////
     newDataObj.companiesT.map((el) => {
       checkTable.checkCompaniesTable(client, el, (res) => {
-        const actual = res.command
-        t.deepEqual(actual, expected2, 'company_name comp_A and comp_B have been added to companies table')
-        done()
-      })
-    })
+        const actual = res.command;
+        t.deepEqual(actual, expected2, 'company_name comp_A and comp_B have been added to companies table');
+        done();
+      });
+    });
     checkTable.checkFilesTable(client, newDataObj.filesT, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected2, 'fake_recording_44 added to files table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected2, 'fake_recording_44 added to files table');
+      done();
+    });
     checkTable.checkUsersTable(client, newDataObj.usersT, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected2, 'guillaume added to users table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected2, 'guillaume added to users table');
+      done();
+    });
     checkTable.checkParticipantsTable(client, newDataObj.participantsT, (res) => {
-      const actual = res.command
-      t.deepEqual(actual, expected2, 'new data added to participants table')
-      done()
-    })
+      const actual = res.command;
+      t.deepEqual(actual, expected2, 'new data added to participants table');
+      done();
+    });
     /////////////////////////// end /////////////////////////////
-    pg.end()
-  })
-})
+    pg.end();
+  });
+});
 
 // tape('checks the poller flow with an already existing file_name', (t) => {
 //   const obj = {

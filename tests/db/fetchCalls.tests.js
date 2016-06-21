@@ -1,40 +1,40 @@
-'use strict'
-const tape = require('tape')
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest'
-const fetchCalls = require('../../src/db/dbFetchCalls.js')
-const pg = require('pg')
+'use strict';
+const tape = require('tape');
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const fetchCalls = require('../../src/db/dbFetchCalls.js');
+const pg = require('pg');
 
 tape('test if one can check the participants table by user name and company', (t) => {
-  t.plan(1)
-  const contact_id = '4387735'
-  const company_id = '100'
-  var actual
-  const expected = 'object'
+  t.plan(1);
+  const contact_id = '4387735';
+  const company_id = '100';
+  var actual;
+  const expected = 'object';
   pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
+    if (err) throw err;
     fetchCalls.checkPartipicantsTable(client, done, contact_id, company_id, (result) => {
-      actual = typeof result
-      t.equals( actual, expected, 'grabbed the participants rows for a user')
-    })
-  })
-  pg.end()
-})
+      actual = typeof result;
+      t.equals( actual, expected, 'grabbed the participants rows for a user');
+    });
+  });
+  pg.end();
+});
 
 tape('restructureCallsResults function prepares data for response', (t) => {
-  t.plan(1)
-  const expected = fullResponse.toString()
+  t.plan(1);
+  const expected = fullResponse.toString();
   pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
+    if (err) throw err;
     fetchCalls.restructureCallsResults(client, done, partipantsQueryResult, (results) => {
-      const actual = results.toString()
-      t.deepEqual(actual, expected, 'calls results restructured')
-    })
-  })
-  pg.end()
-})
+      const actual = results.toString();
+      t.deepEqual(actual, expected, 'calls results restructured');
+    });
+  });
+  pg.end();
+});
 
 tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
-  t.plan(1)
+  t.plan(1);
   const data = {
     call_id: '100',
     company_id: '100',
@@ -45,7 +45,7 @@ tape('findOtherParticipant function locates the caller or callee for any given p
         user: true
       }
     }
-  }
+  };
   const expected = {
     call_id: '100',
     company_id: '100',
@@ -61,15 +61,15 @@ tape('findOtherParticipant function locates the caller or callee for any given p
         user: false
       }
     }
-  }
+  };
   pg.connect(postgresURL, (err, client, done) => {
-    if (err) throw err
+    if (err) throw err;
     fetchCalls.findOtherParticipant(data, client, done, (result) => {
-      const actual = result
-      t.deepEqual(actual, expected, 'caller or callee located')
-    })
-  })
-})
+      const actual = result;
+      t.deepEqual(actual, expected, 'caller or callee located');
+    });
+  });
+});
 
 tape('find file_id, duration and time for the call', (t) => {
   const data = {
@@ -87,18 +87,18 @@ tape('find file_id, duration and time for the call', (t) => {
         user: false
       }
     }
-  }
+  };
 
   pg.connect(postgresURL, (err, client, done) => {
-    t.plan(1)
+    t.plan(1);
     fetchCalls.findCallDetails(data, client, done, (results) => {
-      const expected = '345678904356'
-      const actual = results.duration
-      t.deepEqual(expected, actual, 'congrats full response complete')
-    })
-  })
-  pg.end()
-})
+      const expected = '345678904356';
+      const actual = results.duration;
+      t.deepEqual(expected, actual, 'congrats full response complete');
+    });
+  });
+  pg.end();
+});
 
 const partipantsQueryResult =
   [ { company_id: '100',
@@ -121,7 +121,7 @@ const partipantsQueryResult =
     internal: true,
     participant_role: 'DESTINATION',
     number: '8',
-    contact_id: '4387735' } ]
+    contact_id: '4387735' } ];
 
 const fullResponse = [
   {
@@ -181,4 +181,4 @@ const fullResponse = [
     time: '345678904',
     file_id: '3',
   }
-]
+];

@@ -1,8 +1,8 @@
   // fetches array of file_names
-require('env2')('config.env')
-const request = require('request')
-const apiKey = process.env.API_KEY
-const pbxUrl = 'https://fac1.ipcortex.net'
+require('env2')('config.env');
+const request = require('request');
+const apiKey = process.env.API_KEY;
+const pbxUrl = 'https://fac1.ipcortex.net';
 
 // searches for filenames by companyId
 const updateFileNames = (company_name, callback) => {
@@ -16,22 +16,22 @@ const updateFileNames = (company_name, callback) => {
     { type: 'recording',
     scope: { company: company_name },
     auth: { type: 'auth', key: apiKey } },
-    json: true }
+    json: true };
 
   request(options, (error, response, body) => {
-    if (error) throw error
+    if (error) throw error;
     const files = body.values.map((el) => {
-      delete el.size
-      el.company_name = company_name
-      el.date = el.start
-      delete el.start
-      el.file_name = el.file
-      delete el.file
-      return el
-    })
-    callback(files)
-  })
-}
+      delete el.size;
+      el.company_name = company_name;
+      el.date = el.start;
+      delete el.start;
+      el.file_name = el.file;
+      delete el.file;
+      return el;
+    });
+    callback(files);
+  });
+};
 
 // once we have file_names, fetches the ACTUAL wav file.
 const retrieveWav = (fileName, callback) => {
@@ -47,14 +47,14 @@ const retrieveWav = (fileName, callback) => {
   { company: 'default',
   file: fileName },
   auth: { type: 'auth', key: apiKey } },
-  json: true }
+  json: true };
 
   request(options, function (error, response, body) {
-    if (error) throw (error)
+    if (error) throw (error);
 
-    callback(body)
-  })
-}
+    callback(body);
+  });
+};
 
 const retrieveCallerDetails = (company_name, extensionList, callback) => {
   const options = {
@@ -83,15 +83,15 @@ const retrieveCallerDetails = (company_name, extensionList, callback) => {
       ]
     },
     json: true
-  }
+  };
   request(options, function (error, response, body) {
-    if (error) throw error
-    callback(body)
-  })
-}
+    if (error) throw error;
+    callback(body);
+  });
+};
 
 module.exports = {
   updateFileNames,
   retrieveWav,
   retrieveCallerDetails
-}
+};
