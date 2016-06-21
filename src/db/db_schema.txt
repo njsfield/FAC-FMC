@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS tags CASCADE;
 DROP TABLE IF EXISTS tags_calls CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS filters CASCADE;
+DROP TABLE IF EXISTS polls CASCADE;
 
 DROP SEQUENCE IF EXISTS companies_seq;
 DROP SEQUENCE IF EXISTS calls_seq;
@@ -30,7 +31,7 @@ WITHOUT OIDS;
 CREATE SEQUENCE files_seq start 100 increment 1 cache 50;
 CREATE TABLE files (
     file_id      BIGINT DEFAULT nextval('files_seq'::text),
-    file_name    VARCHAR,
+    file_name    VARCHAR NOT NULL,
     CONSTRAINT files_pk PRIMARY KEY(file_id)
 )
 WITHOUT OIDS;
@@ -63,7 +64,7 @@ CREATE TABLE participants (
     internal     BOOLEAN DEFAULT FALSE NOT NULL,
     participant_role   VARCHAR,
     number       VARCHAR NOT NULL,
-    user_id   BIGINT,
+    contact_id   BIGINT,
     CONSTRAINT participants_pk PRIMARY KEY(company_id, participant_id)
 )
 WITHOUT OIDS;
@@ -75,7 +76,7 @@ CREATE SEQUENCE tags_seq START 100 INCREMENT 1 CACHE 50;
 CREATE TABLE tags (
     /* Tags are owned by companies */
     company_id BIGINT NOT NULL,
-    tag        VARCHAR NOT NULL,
+    tag_name   VARCHAR NOT NULL,
     tag_id     BIGINT  DEFAULT nextval('tags_seq'::text),
 
     -- Make tags unique within a company
@@ -95,11 +96,10 @@ CREATE UNIQUE INDEX tag_id_key ON tags (
 
 /****** 6. TAGS_CALLS TABLE ******/
 CREATE TABLE tags_calls (
-    company_id  BIGINT NOT NULL,
     tag_id      BIGINT NOT NULL,
     call_id     BIGINT NOT NULL,
 
-    CONSTRAINT tags_calls_pk PRIMARY KEY(company_id, tag_id, call_id)
+    CONSTRAINT tags_calls_pk PRIMARY KEY(tag_id, call_id)
 )
 WITHOUT OIDS;
 
@@ -124,6 +124,8 @@ CREATE TABLE users (
     CONSTRAINT users_pk PRIMARY KEY(user_id)
 )
 WITHOUT OIDS;
+
+
 
 /****** TABLE REFERENCES ******/
 
@@ -192,6 +194,14 @@ we resolve? What is the syntax for deleting the file only when all calls referen
       ON DELETE RESTRICT;
 */
 
+/*
+
+ALTER TABLE files
+ADD CONSTRAINT file_name
+UNIQUE file_name
+
+*/
+
 /****** 8. tags TABLE FOREIGN KEYS: ******/
 
 ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
@@ -215,16 +225,16 @@ INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-06 12:43
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_B'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '100', '100', '8', true, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '100', '100', '7', false, 'DESTINATION', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '101', '101', '7', true, 'DESTINATION', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '101', '101', '8', false, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '102', '100', '8', true, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '102', '100', '9', true, 'DESTINATION', 4387738);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '103', '101', '7', true, 'SOURCE', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '103', '101', '8', false, 'DESTINATION', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '8', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '7', false, 'DESTINATION', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '7', true, 'DESTINATION', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '8', false, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '8', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '9', true, 'DESTINATION', 4387738);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '7', true, 'SOURCE', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '8', false, 'DESTINATION', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
 
 INSERT INTO users (user_name, company_id, user_role) VALUES('testUser', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'), 'Admin');
 

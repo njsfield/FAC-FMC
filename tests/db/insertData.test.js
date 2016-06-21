@@ -26,7 +26,7 @@ const obj = {
     number: 1,
     internal: false,
     participant_role: 'source',
-    user_id: 12345
+    contact_id: 12345
   }
 }
 const expected = 'INSERT'

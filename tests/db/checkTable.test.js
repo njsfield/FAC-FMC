@@ -30,7 +30,7 @@ const existingDataObj = {
   participantsT: {
     company_id: 100,
     call_id: 100,
-    user_id: 3222
+    contact_id: 3222
   }
 }
 
@@ -57,7 +57,7 @@ const newDataObj = {
     internal: false,
     participant_role: 'source',
     number: 1,
-    user_id: 999
+    contact_id: 999
   }
 }
 

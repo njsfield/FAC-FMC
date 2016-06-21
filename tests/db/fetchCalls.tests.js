@@ -6,13 +6,13 @@ const pg = require('pg')
 
 tape('test if one can check the participants table by user name and company', (t) => {
   t.plan(1)
-  const user_id = '4387735'
+  const contact_id = '4387735'
   const company_id = '100'
   var actual
   const expected = 'object'
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err
-    fetchCalls.checkPartipicantsTable(client, done, user_id, company_id, (result) => {
+    fetchCalls.checkPartipicantsTable(client, done, contact_id, company_id, (result) => {
       actual = typeof result
       t.equals( actual, expected, 'grabbed the participants rows for a user')
     })
@@ -107,21 +107,21 @@ const partipantsQueryResult =
     internal: true,
     participant_role: 'SOURCE',
     number: '8',
-    user_id: '4387735' },
+    contact_id: '4387735' },
   { company_id: '100',
     participant_id: '104',
     call_id: '102',
     internal: true,
     participant_role: 'SOURCE',
     number: '8',
-    user_id: '4387735' },
+    contact_id: '4387735' },
   { company_id: '100',
     participant_id: '108',
     call_id: '104',
     internal: true,
     participant_role: 'DESTINATION',
     number: '8',
-    user_id: '4387735' } ]
+    contact_id: '4387735' } ]
 
 const fullResponse = [
   {

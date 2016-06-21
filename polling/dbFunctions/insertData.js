@@ -35,8 +35,8 @@ const addToUsersTable = (client, object, callback) => {
 }
 
 const addToParticipantsTable = (client, object, callback) => {
-  const queryArray = [object.call_id, object.company_id, object.number, object.internal, object.participant_role, object.user_id]
-  client.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role, user_id) VALUES ($1, $2, $3, $4, $5, $6)', queryArray, (error, response) => {
+  const queryArray = [object.call_id, object.company_id, object.number, object.internal, object.participant_role, object.contact_id]
+  client.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role, contact_id) VALUES ($1, $2, $3, $4, $5, $6)', queryArray, (error, response) => {
     if (error) throw error
     callback(response)
   })

@@ -58,8 +58,8 @@ const checkUsersTable = (cli, obj, cb) => {
 }
 
 const checkParticipantsTable = (cli, obj, cb) => {
-  const queryArray = [obj.call_id, obj.company_id, obj.user_id]
-  cli.query('SELECT EXISTS (SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND user_id=($3))', queryArray, (err, res) => {
+  const queryArray = [obj.call_id, obj.company_id, obj.contact_id]
+  cli.query('SELECT EXISTS (SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND contact_id=($3))', queryArray, (err, res) => {
     if (err) throw err
     /* add if caller or callee is same as number and
     add if company_name is same as the one company_id
