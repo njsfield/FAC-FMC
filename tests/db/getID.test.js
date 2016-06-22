@@ -32,12 +32,6 @@ tape('test the getID functions', (t) => {
       t.deepEqual(actual, expected, 'getCall_id got the correct call_id from calls table');
       done();
     });
-    // getID.getUser_id(client, obj, (res) => {
-    //   const actual = res;
-    //   const expected = '100';
-    //   t.deepEqual(actual, expected, 'getUser_id got the correct user_id from users table');
-    //   done();
-    // });
     pg.end();
   });
 });
