@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS tags CASCADE;
 DROP TABLE IF EXISTS tags_calls CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS filters CASCADE;
-DROP TABLE IF EXISTS polls CASCADE;
+DROP TABLE IF EXISTS last_poll;
 
 DROP SEQUENCE IF EXISTS companies_seq;
 DROP SEQUENCE IF EXISTS calls_seq;
@@ -17,6 +17,7 @@ DROP SEQUENCE IF EXISTS tags_seq;
 DROP SEQUENCE IF EXISTS tags_calls_seq;
 DROP SEQUENCE IF EXISTS users_seq;
 DROP SEQUENCE IF EXISTS filters_seq;
+
 
 /****** 1. COMPANIES TABLE ******/
 CREATE SEQUENCE companies_seq start 100 increment 1 cache 50;
@@ -120,6 +121,12 @@ CREATE TABLE users (
     company_id BIGINT NOT NULL,
 
     CONSTRAINT users_pk PRIMARY KEY(contact_id)
+)
+WITHOUT OIDS;
+
+/****** 9. LAST_POLL TABLE ******/
+CREATE TABLE last_poll (
+    last_poll TIMESTAMP
 )
 WITHOUT OIDS;
 
