@@ -39,7 +39,6 @@ const getCall_id = (dbClient, obj, cb) => {
 // const getUser_id = (cli, obj, cb) => {
 //   const queryArray = [obj.user_name];
 //   cli.query('SELECT user_id FROM users WHERE user_name=($1)', queryArray, (err, res) => {
-//     console.log(obj.user_name);
 //     if (err) throw err;
 //     const boolKey = Object.keys(res.rows[0]);
 //     const company_id = res.rows[0][boolKey];

@@ -114,7 +114,6 @@ const retrieveCallerDetails = (company_name, extension_list, callback) => {
   };
   request(options, function (error, response, body) {
     if (error) throw error;
-    console.log(body, '<----- body');
     callback(body);
   });
 };
