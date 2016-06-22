@@ -3,8 +3,7 @@
 const checkTable = require('./checkTable.js');
 const getID = require('./getID.js');
 
-/** Calls all functions involved in the poller flow.
-  */
+/** Calls all functions involved in the poller flow. */
 
 const pollerFlow = (cli, done, obj, cb) => {
   checkTable.checkFilesTable(cli, obj, () => {
@@ -27,6 +26,8 @@ const pollerFlow = (cli, done, obj, cb) => {
     });
   });
 };
+
+/** Checks the user_table for user_id. */
 
 const continuedPollerFlow = (cli, done, obj, cb) => {
   checkTable.checkUsersTable(cli, obj, () => {
