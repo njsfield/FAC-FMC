@@ -1,13 +1,15 @@
-//!!! refactor back ticks in queries!!!//
 
-// functions to get unique ids from tables
-// boolKey is the equivalent of response.rows[0]'s first key (consider renaming boolKey)
-// this complies with Travis requirements
+/**
+ * Each function retrieves a unique ID from a table.
+ * @param {object} dbClient - The postgres client server object.
+ * @param {object} object - Data to be inserted into each function.
+ * @param {function} callback - Returns unique ID.
+ */
 
 const getCompany_id = (cli, obj, cb) => {
-  cli.query(`SELECT company_id FROM companies WHERE company_name=('${obj.company_name}')`, (err, res) => {
+  const queryArray = [obj.company_name];
+  cli.query('SELECT company_id FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
-    console.log(res, '<--- res');
     const boolKey = Object.keys(res.rows[0]);
     const company_id = res.rows[0][boolKey];
     cb(company_id);
@@ -15,7 +17,8 @@ const getCompany_id = (cli, obj, cb) => {
 };
 
 const getFile_id = (cli, obj, cb) => {
-  cli.query(`SELECT file_id FROM files WHERE file_name=('${obj.file_name}')`, (err, res) => {
+  const queryArray = [obj.file_name];
+  cli.query('SELECT file_id FROM files WHERE file_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     const file_id = res.rows[0][boolKey];
