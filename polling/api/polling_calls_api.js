@@ -1,14 +1,23 @@
-  // fetches array of file_names
 require('env2')('config.env');
 const request = require('request');
 const apiKey = process.env.API_KEY;
-const pbxUrl = 'https://fac1.ipcortex.net';
 
-// searches for filenames by companyId
+/**
+ * Fetches an array of file_names by company_name from the IPC API.
+ * @param {string} company_name
+ * @param {function} callback - Returns an array of file objects:
+   { caller: '239',
+    callee: '238',
+    duration: 6,
+    company_name: 'default',
+    date: 1465997840,
+    file_name: '2016.06.15.14.37.20-1465997840-239-238.wav' }
+ */
+
 const updateFileNames = (company_name, callback) => {
   const options = {
     method: 'POST',
-    url: pbxUrl + '/rest/call/list',
+    url: process.env.PBX_URL + '/rest/call/list',
     headers:
     { 'cache-control': 'no-cache',
     'content-type': 'application/json' },
@@ -33,8 +42,13 @@ const updateFileNames = (company_name, callback) => {
   });
 };
 
-// once we have file_names, fetches the ACTUAL wav file.
-const retrieveWav = (fileName, callback) => {
+/**
+ * Fetches the actual wav file using the file_names returned from updateFileNames().
+ * @param {string} file_name
+ * @param {function} callback - Returns wav file to root folder.
+ */
+
+const retrieveWav = (file_name, callback) => {
   const options = { method: 'POST',
   url: pbxUrl + '/rest/call/download/recording',
   encoding: null,
@@ -45,18 +59,32 @@ const retrieveWav = (fileName, callback) => {
   { type: 'recording',
   scope:
   { company: 'default',
-  file: fileName },
+  file: file_name },
   auth: { type: 'auth', key: apiKey } },
   json: true };
 
-  request(options, function (error, response, body) {
+  request(options, function (error, response, wav_file) {
     if (error) throw (error);
 
-    callback(body);
+    callback(wav_file);
   });
 };
 
-const retrieveCallerDetails = (company_name, extensionList, callback) => {
+/**
+ * Fetches caller details for a particular company_name.
+ * @param {string} company_name
+ * @param {array} extension_list - array of strings
+ * @param {function} callback - returns body object:
+ *  { result: 'success', values: [], numrows: 0 }
+ *
+ *  where the 'values' array contains objects:
+ *  { virt_exten: '238',
+       company: 'default',
+       scoped_exten: '238',
+       owner: 255 }
+ */
+
+const retrieveCallerDetails = (company_name, extension_list, callback) => {
   const options = {
     method: 'post',
     url: pbxUrl + '/rest/dialplan/read',
@@ -68,7 +96,7 @@ const retrieveCallerDetails = (company_name, extensionList, callback) => {
     body: {
       type: 'extension',
       scope: {     // eg "400"
-        'virt_exten': extensionList,    // eg "400_company",
+        'virt_exten': extension_list,    // eg "400_company",
         'company': company_name,
       },
       auth: {
@@ -86,6 +114,7 @@ const retrieveCallerDetails = (company_name, extensionList, callback) => {
   };
   request(options, function (error, response, body) {
     if (error) throw error;
+    console.log(body, '<----- body');
     callback(body);
   });
 };

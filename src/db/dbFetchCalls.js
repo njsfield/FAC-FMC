@@ -1,4 +1,31 @@
 'use strict';
+
+/**
+ * Refactoring strategy:
+ * 1. Make a double join between the calls and participants table:
+ * -> Where participant_role = caller
+ * -> Where participant_role = callee
+ *
+ * 2. fetchCalls.js should therefore only have to make one call to the database:
+ * -> SELECT (desired returned field) FROM participants p and calls c RIGHT JOIN on
+ * c.call_id AND p.call_id WHERE p.contact_id = (x)
+ *
+ * 3. The join query should also sort by calls.date and set a limit to 50, so that only
+ * the most recent 50 calls are fetched.
+ *
+ * Notes:
+ * -> If the join is a RIGHT JOIN, the right-hand column must contain a value per row,
+ * whereas rows in the left-hand column (in this case contact_id) may contain NULL.
+
+ * -> Main parameter of fetchCalls should be a JSON object including these properties:
+ * @param {integer} first_index - First index of the complete results set.
+ * @param {integer} max_calls - Maximum number of calls to be fetched.
+ * @param {string} participant_role - Whether the participant is a caller or callee.
+ * @param {string} contact_id - Only present for admin role.
+ * @param {string} start_date - Date of earliest call in results array.
+ * @param {string} end_date - Date of latest call in results array.
+ */
+
 // grab all calls for an individual user
 const fetchCalls = (client, done, contact_id, company_id, callback) => {
   checkPartipicantsTable(client, done, contact_id, company_id, (result) => {

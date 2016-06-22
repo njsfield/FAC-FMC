@@ -1,11 +1,12 @@
-//!!! refactor back ticks in queries!!!//
 
 /**
- * Each function adds data to tables.
+ * Each function adds data to tables. What is inserted by each function
+ * is evident as a property of the object parameter.
  * @param {object} dbClient - The postgres client server object.
  * @param {object} object - Data to be inserted into each function.
  * @param {function} callback - Returns response.
  */
+
 const addToCompaniesTable = (dbClient, object, callback) => {
   const queryArray = [object.company_name];
   dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error, response) => {
@@ -23,11 +24,12 @@ const addToFilesTable = (dbClient, object, callback) => {
 };
 
 const addToCallsTable = (dbClient, object, callback) => {
-  dbClient.query(`SELECT TIMESTAMP WITH TIME ZONE 'epoch' + ${object.date} * INTERVAL '1' second`, (err, res) => {
+  const queryArray = [object.date];
+  dbClient.query('SELECT TIMESTAMP WITH TIME ZONE \'epoch\' + ($1) * INTERVAL \'1\' second', queryArray, (err, res) => {
     const objKey = Object.keys(res.rows[0]);
     const timestamp = res.rows[0][objKey];
-    const queryArray = [timestamp, object.company_id, object.file_id, object.duration];
-    dbClient.query('INSERT INTO calls (date, company_id, file_id, duration) VALUES ($1, $2, $3, $4)', queryArray, (error, response) => {
+    const queryArray2 = [timestamp, object.company_id, object.file_id, object.duration];
+    dbClient.query('INSERT INTO calls (date, company_id, file_id, duration) VALUES ($1, $2, $3, $4)', queryArray2, (error, response) => {
       if (error) throw error;
       callback(response);
     });
