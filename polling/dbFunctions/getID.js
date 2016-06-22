@@ -1,21 +1,24 @@
-//!!! refactor back ticks in queries!!!//
 
-// functions to get unique ids from tables
-// boolKey is the equivalent of response.rows[0]'s first key (consider renaming boolKey)
-// this complies with Travis requirements
+/**
+ * Each function retrieves a unique ID from a table.
+ * @param {object} dbClient - The postgres client server object.
+ * @param {object} object - Data to be inserted into each function.
+ * @param {function} callback - Returns unique ID.
+ */
 
-const getCompany_id = (cli, obj, cb) => {
-  cli.query(`SELECT company_id FROM companies WHERE company_name=('${obj.company_name}')`, (err, res) => {
+const getCompany_id = (dbClient, obj, cb) => {
+  const queryArray = [obj.company_name];
+  dbClient.query('SELECT company_id FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
-    console.log(res, '<--- res');
     const boolKey = Object.keys(res.rows[0]);
     const company_id = res.rows[0][boolKey];
     cb(company_id);
   });
 };
 
-const getFile_id = (cli, obj, cb) => {
-  cli.query(`SELECT file_id FROM files WHERE file_name=('${obj.file_name}')`, (err, res) => {
+const getFile_id = (dbClient, obj, cb) => {
+  const queryArray = [obj.file_name];
+  dbClient.query('SELECT file_id FROM files WHERE file_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     const file_id = res.rows[0][boolKey];
@@ -23,9 +26,9 @@ const getFile_id = (cli, obj, cb) => {
   });
 };
 
-const getCall_id = (cli, obj, cb) => {
+const getCall_id = (dbClient, obj, cb) => {
   const queryArray = [obj.company_id, obj.file_id];
-  cli.query('SELECT call_id FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
+  dbClient.query('SELECT call_id FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     const call_id = res.rows[0][boolKey];
@@ -33,9 +36,9 @@ const getCall_id = (cli, obj, cb) => {
   });
 };
 
-const getUser_id = (cli, obj, cb) => {
+const getUser_id = (dbClient, obj, cb) => {
   const queryArray = [obj.user_name];
-  cli.query('SELECT user_id FROM users WHERE user_name=($1)', queryArray, (err, res) => {
+  dbClient.query('SELECT user_id FROM users WHERE user_name=($1)', queryArray, (err, res) => {
     console.log(obj.user_name);
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0]);
