@@ -17,8 +17,7 @@ const obj = {
   },
   addToUsersTable: {
     contact_id: 239,
-    company_id: 100,
-    user_role: 'superUser'
+    company_id: 100
   },
   addToParticipantsTable: {
     call_id: 100,
