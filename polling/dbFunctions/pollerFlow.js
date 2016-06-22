@@ -5,18 +5,18 @@ const getID = require('./getID.js');
 
 /** Calls all functions involved in the poller flow. */
 
-const pollerFlow = (cli, done, obj, cb) => {
-  checkTable.checkFilesTable(cli, obj, () => {
+const pollerFlow = (dbClient, done, obj, cb) => {
+  checkTable.checkFilesTable(dbClient, obj, () => {
     done();
-    getID.getCompany_id(cli, obj, (company_id) => {
+    getID.getCompany_id(dbClient, obj, (company_id) => {
       done();
       obj.company_id = company_id;
-      getID.getFile_id(cli, obj, (file_id) => {
+      getID.getFile_id(dbClient, obj, (file_id) => {
         done();
         obj.file_id = file_id;
-        checkTable.checkCallsTable(cli, obj, (res) => {
+        checkTable.checkCallsTable(dbClient, obj, (res) => {
           done();
-          getID.getCall_id(cli, obj, (call_id) => {
+          getID.getCall_id(dbClient, obj, (call_id) => {
             done();
             obj.call_id = call_id;
             cb(res);
@@ -29,10 +29,10 @@ const pollerFlow = (cli, done, obj, cb) => {
 
 /** Checks the user_table for user_id. */
 
-const continuedPollerFlow = (cli, done, obj, cb) => {
-  checkTable.checkUsersTable(cli, obj, () => {
+const continuedPollerFlow = (dbClient, done, obj, cb) => {
+  checkTable.checkUsersTable(dbClient, obj, () => {
     done();
-    getID.getUser_id(cli, obj, (res) => {
+    getID.getUser_id(dbClient, obj, (res) => {
       cb(res);
       done();
     });
