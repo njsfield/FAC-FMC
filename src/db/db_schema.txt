@@ -41,8 +41,8 @@ WITHOUT OIDS;
  ******/
 CREATE SEQUENCE calls_seq start 100 increment 1 cache 50;
 CREATE TABLE calls (
-    company_id   BIGINT NOT NULL,
     call_id      BIGINT DEFAULT nextval('calls_seq'::text),
+    company_id   BIGINT NOT NULL,
     file_id      BIGINT NOT NULL,
     date         TIMESTAMP,
     duration     BIGINT NOT NULL,
@@ -117,9 +117,8 @@ WITHOUT OIDS;
 /****** 8. USERS TABLE ******/
 CREATE TABLE users (
     user_id    BIGINT DEFAULT nextval('tags_seq'::text),
-    user_name  TEXT NOT NULL,
+    contact_id BIGINT NOT NULL,
     company_id BIGINT NOT NULL,
-    user_role  TEXT NOT NULL,
 
     CONSTRAINT users_pk PRIMARY KEY(user_id)
 )
@@ -228,6 +227,6 @@ INSERT INTO participants(call_id, company_id, number, internal, participant_role
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
 
-INSERT INTO users (user_name, company_id, user_role) VALUES('testUser', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'), 'Admin');
+INSERT INTO users (contact_id, company_id) VALUES(238, (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'));
 
 COMMIT;
