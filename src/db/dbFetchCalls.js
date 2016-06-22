@@ -27,17 +27,17 @@
  */
 
 // grab all calls for an individual user
-const fetchCalls = (client, done, user_id, company_id, callback) => {
-  checkPartipicantsTable(client, done, user_id, company_id, (result) => {
+const fetchCalls = (client, done, contact_id, company_id, callback) => {
+  checkPartipicantsTable(client, done, contact_id, company_id, (result) => {
     restructureCallsResults(client, done, result, (response) => {
       callback(response);
     });
   });
 };
 // step 1: grabs the rows from the participants table which involve the user and their company.
-const checkPartipicantsTable = (client, done, user_id, company_id, callback) => {
-  client.query('SELECT * FROM participants WHERE company_id = $1 AND user_id = $2',
-  [company_id, user_id], (error, result) => {
+const checkPartipicantsTable = (client, done, contact_id, company_id, callback) => {
+  client.query('SELECT * FROM participants WHERE company_id = $1 AND contact_id = $2',
+  [company_id, contact_id], (error, result) => {
     if (error) throw error;
     callback(result.rows);
   });

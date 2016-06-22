@@ -50,8 +50,8 @@ const checkCallsTable = (dbClient, obj, cb) => {
 };
 
 const checkUsersTable = (dbClient, obj, cb) => {
-  const queryArray = [obj.user_name];
-  dbClient.query('SELECT EXISTS (SELECT * FROM users WHERE user_name=($1))', queryArray, (err, res) => {
+  const queryArray = [obj.contact_id];
+  dbClient.query('SELECT EXISTS (SELECT * FROM users WHERE contact_id=($1))', queryArray, (err, res) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     if (res.rows[0][boolKey] === false) {
@@ -63,8 +63,8 @@ const checkUsersTable = (dbClient, obj, cb) => {
 };
 
 const checkParticipantsTable = (dbClient, obj, cb) => {
-  const queryArray = [obj.call_id, obj.company_id, obj.user_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND user_id=($3))', queryArray, (err, res) => {
+  const queryArray = [obj.call_id, obj.company_id, obj.contact_id];
+  dbClient.query('SELECT EXISTS (SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND contact_id=($3))', queryArray, (err, res) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     if (res.rows[0][boolKey] === false) {

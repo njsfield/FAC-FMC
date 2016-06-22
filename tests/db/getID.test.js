@@ -11,7 +11,7 @@ const obj = {
 };
 
 tape('test the getID functions', (t) => {
-  t.plan(4);
+  t.plan(3);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     getID.getCompany_id(client, obj, (res) => {
@@ -32,12 +32,12 @@ tape('test the getID functions', (t) => {
       t.deepEqual(actual, expected, 'getCall_id got the correct call_id from calls table');
       done();
     });
-    getID.getUser_id(client, obj, (res) => {
-      const actual = res;
-      const expected = '100';
-      t.deepEqual(actual, expected, 'getUser_id got the correct user_id from users table');
-      done();
-    });
+    // getID.getUser_id(client, obj, (res) => {
+    //   const actual = res;
+    //   const expected = '100';
+    //   t.deepEqual(actual, expected, 'getUser_id got the correct user_id from users table');
+    //   done();
+    // });
     pg.end();
   });
 });

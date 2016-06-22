@@ -25,12 +25,12 @@ const existingDataObj = {
     company_id: 100
   },
   usersT: {
-    user_name: 'testUser'
+    contact_id: 238
   },
   participantsT: {
     company_id: 100,
     call_id: 100,
-    user_id: 3222
+    contact_id: 3222
   }
 };
 
@@ -47,7 +47,7 @@ const newDataObj = {
     file_name: 'fake_recording_44'
   },
   usersT: {
-    user_name: 'guillaume',
+    contact_id: 236,
     company_id: 100,
     user_role: 'yes'
   },
@@ -57,7 +57,7 @@ const newDataObj = {
     internal: false,
     participant_role: 'source',
     number: 1,
-    user_id: 999
+    contact_id: 999
   }
 };
 

@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS tags CASCADE;
 DROP TABLE IF EXISTS tags_calls CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS filters CASCADE;
+DROP TABLE IF EXISTS last_poll;
 
 DROP SEQUENCE IF EXISTS companies_seq;
 DROP SEQUENCE IF EXISTS calls_seq;
@@ -16,6 +17,7 @@ DROP SEQUENCE IF EXISTS tags_seq;
 DROP SEQUENCE IF EXISTS tags_calls_seq;
 DROP SEQUENCE IF EXISTS users_seq;
 DROP SEQUENCE IF EXISTS filters_seq;
+
 
 /****** 1. COMPANIES TABLE ******/
 CREATE SEQUENCE companies_seq start 100 increment 1 cache 50;
@@ -30,7 +32,7 @@ WITHOUT OIDS;
 CREATE SEQUENCE files_seq start 100 increment 1 cache 50;
 CREATE TABLE files (
     file_id      BIGINT DEFAULT nextval('files_seq'::text),
-    file_name    VARCHAR,
+    file_name    VARCHAR NOT NULL,
     CONSTRAINT files_pk PRIMARY KEY(file_id)
 )
 WITHOUT OIDS;
@@ -40,8 +42,8 @@ WITHOUT OIDS;
  ******/
 CREATE SEQUENCE calls_seq start 100 increment 1 cache 50;
 CREATE TABLE calls (
-    company_id   BIGINT NOT NULL,
     call_id      BIGINT DEFAULT nextval('calls_seq'::text),
+    company_id   BIGINT NOT NULL,
     file_id      BIGINT NOT NULL,
     date         TIMESTAMP,
     duration     BIGINT NOT NULL,
@@ -63,7 +65,7 @@ CREATE TABLE participants (
     internal     BOOLEAN DEFAULT FALSE NOT NULL,
     participant_role   VARCHAR,
     number       VARCHAR NOT NULL,
-    user_id   BIGINT,
+    contact_id   BIGINT,
     CONSTRAINT participants_pk PRIMARY KEY(company_id, participant_id)
 )
 WITHOUT OIDS;
@@ -75,7 +77,7 @@ CREATE SEQUENCE tags_seq START 100 INCREMENT 1 CACHE 50;
 CREATE TABLE tags (
     /* Tags are owned by companies */
     company_id BIGINT NOT NULL,
-    tag        VARCHAR NOT NULL,
+    tag_name   VARCHAR NOT NULL,
     tag_id     BIGINT  DEFAULT nextval('tags_seq'::text),
 
     -- Make tags unique within a company
@@ -95,11 +97,10 @@ CREATE UNIQUE INDEX tag_id_key ON tags (
 
 /****** 6. TAGS_CALLS TABLE ******/
 CREATE TABLE tags_calls (
-    company_id  BIGINT NOT NULL,
     tag_id      BIGINT NOT NULL,
     call_id     BIGINT NOT NULL,
 
-    CONSTRAINT tags_calls_pk PRIMARY KEY(company_id, tag_id, call_id)
+    CONSTRAINT tags_calls_pk PRIMARY KEY(tag_id, call_id)
 )
 WITHOUT OIDS;
 
@@ -107,7 +108,7 @@ WITHOUT OIDS;
 CREATE TABLE filters (
     filter_id   BIGINT DEFAULT nextval('filters_seq'::text),
     filter_name TEXT NOT NULL,
-    user_id     BIGINT NOT NULL,
+    contact_id  BIGINT NOT NULL,
     filter_spec TEXT NOT NULL,
 
     CONSTRAINT filters_pk PRIMARY KEY(filter_id)
@@ -116,14 +117,20 @@ WITHOUT OIDS;
 
 /****** 8. USERS TABLE ******/
 CREATE TABLE users (
-    user_id    BIGINT DEFAULT nextval('tags_seq'::text),
-    user_name  TEXT NOT NULL,
+    contact_id BIGINT NOT NULL,
     company_id BIGINT NOT NULL,
-    user_role  TEXT NOT NULL,
 
-    CONSTRAINT users_pk PRIMARY KEY(user_id)
+    CONSTRAINT users_pk PRIMARY KEY(contact_id)
 )
 WITHOUT OIDS;
+
+/****** 9. LAST_POLL TABLE ******/
+CREATE TABLE last_poll (
+    last_poll TIMESTAMP
+)
+WITHOUT OIDS;
+
+
 
 /****** TABLE REFERENCES ******/
 
@@ -177,8 +184,8 @@ ALTER TABLE users ADD CONSTRAINT users_companies_fk
 /****** 5. filters TABLE FOREIGN KEYS: ******/
 
 ALTER TABLE filters ADD CONSTRAINT filters_users_fk
-      FOREIGN KEY (user_id)
-      REFERENCES users(user_id)
+      FOREIGN KEY (contact_id)
+      REFERENCES users(contact_id)
       ON DELETE CASCADE;
 
 /****** 6. files TABLE FOREIGN KEYS: ******/
@@ -215,17 +222,17 @@ INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-06 12:43
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_B'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '100', '100', '8', true, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '100', '100', '7', false, 'DESTINATION', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '101', '101', '7', true, 'DESTINATION', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '101', '101', '8', false, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '102', '100', '8', true, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '102', '100', '9', true, 'DESTINATION', 4387738);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '103', '101', '7', true, 'SOURCE', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '103', '101', '8', false, 'DESTINATION', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, user_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '8', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '7', false, 'DESTINATION', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '7', true, 'DESTINATION', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '8', false, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '8', true, 'SOURCE', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '9', true, 'DESTINATION', 4387738);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '7', true, 'SOURCE', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '8', false, 'DESTINATION', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
 
-INSERT INTO users (user_name, company_id, user_role) VALUES('testUser', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'), 'Admin');
+INSERT INTO users (contact_id, company_id) VALUES(238, (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'));
 
 COMMIT;

@@ -16,9 +16,8 @@ const obj = {
     duration: 999
   },
   addToUsersTable: {
-    user_name: 'testUser2',
-    company_id: 100,
-    user_role: 'superUser'
+    contact_id: 239,
+    company_id: 100
   },
   addToParticipantsTable: {
     call_id: 100,
@@ -26,7 +25,7 @@ const obj = {
     number: 1,
     internal: false,
     participant_role: 'source',
-    user_id: 12345
+    contact_id: 12345
   }
 };
 const expected = 'INSERT';
