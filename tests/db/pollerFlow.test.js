@@ -11,8 +11,7 @@ const obj = {
 tape('test the pollerFlow', (t) => {
   t.plan(1);
   pg.connect(postgresURL, (err, client, done) => {
-    pollerFlow(client, done, obj, (res) => {
-      console.log(res, '<<<<<<<<<<<<<<<<<<<<<TEST');
+    pollerFlow(client, done, obj, () => {
     });
     done();
   });

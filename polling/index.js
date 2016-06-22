@@ -80,8 +80,6 @@ pollCalls.updateFileNames(company_name, (files) => {
                       caller.internal = true;
                     }
                     insertData.addToParticipantsTable(client, caller, () => {
-                      console.log(caller, '<--- caller');
-
                       done();
                     });
                   });
