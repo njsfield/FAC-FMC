@@ -1,7 +1,6 @@
 require('env2')('config.env');
 const request = require('request');
 const apiKey = process.env.API_KEY;
-const pbxUrl = 'https://fac1.ipcortex.net';
 
 /**
  * Fetches an array of file_names by company_name from the IPC API.
@@ -18,7 +17,7 @@ const pbxUrl = 'https://fac1.ipcortex.net';
 const updateFileNames = (company_name, callback) => {
   const options = {
     method: 'POST',
-    url: pbxUrl + '/rest/call/list',
+    url: process.env.PBX_URL + '/rest/call/list',
     headers:
     { 'cache-control': 'no-cache',
     'content-type': 'application/json' },
