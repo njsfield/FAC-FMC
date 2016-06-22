@@ -194,14 +194,6 @@ we resolve? What is the syntax for deleting the file only when all calls referen
       ON DELETE RESTRICT;
 */
 
-/*
-
-ALTER TABLE files
-ADD CONSTRAINT file_name
-UNIQUE file_name
-
-*/
-
 /****** 8. tags TABLE FOREIGN KEYS: ******/
 
 ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
