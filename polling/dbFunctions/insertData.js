@@ -35,8 +35,8 @@ const addToCallsTable = (dbClient, object, callback) => {
 };
 
 const addToUsersTable = (dbClient, object, callback) => {
-  const queryArray = [object.user_name, object.company_id, object.user_role];
-  dbClient.query('INSERT INTO users (user_name, company_id, user_role) VALUES ($1, $2, $3)', queryArray, (error, response) => {
+  const queryArray = [object.contact_id, object.company_id];
+  dbClient.query('INSERT INTO users (contact_id, company_id) VALUES ($1, $2)', queryArray, (error, response) => {
     if (error) throw error;
     callback(response);
   });
@@ -50,13 +50,13 @@ const addToParticipantsTable = (dbClient, object, callback) => {
   });
 };
 
-const addToTagsTable = (dbClient, object, callback) => {
-  const queryArray = [object.tag, object.user_id];
-  dbClient.query('INSERT INTO tags (tag, company_id) VALUES ($1, (SELECT company_id FROM users WHERE user_id=$2))', queryArray, (error, response) => {
-    if (error) throw error;
-    callback(response);
-  });
-};
+// const addToTagsTable = (dbClient, object, callback) => {
+//   const queryArray = [object.tag, object.user_id];
+//   dbClient.query('INSERT INTO tags (tag, company_id) VALUES ($1, (SELECT company_id FROM users WHERE user_id=$2))', queryArray, (error, response) => {
+//     if (error) throw error;
+//     callback(response);
+//   });
+// };
 
 module.exports = {
   addToCompaniesTable,
@@ -64,5 +64,5 @@ module.exports = {
   addToCallsTable,
   addToUsersTable,
   addToParticipantsTable,
-  addToTagsTable
+  // addToTagsTable
 };
