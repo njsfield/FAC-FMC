@@ -2,13 +2,12 @@
 require('env2')('config.env');
 const request = require('request');
 const apiKey = process.env.API_KEY;
-const pbxUrl = 'https://fac1.ipcortex.net';
 
 // searches for filenames by companyId
 const updateFileNames = (company_name, callback) => {
   const options = {
     method: 'POST',
-    url: pbxUrl + '/rest/call/list',
+    url: process.env.PBX_URL + '/rest/call/list',
     headers:
     { 'cache-control': 'no-cache',
     'content-type': 'application/json' },

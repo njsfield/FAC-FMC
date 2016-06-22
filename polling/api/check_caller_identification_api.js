@@ -1,4 +1,4 @@
-const pbxUrl = 'https://fac1.ipcortex.net';
+require('env2')('config.env');
 
   // fetches array of file_names
 'use strict';
@@ -8,7 +8,7 @@ const request = require('request');
 const checkLoginDeets = (companyId, callback) => {
   const options = {
     method: 'POST',
-    url: pbxUrl + '/rest/auth',
+    url: process.env.PBX_URL + '/rest/auth',
     headers:
       { 'cache-control': 'no-cache',
       'content-type': 'application/json' },
