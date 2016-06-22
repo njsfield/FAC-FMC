@@ -16,7 +16,7 @@ const obj = {
     duration: 999
   },
   addToUsersTable: {
-    user_name: 'testUser2',
+    contact_id: 239,
     company_id: 100,
     user_role: 'superUser'
   },
