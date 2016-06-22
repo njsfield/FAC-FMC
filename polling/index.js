@@ -6,30 +6,45 @@ const insertData = require('./dbFunctions/insertData.js');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
 const pg = require('pg');
 const company_name = 'default';
+/**
+ * API calls are made to IPC to update the participants table on a regular basis.
+ * Scheduling is still to be implemented.
+ *
+ * @param {string} company_name - The name of the company to which the calls are attributed.
+ * @param {object} file - Properties are caller, callee, duration, company_name, date, file_name,
+ * company_id, file_id and call_id.
+ * @param {object} user - Properties are user_role, user_name and company_id.
+ * @param {object} caller - Properties are call_id, company_id, number, internal, participant_role, user_id.
+ * @param {object} callee - Properties are call_id, company_id, number, internal, participant_role, user_id.
+ *
+ * Refactoring strategy: into 3 loops
+ * Loop 1:
+ * For each company, fetch a list of files.
+ *
+ * Loop 2:
+ * For each file, call functions that will...
+ * a) create a call recording
+ * b) create a callee participant
+ * c) create a caller participant
+ *
+ * If the caller matches the extension number, add to -> participants[].
+ *
+ * Loop 3:
+ * If participants.length > 0
+ * Update the participants table -> polling_calls_api/retrieveCallerDetails(participants)
+ *
+ * Additional features:
+ * 1. - Create a function that selects the highest index of the participants table and sets
+ *      it to a variable.
+ *    - If contact_id doesn't exist in Loop 3, where participant_id > max,
+ *      company_id = x and number = y internal should be set to 'true'.
+ *
+ * 2. Introduce try / catch for errors that respond to errors in different ways. e.g.
+ *    logging the error if related to the database.
+ *
+ * 3. Use push instead of concat to avoid clogging memory space.
+ */
 
-// introduce try  / catch error
-// check what kind of error it is e.g. if it's a db error, console.logging the error would be appropriate
-// Poller Flow:
-// should be refactored to look like:
-// 1st loop -> for each company, fetch list of files
-// select highest index of participants table (within a separate function) and set to a variable
-// participants = []
-// 2nd loop -> files.foreach(pabx(file))
-// if (createFileRecord (file)) {
-// createCallRecord()
-// createCalleeParty()
-// createCallerParty()
-// if caller is the ext number, add to party []
-//
-// if (participants.length > 0) {
-// 3rd loop -> retrieveCallerDetails(participants) ---> this updates the participants table...
-// Contact_id may not exist.
-// Use variable to find max index of participants and where participant_id > max,
-// company_id = x and number = y internal should be set to 'true'.
-//
-// }
-//}
-// SELECT * FROM companies WHERE company_name=$1
 pollCalls.updateFileNames(company_name, (files) => {
   var calleeList = [];
   var callerList = [];
@@ -65,6 +80,8 @@ pollCalls.updateFileNames(company_name, (files) => {
                       caller.internal = true;
                     }
                     insertData.addToParticipantsTable(client, caller, () => {
+                      console.log(caller, '<--- caller');
+
                       done();
                     });
                   });
