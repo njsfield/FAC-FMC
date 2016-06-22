@@ -8,9 +8,10 @@ tape('check that we can fetch the audio with a file_id', (t) => {
   const file_id = '100';
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
-    fetchAudio.fetchAudio(client, done, file_id, (result) => {
+    fetchAudio.fetchAudio(client, file_id, (result) => {
       const actual = result;
       t.deepEqual(actual, expected, 'call file_id found');
+      done();
     });
   });
   pg.end();

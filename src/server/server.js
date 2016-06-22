@@ -33,10 +33,10 @@ Server.register(plugins, (error) => {
   Server.route(routes);
 
   Server.auth.strategy('jwt', 'jwt',
-    { key: process.env.JWT_KEY,          // Never Share your secret key
+    { key: process.env.JWT_KEY,
       validateFunc: login.validate,
-      verifyFunc: login.verify,       // validate function defined above
-      verifyOptions: { algorithms: [ 'HS256' ] } // pick a strong algorithm
+      verifyFunc: login.verify,
+      verifyOptions: { algorithms: [ 'HS256' ] } 
     });
 
   Server.auth.default('jwt');
