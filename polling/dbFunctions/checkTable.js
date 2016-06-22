@@ -1,7 +1,14 @@
 const insertData = require('./insertData.js');
 
-//functions to check a table for a specfic bit of data.
-//If said data is not in the table functions are called to insert it
+/**
+ * Each function checks a table for specific data. What is checked for in each function
+ * is evident as a property of the object parameter. If checked for data is absent,
+ * functions from insertData.js are called to insert it.
+ * @param {object} dbClient - The postgres client server object.
+ * @param {object} object - Data to be inserted into each function.
+ * @param {function} callback - Returns response.
+ */
+
 const checkCompaniesTable = (cli, obj, cb) => {
   const queryArray = [obj.company_name];
   cli.query('SELECT EXISTS (SELECT * FROM companies WHERE company_name=($1))', queryArray, (err, res) => {
