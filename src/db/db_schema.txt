@@ -107,7 +107,7 @@ WITHOUT OIDS;
 CREATE TABLE filters (
     filter_id   BIGINT DEFAULT nextval('filters_seq'::text),
     filter_name TEXT NOT NULL,
-    user_id     BIGINT NOT NULL,
+    contact_id  BIGINT NOT NULL,
     filter_spec TEXT NOT NULL,
 
     CONSTRAINT filters_pk PRIMARY KEY(filter_id)
@@ -116,11 +116,10 @@ WITHOUT OIDS;
 
 /****** 8. USERS TABLE ******/
 CREATE TABLE users (
-    user_id    BIGINT DEFAULT nextval('tags_seq'::text),
     contact_id BIGINT NOT NULL,
     company_id BIGINT NOT NULL,
 
-    CONSTRAINT users_pk PRIMARY KEY(user_id)
+    CONSTRAINT users_pk PRIMARY KEY(contact_id)
 )
 WITHOUT OIDS;
 
@@ -178,8 +177,8 @@ ALTER TABLE users ADD CONSTRAINT users_companies_fk
 /****** 5. filters TABLE FOREIGN KEYS: ******/
 
 ALTER TABLE filters ADD CONSTRAINT filters_users_fk
-      FOREIGN KEY (user_id)
-      REFERENCES users(user_id)
+      FOREIGN KEY (contact_id)
+      REFERENCES users(contact_id)
       ON DELETE CASCADE;
 
 /****** 6. files TABLE FOREIGN KEYS: ******/
