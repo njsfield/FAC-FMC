@@ -75,18 +75,18 @@ const checkParticipantsTable = (dbClient, obj, cb) => {
   });
 };
 
-const checkTagsTable = (url, dbClient, obj, cb) => {
-  const queryArray = [obj.tag, obj.user_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM tags WHERE tag=($1) AND company_id=((SELECT company_id FROM users WHERE user_id=($2))))', queryArray, (err, res) => {
-    if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    if (res.rows[0][boolKey] === false) {
-      insertData.addToTagsTable(url, dbClient, obj, cb);
-    } else {
-      cb(res);
-    }
-  });
-};
+// const checkTagsTable = (url, dbClient, obj, cb) => {
+//   const queryArray = [obj.tag, obj.user_id];
+//   dbClient.query('SELECT EXISTS (SELECT * FROM tags WHERE tag=($1) AND company_id=((SELECT company_id FROM users WHERE user_id=($2))))', queryArray, (err, res) => {
+//     if (err) throw err;
+//     const boolKey = Object.keys(res.rows[0])[0];
+//     if (res.rows[0][boolKey] === false) {
+//       insertData.addToTagsTable(url, dbClient, obj, cb);
+//     } else {
+//       cb(res);
+//     }
+//   });
+// };
 
 module.exports = {
   checkFilesTable,
@@ -94,5 +94,5 @@ module.exports = {
   checkCallsTable,
   checkUsersTable,
   checkParticipantsTable,
-  checkTagsTable
+  // checkTagsTable
 };
