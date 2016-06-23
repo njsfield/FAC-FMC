@@ -2,6 +2,7 @@
 //     Consider removing user_id and company_id from the xhr.open and insert them into the xhr.send as
 //     a stringified object. */
 //
+
 // var fetchCalls = () => {
 //   var xhr = new XMLHttpRequest();
 //   xhr.onreadystatechange = function() {
@@ -9,14 +10,14 @@
 //       console.log(xhr.responseText);
 //     }
 //   };
-//   var contact_id = '4387735';
+//   var user_id = '4387735';
 //   var company_id = '100';
-//   xhr.open('GET', '/fetch-calls/' + contact_id + '/' + company_id, true);
+//   xhr.open('GET', '/fetch-calls/' + user_id + '/' + company_id, true);
 //   xhr.send();
 // };
 //
 // fetchCalls();
-//
+
 // // var fetchAudio = () => {
 // //   var xhr = new XMLHttpRequest();
 // //   xhr.onreadystatechange = function() {
