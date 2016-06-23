@@ -1,30 +1,25 @@
 require('env2')('config.env');
 const JWT = require('jsonwebtoken');
-const validate = require('../auth/validate.js');
-// const loginApi = require('../../polling/api/check_caller_identification_api.js')
-// const pg = require('pg')
-// const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
-
-// const checkUser = require('../../polling/dbFunctions/checkTable.js')
+const loginApi = require('../../polling/api/check_caller_identification_api.js');
 
 module.exports = {
   method: 'POST',
   path: '/login',
   config: { auth: false },
   handler: (request, reply) => {
-    validate({
-      username: request.payload.username,
-      password: request.payload.password,
-    }, request, (err, isValid) => {
-      if (err || !isValid)
-        return reply.redirect('/');
+    const password = request.payload.password;
+    const username = request.payload.username;
+    loginApi.checkLoginDeets(username, password, 'default', (user) => {
 
-      const token = JWT.sign({
-        username: request.payload.username,
-        password: request.payload.password
-      }, process.env.JWT_KEY);
+      if (user.result === 'success') {
 
-      reply.redirect('/dashboard').state('token', token);
-    }, request.payload.username, request.payload.password);
+        const token = JWT.sign({
+          username,
+          password
+        }, process.env.JWT_KEY);
+
+        reply.redirect('/dashboard').state('token', token);
+      }
+    });
   }
 };
