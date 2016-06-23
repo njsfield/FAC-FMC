@@ -15,7 +15,7 @@ const routes = [
   require('../routes/dashboard.js'),
   require('../routes/editTag.js'),
   require('../routes/fetchAudio.js'),
-  require('../routes/fetchCalls.js'),
+  // require('../routes/fetchCalls.js'),
   require('../routes/index.js'),
   require('../routes/logout.js'),
   require('../routes/schema.js'),
@@ -36,7 +36,7 @@ Server.register(plugins, (error) => {
     { key: process.env.JWT_KEY,
       validateFunc: login.validate,
       verifyFunc: login.verify,
-      verifyOptions: { algorithms: [ 'HS256' ] } 
+      verifyOptions: { algorithms: [ 'HS256' ] }
     });
 
   Server.auth.default('jwt');
