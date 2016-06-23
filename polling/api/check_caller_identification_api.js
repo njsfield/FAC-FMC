@@ -16,7 +16,7 @@ const request = require('request');
      perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } }
  */
 
-const checkLoginDeets = (company_name, callback) => {
+const checkLoginDeets = (username, password, company_name, callback) => {
   const options = {
     method: 'POST',
     url: process.env.PBX_URL + '/rest/auth',
@@ -27,8 +27,8 @@ const checkLoginDeets = (company_name, callback) => {
     {
       auth: {
         type: 'auth',
-        username: 'fac30a',
-        password: 'gh2ig32z'
+        username: username,
+        password: password
       }
     },
     json: true
