@@ -2,7 +2,8 @@ const Hapi = require('hapi');
 const Server = new Hapi.Server();
 const port = process.env.PORT || 3000;
 const views = require('./views.js');
-const login = require('../routes/login.js');
+const validate = require('../auth/validate.js');
+const verify = require('../auth/verify.js');
 
 const plugins = [
   require('inert'),
@@ -11,11 +12,11 @@ const plugins = [
 ];
 
 const routes = [
-  login.routeObj,
+  require('../routes/login.js'),
   require('../routes/dashboard.js'),
   require('../routes/editTag.js'),
   require('../routes/fetchAudio.js'),
-  require('../routes/fetchCalls.js'),
+  // require('../routes/fetchCalls.js'),
   require('../routes/index.js'),
   require('../routes/logout.js'),
   require('../routes/schema.js'),
@@ -34,9 +35,9 @@ Server.register(plugins, (error) => {
 
   Server.auth.strategy('jwt', 'jwt',
     { key: process.env.JWT_KEY,
-      validateFunc: login.validate,
-      verifyFunc: login.verify,
-      verifyOptions: { algorithms: [ 'HS256' ] } 
+      validateFunc: validate,
+      verifyFunc: verify,
+      verifyOptions: { algorithms: [ 'HS256' ] }
     });
 
   Server.auth.default('jwt');
