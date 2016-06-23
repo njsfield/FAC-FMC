@@ -1,41 +1,30 @@
+require('env2')('config.env');
 const JWT = require('jsonwebtoken');
-const loginApi = require('../../polling/api/check_caller_identification_api.js');
+const validate = require('../auth/validate.js');
+// const loginApi = require('../../polling/api/check_caller_identification_api.js')
+// const pg = require('pg')
+// const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc'
 
-function validate (body, decoded, request, callback) {
-  // do your checks to see if the person is valid
-  if (!body.user[decoded.id]) {
-    return callback(null, false);
-  }
-  else {
-    return callback(null, true);
-  }
-}
-
-function verify (decoded, request, callback) {
-  return callback(null, true, decoded);
-};
+// const checkUser = require('../../polling/dbFunctions/checkTable.js')
 
 module.exports = {
-  routeObj: {
-    method: 'GET',
-    path: '/login',
-    config: { auth: false },
-    handler: (request, reply) => {
-      loginApi.checkLoginDeets('default', (body) => {
-        if (body.result === 'success') {
+  method: 'POST',
+  path: '/login',
+  config: { auth: false },
+  handler: (request, reply) => {
+    validate({
+      username: request.payload.username,
+      password: request.payload.password,
+    }, request, (err, isValid) => {
+      if (err || !isValid)
+        return reply.redirect('/');
 
-          const secret = 'guigihfkhfkh';
+      const token = JWT.sign({
+        username: request.payload.username,
+        password: request.payload.password
+      }, process.env.JWT_KEY);
 
-          const token = JWT.sign(body.user, secret); // synchronous
-          const user = '4387735'; // const user = body.user.login (what it would be)
-          const comp = '100';
-          reply.redirect(`/dashboard/${user}/${comp}`).state('token', token);
-        } else {
-          reply.redirect('/');
-        }
-      });
-    }
-  },
-  validate,
-  verify
+      reply.redirect('/dashboard').state('token', token);
+    }, request.payload.username, request.payload.password);
+  }
 };
