@@ -39,6 +39,5 @@ const getCall_id = (dbClient, obj, cb) => {
 module.exports = {
   getCompany_id,
   getFile_id,
-  getCall_id,
-  // getUser_id
+  getCall_id
 };
