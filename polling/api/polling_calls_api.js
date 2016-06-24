@@ -14,7 +14,7 @@ const apiKey = process.env.API_KEY;
     file_name: '2016.06.15.14.37.20-1465997840-239-238.wav' }
  */
 
-const updateFileNames = (company_name, callback) => {
+const pollForFileInfo = (company_name, callback) => {
   const options = {
     method: 'POST',
     url: process.env.PBX_URL + '/rest/call/list',
@@ -29,28 +29,34 @@ const updateFileNames = (company_name, callback) => {
 
   request(options, (error, response, body) => {
     if (error) throw error;
-    const files = body.values.map((el) => {
-      delete el.size;
-      el.company_name = company_name;
-      el.date = el.start;
-      delete el.start;
-      el.file_name = el.file;
-      delete el.file;
-      return el;
-    });
-    callback(files);
+
+    if (body.result === 'fail') {
+      callback('Company name does not exist.');
+    }
+    else {
+      const files = body.values.map((el) => {
+        delete el.size;
+        el.company_name = company_name;
+        el.date = el.start;
+        delete el.start;
+        el.file_name = el.file;
+        delete el.file;
+        return el;
+      });
+      callback(files);
+    }
   });
 };
 
 /**
- * Fetches the actual wav file using the file_names returned from updateFileNames().
+ * Fetches the actual wav file using the file_names returned from pollForFileInfo().
  * @param {string} file_name
  * @param {function} callback - Returns wav file to root folder.
  */
 
 const retrieveWav = (file_name, callback) => {
   const options = { method: 'POST',
-  url: pbxUrl + '/rest/call/download/recording',
+  url: process.env.PBX_URL + '/rest/call/download/recording',
   encoding: null,
   headers:
   { 'cache-control': 'no-cache',
@@ -87,7 +93,7 @@ const retrieveWav = (file_name, callback) => {
 const retrieveCallerDetails = (company_name, extension_list, callback) => {
   const options = {
     method: 'post',
-    url: pbxUrl + '/rest/dialplan/read',
+    url: process.env.PBX_URL + '/rest/dialplan/read',
     encoding: null,
     headers: {
       'cache-control': 'no-cache',
@@ -119,7 +125,7 @@ const retrieveCallerDetails = (company_name, extension_list, callback) => {
 };
 
 module.exports = {
-  updateFileNames,
+  pollForFileInfo,
   retrieveWav,
   retrieveCallerDetails
 };
