@@ -9,26 +9,35 @@ FAC Find My Calls
 
 * Make sure you have PostgreSQL installed.
 
+* Install the npm modules:
+
+```
+$ npm i
+```
 * Start your Postgres server by entering the following or a similar command into your terminal:
 
 ```
 $ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 
 ```
-
-* Install the npm modules:
+* Login to psql as the Postgres user:
 
 ```
-$ npm i
+$ psql postgres
+```
+* Connect to the fmc database:
+
+```
+$ \c fmc
 ```
 
-* Authorise your localhost:
+* In a separate terminal tab window, authorise your localhost:
 
 ```
 $ export NODE_TLS_REJECT_UNAUTHORIZED=0
 ```
 
-* Finally, run either:
+* Then finally, run either:
 
 ```
 $ npm start
