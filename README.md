@@ -47,3 +47,5 @@ or
 ```
 $ npm run startmon
 ```
+
+You'll need to configure the environment variables - these will need to be shared privately.
