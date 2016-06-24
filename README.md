@@ -4,3 +4,46 @@
 FAC Find My Calls
 
 [![Build Status](https://travis-ci.org/ipcortex/FAC-FMC.svg?branch=master)](https://travis-ci.org/ipcortex/FAC-FMC)
+
+## Getting Started
+
+* Make sure you have PostgreSQL installed.
+
+* Install the npm modules:
+
+```
+$ npm i
+```
+* Start your Postgres server by entering the following or a similar command into your terminal:
+
+```
+$ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+
+```
+* Login to psql as the Postgres user:
+
+```
+$ psql postgres
+```
+* Connect to the fmc database:
+
+```
+$ \c fmc
+```
+
+* In a separate terminal tab window, authorise your localhost:
+
+```
+$ export NODE_TLS_REJECT_UNAUTHORIZED=0
+```
+
+* Then finally, run either:
+
+```
+$ npm start
+```
+or
+
+```
+$ npm run startmon
+```
