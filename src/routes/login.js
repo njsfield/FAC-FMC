@@ -18,7 +18,10 @@ module.exports = {
           password
         }, process.env.JWT_KEY);
 
-        reply.redirect('/dashboard').state('token', token);
+        return reply.redirect('/dashboard').state('token', token);
+      }
+      else {
+        return reply.redirect('/');
       }
     });
   }
