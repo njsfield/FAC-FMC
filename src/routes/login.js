@@ -26,6 +26,7 @@ module.exports = {
           userRole = 'admin';
         }
         const token = JWT.sign({
+          contact_id: user.user.id,
           username,
           password,
           userRole
