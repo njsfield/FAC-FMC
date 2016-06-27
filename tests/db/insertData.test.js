@@ -30,12 +30,17 @@ const obj = {
   addToTagsTable: {
     contact_id: 238,
     tag_name: 'urgent'
+  },
+  addToTagsCallsTable: {
+    company_id: 100,
+    file_id: 100,
+    tag_name: 'urgent'
   }
 };
 const expected = 'INSERT';
 
 tape('test the insertData functions', (t) => {
-  t.plan(6);
+  t.plan(7);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     insertData.addToCompaniesTable(client, obj.addToCompaniesTable, (res) => {
@@ -66,6 +71,11 @@ tape('test the insertData functions', (t) => {
     insertData.addToTagsTable(client, obj.addToTagsTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to tags table');
+      done();
+    });
+    insertData.addToTagsCallsTable(client, obj.addToTagsCallsTable, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to tagsCalls table');
       done();
     });
     pg.end();
