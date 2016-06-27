@@ -31,12 +31,6 @@ $ psql postgres
 $ \c fmc
 ```
 
-* In a separate terminal tab window, authorise your localhost:
-
-```
-$ export NODE_TLS_REJECT_UNAUTHORIZED=0
-```
-
 * Then finally, run either:
 
 ```
