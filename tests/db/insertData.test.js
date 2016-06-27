@@ -26,12 +26,16 @@ const obj = {
     internal: false,
     participant_role: 'source',
     contact_id: 12345
+  },
+  addToTagsTable: {
+    contact_id: 238,
+    tag_name: 'urgent'
   }
 };
 const expected = 'INSERT';
 
 tape('test the insertData functions', (t) => {
-  t.plan(5);
+  t.plan(6);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     insertData.addToCompaniesTable(client, obj.addToCompaniesTable, (res) => {
@@ -57,6 +61,11 @@ tape('test the insertData functions', (t) => {
     insertData.addToParticipantsTable(client, obj.addToParticipantsTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to participants table');
+      done();
+    });
+    insertData.addToTagsTable(client, obj.addToTagsTable, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to tags table');
       done();
     });
     pg.end();
