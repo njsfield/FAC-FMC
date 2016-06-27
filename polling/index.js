@@ -1,11 +1,12 @@
+'use strict';
+
 const pollCalls = require('./api/polling_calls_api.js');
+// const insertData = require('./dbFunctions/insertData.js');
 const pollerFlow = require('./dbFunctions/pollerFlow.js').pollerFlow;
-const continuedPollerFlow = require('./dbFunctions/pollerFlow.js').continuedPollerFlow;
-const insertData = require('./dbFunctions/insertData.js');
-// const fs = require('fs')
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
 const pg = require('pg');
-const company_name = 'default';
+const companyName = 'default';
+
 /**
  * API calls are made to IPC to update the participants table on a regular basis.
  * Scheduling is still to be implemented.
@@ -45,86 +46,47 @@ const company_name = 'default';
  * 3. Use push instead of concat to avoid clogging memory space.
  */
 
-pollCalls.pollForFileInfo(company_name, (files) => {
-  var calleeList = [];
-  var callerList = [];
-  pg.connect(postgresURL, (err, client, done) => {
+pollCalls.pollForFileInfo(companyName, (fileObjs) => {
+  let participantsArray = [];
+  pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
-    files.forEach((file, i) => {
-      pollerFlow(client, done, file, (result) => {
+    fileObjs.forEach((obj, i) => {
+      pollerFlow(dbClient, done, obj, (result) => {
         if(result.command === 'INSERT') {
-          if (calleeList.indexOf(file.callee) < 0 ) calleeList = calleeList.concat([file.callee]);
-          if (callerList.indexOf(file.caller) < 0 ) callerList = callerList.concat([file.caller]);
+          const callerQueryArray = [obj.call_id, obj.company_id, obj.caller, false, 'caller'];
+          dbClient.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role)' +
+          'VALUES ($1, $2, $3, $4, $5)', callerQueryArray, (error) => {
+            if (error) throw error;
+          });
+          const calleeQueryArray = [obj.call_id, obj.company_id, obj.callee, false, 'callee'];
+          dbClient.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role)' +
+          'VALUES ($1, $2, $3, $4, $5)', calleeQueryArray, (error) => {
+            if (error) throw error;
+          });
+          if (participantsArray.indexOf(obj.callee) < 0 ) participantsArray.push(obj.callee);
+          if (participantsArray.indexOf(obj.caller) < 0 ) participantsArray.push(obj.caller);
         }
         done();
-        if (i === files.length -1 ) {
-          if (callerList.length > 0) {
-            callerList.forEach((el) => {
-              pollCalls.retrieveCallerDetails(company_name, el, (res) => {
-                if (res.numrows !== 0) {
-                  const user = {
-                    user_role: 'testing', //hard coded data that will need to be changed <---------
-                    user_name: res.values[0].owner,
-                    company_id: file.company_id
-                  };
-                  continuedPollerFlow(client, done, user, (res2) => {
-                    const caller = {
-                      call_id: file.call_id,
-                      company_id: file.company_id,
-                      number: res.values[0].scoped_exten,
-                      internal: false,
-                      participant_role: 'source',
-                      user_id: res2
-                    };
-                    if (res.values[0].company === file.company_name) {
-                      caller.internal = true;
-                    }
-                    insertData.addToParticipantsTable(client, caller, () => {
-                      done();
-                    });
-                  });
-                } else {
-                  console.log('numrows was 0');
-                }
-              });
+        if (i === fileObjs.length -1 ) {
+          if (participantsArray.length > 0) {
+            pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
+              if (res.numrows === 0) {
+                console.log('no data returned from api call to IPC');
+              }
+              else {
+                res.values.forEach((extObj) => {
+                  console.log(extObj, '<---- extObj');
+                  const queryArray = [true, extObj.company, extObj.virt_exten];
+                  dbClient.query('UPDATE participants SET internal=($1) WHERE company_id=(SELECT company_id FROM companies WHERE company_name=$2) AND number=($3)',
+                queryArray, (error, response) => {
+                  console.log(response, '<---- response');
+                });
+                });
+              }
             });
           }
           else {
-            console.log('callerList is empty');
-          }
-          if (calleeList.length > 0) {
-            calleeList.forEach((el) => {
-              pollCalls.retrieveCallerDetails(company_name, el, (res) => {
-                if (res.numrows !== 0) {
-                  const user = {
-                    user_role: 'testing', //hard coded data that will need to be changed <---------
-                    user_name: res.values[0].owner,
-                    company_id: file.company_id
-                  };
-                  continuedPollerFlow(client, done, user, (res2) => {
-                    const callee = {
-                      call_id: file.call_id,
-                      company_id: file.company_id,
-                      number: res.values[0].scoped_exten,
-                      internal: false,
-                      participant_role: 'destination',
-                      user_id: res2
-                    };
-                    if (res.values[0].company === file.company_name) {
-                      callee.internal = true;
-                    }
-                    insertData.addToParticipantsTable(client, callee, () => {
-                      done();
-                    });
-                  });
-                } else {
-                  console.log('numrows was 0');
-                }
-              });
-            });
-          }
-          else {
-            console.log('callee list is empty as well');
+            console.log('no new participants were added');
           }
         }
       });
