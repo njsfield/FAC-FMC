@@ -14,3 +14,4 @@ require('./db/checkTable.test.js'); //all bar checkTags tested and pass
 // require('./db/fetchCalls.tests.js');
 // require('./db/fetchAudio.tests.js');
 // require('./api/polling_calls_api.test.js');
+require('./db/polling.index.test.js');
