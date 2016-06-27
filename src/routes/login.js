@@ -1,3 +1,5 @@
+/** Introduce functionality to store contact_id in users table */
+
 require('env2')('config.env');
 const JWT = require('jsonwebtoken');
 const loginApi = require('../../polling/api/check_caller_identification_api.js');

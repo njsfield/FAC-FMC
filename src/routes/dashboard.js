@@ -10,7 +10,7 @@ module.exports = {
     const decoded = JWT.decode(request.state.token);
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
-        return reply.view('login').unstate('token');
+        return reply.redirect('/').unstate('token');
       }
       else {
         const contact_id = request.params;

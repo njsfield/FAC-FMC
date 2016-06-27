@@ -45,7 +45,7 @@ const company_name = 'default';
  * 3. Use push instead of concat to avoid clogging memory space.
  */
 
-pollCalls.updateFileNames(company_name, (files) => {
+pollCalls.pollForFileInfo(company_name, (files) => {
   var calleeList = [];
   var callerList = [];
   pg.connect(postgresURL, (err, client, done) => {
