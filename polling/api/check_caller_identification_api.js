@@ -5,15 +5,18 @@ const request = require('request');
  * Sends username and password from client side server to IPC API for authentication.
  * @param {string} company_name
  * @param {function} callback - Returns the user object:
- *  user:
-   { id: 239,
-     login: 'fac30a',
-     name: 'Virginie Trubiano',
-     company: 'default',
-     home: 'default',
-     companies: [],
-     session: 'ti8gKjr89/Nylf2+Vv0pt8S4',
-     perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } }
+ *  { token: 'a very long string of random characters',
+      expires: 1467111677.992,
+      result: 'success',
+      user:
+       { id: 240,
+         login: 'fac30b',
+         name: 'Virginie Trubiano B',
+         company: 'default',
+         home: 'default',
+         companies: [],
+         session: 'ipBPs4Cq3XHbwmRQ6k6aksj3',
+         perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } }
  */
 
 const checkLoginDeets = (username, password, company_name, callback) => {
@@ -36,7 +39,6 @@ const checkLoginDeets = (username, password, company_name, callback) => {
 
   request(options, function (error, response, user) {
     if (error) throw (error);
-
     callback(user);
   });
 };
