@@ -2,6 +2,7 @@ const dbFetchCalls = require('../db/dbFetchCalls.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
 
 module.exports = {
   method: 'GET',
@@ -13,12 +14,11 @@ module.exports = {
         return reply.redirect('/').unstate('token');
       }
       else {
-        const contact_id = request.params;
-        const company_id = request.params.company_id;
-        const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
-        pg.connect(postgresURL, (err, client, done) => {
+        // const contact_id = request.params;
+        // const company_id = request.params.company_id;
+        pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
-          dbFetchCalls.fetchCalls(client, done, 4387735, 101, (result) => {
+          dbFetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
             const calls = {
               calls: result
             };
@@ -29,4 +29,5 @@ module.exports = {
     });
   }
 };
-// 4387735/101
+// contact_id=4387735
+// company_id=101
