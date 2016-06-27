@@ -14,20 +14,23 @@ module.exports = {
         return reply.redirect('/').unstate('token');
       }
       else {
-        // const contact_id = request.params;
-        // const company_id = request.params.company_id;
         pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
-          dbFetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
-            const calls = {
-              calls: result
-            };
-            reply.view('dashboard', calls);
+          dbClient.query('SELECT company_id FROM users WHERE contact_id=($1)', [decoded.contact_id], (err2, res) => {
+            if (err2) throw err2;
+            dbFetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
+              const calls = {
+                calls: result
+              };
+              reply.view('dashboard', calls);
+            });
           });
         });
       }
     });
   }
 };
-// contact_id=4387735
-// company_id=101
+// contact_id hard=4387735
+// company_id hard=101
+// contact_id soft=decoded.contact_id
+// company_id soft=res.rows[0].company_id
