@@ -1,3 +1,4 @@
+require('env2')('config.env');
 const JWT = require('jsonwebtoken');
 
 module.exports = (decoded, request, callback) => {
