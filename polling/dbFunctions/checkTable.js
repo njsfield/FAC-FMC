@@ -93,6 +93,6 @@ module.exports = {
   checkCompaniesTable,
   checkCallsTable,
   checkUsersTable,
-  checkParticipantsTable,
+  checkParticipantsTable
   // checkTagsTable
 };
