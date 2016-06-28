@@ -1,3 +1,7 @@
+const pg = require('pg');
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+
+
 module.exports = {
   method: 'post',
   path: '/tag-call',
