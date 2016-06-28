@@ -7,7 +7,8 @@ const obj = {
   file_name: 'recording_1',
   company_id: 100,
   file_id: 100,
-  user_name: 'testUser'
+  user_name: 'testUser',
+  tag_name: 'urgent'
 };
 
 tape('test the getID functions', (t) => {
@@ -30,6 +31,13 @@ tape('test the getID functions', (t) => {
       const actual = res;
       const expected = '100';
       t.deepEqual(actual, expected, 'getCall_id got the correct call_id from calls table');
+      done();
+    });
+    getID.getTag_id(client, obj, (res) => {
+      console.log(actual, '<--- actual');
+      const actual = res;
+      const expected = '100';
+      t.deepEqual(actual, expected, 'getTag_id got the correct tag_id from tags table');
       done();
     });
     pg.end();
