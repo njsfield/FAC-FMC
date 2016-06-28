@@ -1,4 +1,5 @@
 // Set up test database
+require('env2')('config.env');
 const fs = require('fs');
 const schema = require('../src/db/getSchema.js');
 const connectionString = 'postgres://postgres:postgrespassword@localhost/fmctest';
