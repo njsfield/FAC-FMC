@@ -30,7 +30,7 @@ module.exports = {
           username,
           password,
           userRole
-        }, JSON.stringify(process.env.JWT_KEY));
+        }, process.env.JWT_KEY);
 
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
