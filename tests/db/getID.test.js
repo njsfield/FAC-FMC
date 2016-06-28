@@ -12,7 +12,7 @@ const obj = {
 };
 
 tape('test the getID functions', (t) => {
-  t.plan(3);
+  t.plan(4);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     getID.getCompany_id(client, obj, (res) => {
@@ -34,7 +34,6 @@ tape('test the getID functions', (t) => {
       done();
     });
     getID.getTag_id(client, obj, (res) => {
-      console.log(actual, '<--- actual');
       const actual = res;
       const expected = '100';
       t.deepEqual(actual, expected, 'getTag_id got the correct tag_id from tags table');
