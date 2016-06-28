@@ -23,7 +23,6 @@ tape('test polling calls api functions ', (t) => {
     t.deepEqual(actual, expected, 'virtual extension number is as expected in values array');
   });
   pollCalls.retrieveCallerDetails('default', virtualExt.long, (res) => {
-    console.log(res, '<--------res!!!!!!');
     const actual = res.values[0].virt_exten;
     const expected = '241';
     t.deepEqual(actual, expected, 'virtual extension numbers are as expected in values array');
