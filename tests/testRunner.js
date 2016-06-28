@@ -14,4 +14,5 @@ schema.getSchema(connectionString, sql);
 // require('./db/fetchCalls.tests.js');
 // require('./db/fetchAudio.tests.js');
 // require('./api/polling_calls_api.test.js');
-require('./server/login-flow.test.js');
+require('./server/login-flow-success.test.js');
+require('./server/login-flow-fail.test.js');
