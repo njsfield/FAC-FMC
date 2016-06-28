@@ -1,4 +1,5 @@
 'use strict';
+require('env2')('config.env');
 const pg = require('pg');
 const server = require('../../src/server/server.js');
 const nock = require('nock');
