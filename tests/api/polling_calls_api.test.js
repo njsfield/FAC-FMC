@@ -1,4 +1,5 @@
 const tape = require('tape');
+const pg = require('pg');
 const pollCalls = require('../../polling/api/polling_calls_api.js');
 const virtualExt = {
   short: ['241'],
@@ -36,5 +37,6 @@ tape('test polling calls api functions ', (t) => {
     const actual = res.values.length;
     const expected = 0;
     t.deepEqual(actual, expected, 'incorrect company name won\'t add values to the array');
+    pg.end();
   });
 });
