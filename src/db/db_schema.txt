@@ -213,6 +213,7 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       INSERT INTO files (file_name) VALUES('recording_1');
       INSERT INTO files (file_name) VALUES('recording_2');
       INSERT INTO files (file_name) VALUES('recording_3');
+      INSERT INTO tags (tag_name, company_id) VALUES('important', 100);
 
 /* Create a call referencing this file */
 
