@@ -22,6 +22,12 @@
       </div>
     </div>
     <div id="collapse{{@index}}" class="panel-collapse collapse">
+      <form action="/tagCall" method="POST">
+        <div class="form-group">
+          <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
+        </div>
+        <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
+      </form>
       <div class="panel-body">Listen to your calls : {{ file_id}}</div>
     </div>
   </div>
