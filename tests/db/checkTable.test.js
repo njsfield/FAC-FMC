@@ -172,21 +172,20 @@ tape('test the checkTable functions', (t) => {
 //   })
 // })
 
-//
 // tape('test if tag exists in tags table and if not, inserts it', (t) => {
 //   const obj = {
 //     tag: 'meeting',
 //     user_id: 100
-//   }
+//   };
 //   pg.connect(postgresURL, (err, client, done) => {
-//     if (err) throw err
+//     if (err) throw err;
 //     pollingFuncs.checkTagsTable(client, obj, (res) => {
-//       const actual = res.command
-//       const expected = 'INSERT'
-//       t.deepEqual(actual, expected, 'tag inserted into tags table')
-//       done()
-//     })
-//     t.end()
-//     pg.end()
-//   })
-// })
+//       const actual = res.command;
+//       const expected = 'INSERT';
+//       t.deepEqual(actual, expected, 'tag inserted into tags table');
+//       done();
+//     });
+//     t.end();
+//     pg.end();
+//   });
+// });
