@@ -29,6 +29,7 @@
     "hapi-auth-jwt2": "^7.0.1",
     "inert": "^4.0.0",
     "jsonwebtoken": "^7.0.1",
+    "nock": "^8.0.0",
     "pg": "^5.0.0",
     "request": "^2.72.0",
     "tape": "^4.5.1",
