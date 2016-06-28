@@ -1,4 +1,5 @@
 // Set up test database
+require('env2')('config.env');
 const fs = require('fs');
 const schema = require('../src/db/getSchema.js');
 const connectionString = 'postgres://postgres:postgrespassword@localhost/fmctest';
@@ -14,3 +15,5 @@ require('./db/getID.test.js'); //All functions tested and pass
 // require('./db/fetchCalls.tests.js');
 // require('./db/fetchAudio.tests.js');
 // require('./api/polling_calls_api.test.js');
+require('./server/login-flow-success.test.js');
+require('./server/login-flow-fail.test.js');

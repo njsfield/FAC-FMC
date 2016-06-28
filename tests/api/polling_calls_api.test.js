@@ -1,4 +1,5 @@
 const tape = require('tape');
+const pg = require('pg');
 const pollCalls = require('../../polling/api/polling_calls_api.js');
 const virtualExt = {
   short: ['241'],
@@ -23,7 +24,6 @@ tape('test polling calls api functions ', (t) => {
     t.deepEqual(actual, expected, 'virtual extension number is as expected in values array');
   });
   pollCalls.retrieveCallerDetails('default', virtualExt.long, (res) => {
-    console.log(res, '<--------res!!!!!!');
     const actual = res.values[0].virt_exten;
     const expected = '241';
     t.deepEqual(actual, expected, 'virtual extension numbers are as expected in values array');
@@ -37,5 +37,6 @@ tape('test polling calls api functions ', (t) => {
     const actual = res.values.length;
     const expected = 0;
     t.deepEqual(actual, expected, 'incorrect company name won\'t add values to the array');
+    pg.end();
   });
 });
