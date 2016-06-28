@@ -8,6 +8,7 @@ const pg = require('pg');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
 const checkTable = require('../../polling/dbFunctions/checkTable.js');
 const getID = require('../../polling/dbFunctions/getID.js');
+const secret = process.env.JWT_KEY;
 
 module.exports = {
   method: 'POST',
@@ -30,7 +31,7 @@ module.exports = {
           username,
           password,
           userRole
-        }, process.env.JWT_KEY);
+        }, secret.toString());
 
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
