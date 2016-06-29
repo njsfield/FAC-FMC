@@ -30,8 +30,13 @@ $ psql postgres
 ```
 $ \c fmc
 ```
+* Run the schema:
 
-* Then finally, run either:
+```
+$ \i src/db/db_schema.txt
+```
+
+* Then, in a separate tab, run either:
 
 ```
 $ npm start
