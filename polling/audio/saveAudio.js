@@ -5,8 +5,9 @@ const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
 const getID = require('../dbFunctions/getID.js');
 
 const saveAudio = (file_name) => {
-  const obj = {};
-  obj.file_name = file_name;
+  const obj = {
+    file_name
+  };
   pg.connect(postgresURL, (err, client, done) => {
     getID.getFile_id(client, obj, (response) => {
       polling_calls_api.retrieveWav(file_name, (res) => {
@@ -17,6 +18,8 @@ const saveAudio = (file_name) => {
     pg.end();
   });
 };
+
+saveAudio('2016.06.15.14.36.01-1465997761-239-238.wav');
 
 module.exports = {
   saveAudio
