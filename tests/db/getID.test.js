@@ -7,12 +7,22 @@ const obj = {
   file_name: 'recording_1',
   company_id: 100,
   file_id: 100,
-  user_name: 'testUser',
-  tag_name: 'important'
+  tag_name: 'important',
+  filter_name: 'test-filter',
+  contact_id: 450,
+  filter_spec: {
+    to: 100,
+    from: '',
+    contact_id: '',
+    min: '',
+    max: '',
+    date: '',
+    tags: ''
+  }
 };
 
 tape('test the getID functions', (t) => {
-  t.plan(4);
+  t.plan(5);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     getID.getCompany_id(client, obj, (res) => {
@@ -39,6 +49,12 @@ tape('test the getID functions', (t) => {
       t.deepEqual(actual, expected, 'getTag_id got the correct tag_id from tags table');
       done();
     });
-    pg.end();
+    getID.getFilter_id(client, obj, (res) => {
+      const actual = res;
+      const expected = '100';
+      t.deepEqual(actual, expected, 'getFilter_id got the correct filter_id from filters table');
+      done();
+      // pg.end();
+    });
   });
 });
