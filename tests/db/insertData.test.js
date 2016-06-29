@@ -35,12 +35,16 @@ const obj = {
     company_id: 100,
     file_id: 100,
     tag_name: 'urgent'
+  },
+  editTagsTable: {
+    tag_id: 100,
+    tag_name: 'important'
   }
 };
 const expected = 'INSERT';
 
 tape('test the insertData functions', (t) => {
-  t.plan(7);
+  t.plan(2);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     insertData.addToCompaniesTable(client, obj.addToCompaniesTable, (res) => {
@@ -48,36 +52,44 @@ tape('test the insertData functions', (t) => {
       t.deepEqual(actual, expected, 'added to companies table');
       done();
     });
-    insertData.addToFilesTable(client, obj.addToFilesTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to files table');
-      done();
-    });
-    insertData.addToUsersTable(client, obj.addToUsersTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to users table');
-      done();
-    });
-    insertData.addToParticipantsTable(client, obj.addToParticipantsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to participants table');
-      done();
-    });
+    // insertData.addToFilesTable(client, obj.addToFilesTable, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected, 'added to files table');
+    //   done();
+    // });
+    // insertData.addToUsersTable(client, obj.addToUsersTable, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected, 'added to users table');
+    //   done();
+    // });
+    // insertData.addToParticipantsTable(client, obj.addToParticipantsTable, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected, 'added to participants table');
+    //   done();
+    // });
     insertData.addToTagsTable(client, obj.addToTagsTable, (res) => {
+      console.log(res, '>>>>>>>>>>>>>1');
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to tags table');
       done();
     });
-    insertData.addToTagsCallsTable(client, obj.addToTagsCallsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to tagsCalls table');
-      done();
-    });
-    insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to calls table');
-      done();
-      pg.end();
-    });
+    // insertData.addToTagsCallsTable(client, obj.addToTagsCallsTable, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected, 'added to tagsCalls table');
+    //   done();
+    // });
+    // insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
+    //   console.log(res, '>>>>>>>>>>>>>2');
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected, 'added to calls table');
+    //   done();
+    // });
+    // insertData.editTagsTable(client, obj.editTagsTable, (res) => {
+    //   const actual = res.command;
+    //   const expected2 = 'UPDATE';
+    //   t.deepEqual(actual, expected2, 'added to tagsCalls table');
+    //   done();
+    //   pg.end();
+    // });
   });
 });
