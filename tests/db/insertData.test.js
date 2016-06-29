@@ -53,11 +53,6 @@ tape('test the insertData functions', (t) => {
       t.deepEqual(actual, expected, 'added to files table');
       done();
     });
-    insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to calls table');
-      done();
-    });
     insertData.addToUsersTable(client, obj.addToUsersTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to users table');
@@ -78,6 +73,11 @@ tape('test the insertData functions', (t) => {
       t.deepEqual(actual, expected, 'added to tagsCalls table');
       done();
     });
-    pg.end();
+    insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to calls table');
+      done();
+      pg.end();
+    });
   });
 });

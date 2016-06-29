@@ -31,6 +31,10 @@ const existingDataObj = {
     company_id: 100,
     call_id: 100,
     contact_id: 3222
+  },
+  tagsT: {
+    tag_name: 'important',
+    company_id: 100
   }
 };
 
@@ -58,11 +62,15 @@ const newDataObj = {
     participant_role: 'source',
     number: 1,
     contact_id: 999
+  },
+  tagsT: {
+    tag_name: 'fresh',
+    company_id: 100
   }
 };
 
 tape('test the checkTable functions', (t) => {
-  t.plan(12);
+  t.plan(14);
   pg.connect(postgresURL, (err, client, done) => {
     const expected1 = true;
     const expected2 = 'INSERT';
@@ -102,6 +110,12 @@ tape('test the checkTable functions', (t) => {
       t.deepEqual(actual, expected1, 'data exists in participants table');
       done();
     });
+    checkTable.checkTagsTable(client, existingDataObj.tagsT, (res) => {
+      const boolKey = Object.keys(res.rows[0])[0];
+      const actual = res.rows[0][boolKey];
+      t.deepEqual(actual, expected1, 'tag exists in tags table');
+    });
+
     ///////////////////////// end /////////////////////
 
     /////////////// adds data to tables ///////////////
@@ -125,6 +139,11 @@ tape('test the checkTable functions', (t) => {
     checkTable.checkParticipantsTable(client, newDataObj.participantsT, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected2, 'new data added to participants table');
+      done();
+    });
+    checkTable.checkTagsTable(client, newDataObj.tagsT, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected2, 'new data added to tags table');
       done();
     });
     /////////////////////////// end /////////////////////////////
@@ -172,21 +191,20 @@ tape('test the checkTable functions', (t) => {
 //   })
 // })
 
-//
 // tape('test if tag exists in tags table and if not, inserts it', (t) => {
 //   const obj = {
 //     tag: 'meeting',
 //     user_id: 100
-//   }
+//   };
 //   pg.connect(postgresURL, (err, client, done) => {
-//     if (err) throw err
-//     pollingFuncs.checkTagsTable(client, obj, (res) => {
-//       const actual = res.command
-//       const expected = 'INSERT'
-//       t.deepEqual(actual, expected, 'tag inserted into tags table')
-//       done()
-//     })
-//     t.end()
-//     pg.end()
-//   })
-// })
+//     if (err) throw err;
+//     checkTable.checkTagsTable(client, obj, (res) => {
+//       const actual = res.command;
+//       const expected = 'INSERT';
+//       t.deepEqual(actual, expected, 'tag inserted into tags table');
+//       done();
+//     });
+//     t.end();
+//     pg.end();
+//   });
+// });

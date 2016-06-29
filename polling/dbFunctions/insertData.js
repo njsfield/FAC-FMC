@@ -53,8 +53,8 @@ const addToParticipantsTable = (dbClient, object, callback) => {
 };
 
 const addToTagsTable = (dbClient, object, callback) => {
-  const queryArray = [object.tag_name, object.contact_id];
-  dbClient.query('INSERT INTO tags (tag_name, company_id) VALUES ($1, (SELECT company_id FROM users WHERE contact_id=$2))', queryArray, (error, response) => {
+  const queryArray = [object.tag_name, object.company_id];
+  dbClient.query('INSERT INTO tags (tag_name, company_id) VALUES ($1, $2)', queryArray, (error, response) => {
     if (error) throw error;
     callback(response);
   });
