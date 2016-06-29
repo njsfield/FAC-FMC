@@ -75,7 +75,6 @@ pollCalls.pollForFileInfo(companyName, (fileObjs) => {
               }
               else {
                 res.values.forEach((extObj) => {
-                  console.log(extObj, '<---- extObj');
                   const queryArray = [true, extObj.company, extObj.virt_exten];
                   dbClient.query('UPDATE participants SET internal=($1) WHERE company_id=(SELECT company_id FROM companies WHERE company_name=$2) AND number=($3)',
                 queryArray, (error, response) => {
