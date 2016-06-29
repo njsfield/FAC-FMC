@@ -61,9 +61,8 @@ const addToTagsTable = (dbClient, object, callback) => {
 };
 
 const addToTagsCallsTable = (dbClient, object, callback) => {
-  const queryArray = [object.company_id, object.file_id, object.tag_name];
-  dbClient.query('INSERT INTO tags_calls (call_id, tag_id) VALUES ((SELECT call_id FROM calls WHERE company_id=$1 AND file_id=$2), (SELECT tag_id FROM tags WHERE tag_name=$3))',
-  queryArray, (error, response) => {
+  const queryArray = [object.call_id, object.tag_id];
+  dbClient.query('INSERT INTO tags_calls (call_id, tag_id) VALUES ($1, $2)', queryArray, (error, response) => {
     if (error) throw error;
     callback(response);
   });
