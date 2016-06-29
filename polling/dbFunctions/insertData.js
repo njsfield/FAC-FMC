@@ -69,6 +69,14 @@ const addToTagsCallsTable = (dbClient, object, callback) => {
   });
 };
 
+const editTagsTable = (dbClient, object, callback) => {
+  const queryArray = [object.tag_name, object.tag_id];
+  dbClient.query('UPDATE tags SET tag_name=$1 WHERE tag_id=$2', queryArray, (error, response) => {
+    if (error) throw error;
+    callback(response);
+  });
+};
+
 module.exports = {
   addToCompaniesTable,
   addToFilesTable,
@@ -76,5 +84,6 @@ module.exports = {
   addToUsersTable,
   addToParticipantsTable,
   addToTagsTable,
-  addToTagsCallsTable
+  addToTagsCallsTable,
+  editTagsTable
 };
