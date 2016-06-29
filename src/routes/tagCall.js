@@ -3,6 +3,7 @@ const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
 const JWT = require('jsonwebtoken');
 const checkTable = require('../../polling/dbFunctions/checkTable.js');
 const getId = require('../../polling/dbFunctions/getID.js');
+const insert = require('../../polling/dbFunctions/insertData.js');
 const validate = require('../auth/validate.js');
 
 module.exports = {
@@ -22,8 +23,20 @@ module.exports = {
               tag_name: request.payload.tag,
               company_id: company_id
             };
-            checkTable.checkTagsTable(dbClient, tag, done);
-            reply.redirect('/dashboard');
+            checkTable.checkTagsTable(dbClient, tag, () => {
+
+              getId.getTag_id(dbClient, tag, (tag_id) => {
+                const tagsCalls = {
+                  tag_id: tag_id,
+                  call_id: request.payload.call_id
+                };
+
+                insert.addToTagsCallsTable(dbClient, tagsCalls, () => {
+                  reply.redirect('/dashboard');
+                  done();
+                });
+              });
+            });
           });
         });
       }
