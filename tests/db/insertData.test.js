@@ -28,14 +28,17 @@ const obj = {
     contact_id: 12345
   },
   addToTagsTable: {
-    contact_id: 238,
+    company_id: 100,
     tag_name: 'urgent'
   },
   addToTagsCallsTable: {
-    company_id: 100,
-    file_id: 100,
-    tag_name: 'urgent'
+    call_id: 100,
+    tag_id: 100
   }
+  // editTagsTable: {
+  //   tag_id: 100,
+  //   tag_name: 'important'
+  // }
 };
 const expected = 'INSERT';
 
@@ -79,5 +82,11 @@ tape('test the insertData functions', (t) => {
       done();
       pg.end();
     });
+    // insertData.editTagsTable(client, obj.editTagsTable, (res) => {
+    //   const actual = res.command;
+    //   const expected2 = 'UPDATE';
+    //   t.deepEqual(actual, expected2, 'added to tagsCalls table');
+    //   done();
+    // });
   });
 });
