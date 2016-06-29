@@ -105,6 +105,7 @@ CREATE TABLE tags_calls (
 WITHOUT OIDS;
 
 /****** 7. FILTERS TABLE ******/
+CREATE SEQUENCE filters_seq START 100 INCREMENT 1 CACHE 50;
 CREATE TABLE filters (
     filter_id   BIGINT DEFAULT nextval('filters_seq'::text),
     filter_name TEXT NOT NULL,
@@ -174,19 +175,13 @@ ALTER TABLE tags_calls ADD CONSTRAINT tags_calls_to_calls_fk
       ON DELETE CASCADE;
 
 
-      /****** 4. users TABLE FOREIGN KEYS: ******/
+/****** 4. users TABLE FOREIGN KEYS: ******/
 
 ALTER TABLE users ADD CONSTRAINT users_companies_fk
       FOREIGN KEY (company_id)
       REFERENCES companies(company_id)
       ON DELETE CASCADE;
 
-/****** 5. filters TABLE FOREIGN KEYS: ******/
-
-ALTER TABLE filters ADD CONSTRAINT filters_users_fk
-      FOREIGN KEY (contact_id)
-      REFERENCES users(contact_id)
-      ON DELETE CASCADE;
 
 /****** 6. files TABLE FOREIGN KEYS: ******/
 /* this constraint is causing problems as the foreign key is not
@@ -214,6 +209,15 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       INSERT INTO files (file_name) VALUES('recording_2');
       INSERT INTO files (file_name) VALUES('recording_3');
       INSERT INTO tags (tag_name, company_id) VALUES('important', 100);
+      INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter', 450, '{
+        to: 100,
+        from: '',
+        contact_id: '',
+        min: '',
+        max: '',
+        date: '',
+        tags: ''
+      }');
 
 /* Create a call referencing this file */
 
