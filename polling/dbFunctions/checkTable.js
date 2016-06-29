@@ -88,11 +88,25 @@ const checkTagsTable = (dbClient, obj, cb) => {
   });
 };
 
+const checkFiltersTable = (dbClient, obj, cb) => {
+  const queryArray = [obj.filter_name, obj.contact_id, obj.filter_spec];
+  dbClient.query('SELECT EXISTS (SELECT * FROM tags WHERE filter_name=($1) AND contact_id=($2) AND filter_spec=($3))', queryArray, (err, res) => {
+    if (err) throw err;
+    const boolKey = Object.keys(res.rows[0])[0];
+    if (res.rows[0][boolKey] === false) {
+      insertData.addToFiltersTable(dbClient, obj, cb);
+    } else {
+      cb(res);
+    }
+  });
+};
+
 module.exports = {
   checkFilesTable,
   checkCompaniesTable,
   checkCallsTable,
   checkUsersTable,
   checkParticipantsTable,
-  checkTagsTable
+  checkTagsTable,
+  checkFiltersTable
 };
