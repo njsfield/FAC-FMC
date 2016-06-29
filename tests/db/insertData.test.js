@@ -32,14 +32,13 @@ const obj = {
     tag_name: 'urgent'
   },
   addToTagsCallsTable: {
-    company_id: 100,
-    file_id: 100,
-    tag_name: 'urgent'
-  },
-  editTagsTable: {
-    tag_id: 100,
-    tag_name: 'important'
+    call_id: 100,
+    tag_id: 100
   }
+  // editTagsTable: {
+  //   tag_id: 100,
+  //   tag_name: 'important'
+  // }
 };
 const expected = 'INSERT';
 
