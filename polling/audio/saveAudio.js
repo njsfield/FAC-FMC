@@ -19,8 +19,6 @@ const saveAudio = (file_name) => {
   });
 };
 
-saveAudio('2016.06.15.14.36.01-1465997761-239-238.wav');
-
 module.exports = {
   saveAudio
 };
