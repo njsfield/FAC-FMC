@@ -8,7 +8,7 @@ const obj = {
   company_id: 100,
   file_id: 100,
   user_name: 'testUser',
-  tag_name: 'urgent'
+  tag_name: 'important'
 };
 
 tape('test the getID functions', (t) => {

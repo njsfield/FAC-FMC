@@ -43,9 +43,7 @@ module.exports = {
               contact_id: user.user.id,
               company_id: res
             };
-            checkTable.checkUsersTable(dbClient, userObj, (response) => {
-              console.log(response, '<---response');
-            });
+            checkTable.checkUsersTable(dbClient, userObj, () => {});
           });
         });
         return reply.redirect('/dashboard').state('token', token);
