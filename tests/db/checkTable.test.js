@@ -35,6 +35,10 @@ const existingDataObj = {
   tagsT: {
     tag_name: 'important',
     company_id: 100
+  },
+  filtersT: {
+    filter_name: 'test-filter',
+    contact_id: 238
   }
 };
 
@@ -66,11 +70,24 @@ const newDataObj = {
   tagsT: {
     tag_name: 'fresh',
     company_id: 100
+  },
+  filtersT: {
+    filter_name: 'new-test-filter',
+    contact_id: 238,
+    filter_spec: {
+      to: 100,
+      from: '',
+      contact_id: '',
+      min: '',
+      max: '',
+      date: '',
+      tags: ''
+    }
   }
 };
 
 tape('test the checkTable functions', (t) => {
-  t.plan(14);
+  t.plan(16);
   pg.connect(postgresURL, (err, client, done) => {
     const expected1 = true;
     const expected2 = 'INSERT';
@@ -115,6 +132,11 @@ tape('test the checkTable functions', (t) => {
       const actual = res.rows[0][boolKey];
       t.deepEqual(actual, expected1, 'tag exists in tags table');
     });
+    checkTable.checkFiltersTable(client, existingDataObj.filtersT, (res) => {
+      const boolKey = Object.keys(res.rows[0])[0];
+      const actual = res.rows[0][boolKey];
+      t.deepEqual(actual, expected1, 'filter exists in filters table');
+    });
 
     ///////////////////////// end /////////////////////
 
@@ -146,8 +168,13 @@ tape('test the checkTable functions', (t) => {
       t.deepEqual(actual, expected2, 'new data added to tags table');
       done();
     });
+    checkTable.checkFiltersTable(client, newDataObj.filtersT, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected2, 'new filter added to filters table');
+      done();
+    });
     /////////////////////////// end /////////////////////////////
-    pg.end();
+    // pg.end();
   });
 });
 

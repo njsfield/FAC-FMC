@@ -67,6 +67,14 @@ const addToTagsCallsTable = (dbClient, object, callback) => {
     callback(response);
   });
 };
+
+const addToFiltersTable = (dbClient, object, callback) => {
+  const queryArray = [object.filter_name, object.contact_id, object.filter_spec];
+  dbClient.query('INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES ($1, $2, $3)', queryArray, (error, response) => {
+    if (error) throw error;
+    callback(response);
+  });
+};
 //
 // const editTagsTable = (dbClient, object, callback) => {
 //   const queryArray = [object.tag_name, object.tag_id];
@@ -83,6 +91,7 @@ module.exports = {
   addToUsersTable,
   addToParticipantsTable,
   addToTagsTable,
-  addToTagsCallsTable
+  addToTagsCallsTable,
+  addToFiltersTable
   // editTagsTable
 };
