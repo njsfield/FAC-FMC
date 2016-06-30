@@ -36,8 +36,8 @@ const obj = {
     tag_id: 100
   },
   addToFiltersTable: {
-    filter_name: 'test-filter',
-    contact_id: 4387735,
+    filter_name: 'newest-test-filter',
+    contact_id: 238,
     filter_spec: {
       to: 100,
       from: '',
