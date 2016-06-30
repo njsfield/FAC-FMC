@@ -15,6 +15,7 @@ const routes = [
   require('../routes/dashboard.js'),
   require('../routes/editTag.js'),
   require('../routes/fetchAudio.js'),
+  require('../routes/filteredCalls.js'),
   require('../routes/index.js'),
   require('../routes/logout.js'),
   require('../routes/schema.js'),
