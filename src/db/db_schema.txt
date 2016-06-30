@@ -242,7 +242,6 @@ INSERT INTO users (contact_id, company_id) VALUES(100, (SELECT company_id FROM c
 INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter', 238, '{
   to: 100,
   from: '',
-  contact_id: '',
   min: '',
   max: '',
   date: '',
@@ -251,7 +250,6 @@ INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter',
 INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter', 100, '{
   to: 100,
   from: '',
-  contact_id: '',
   min: '',
   max: '',
   date: '',
