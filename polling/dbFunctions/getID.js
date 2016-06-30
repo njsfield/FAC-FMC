@@ -47,8 +47,8 @@ const getTag_id = (dbClient, obj, cb) => {
 };
 
 const getFilter_id = (dbClient, obj, cb) => {
-  const queryArray = [obj.filter_name, obj.contact_id, obj.filter_spec];
-  dbClient.query('SELECT filter_id FROM filters WHERE filter_name=($1) AND contact_id=($2) AND filter_spec=($3)', queryArray, (err, res) => {
+  const queryArray = [obj.filter_name, obj.contact_id];
+  dbClient.query('SELECT filter_id FROM filters WHERE filter_name=($1) AND contact_id=($2)', queryArray, (err, res) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     const filter_id = res.rows[0][boolKey];
