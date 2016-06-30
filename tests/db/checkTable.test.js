@@ -35,6 +35,10 @@ const existingDataObj = {
   tagsT: {
     tag_name: 'important',
     company_id: 100
+  },
+  filtersT: {
+    filter_name: 'test-filter',
+    contact_id: 238
   }
 };
 
@@ -68,8 +72,8 @@ const newDataObj = {
     company_id: 100
   },
   filtersT: {
-    filter_name: 'test-filter',
-    contact_id: 4387735,
+    filter_name: 'new-test-filter',
+    contact_id: 238,
     filter_spec: {
       to: 100,
       from: '',
@@ -83,7 +87,7 @@ const newDataObj = {
 };
 
 tape('test the checkTable functions', (t) => {
-  t.plan(14);
+  t.plan(16);
   pg.connect(postgresURL, (err, client, done) => {
     const expected1 = true;
     const expected2 = 'INSERT';
