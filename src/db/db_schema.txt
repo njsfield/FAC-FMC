@@ -112,7 +112,7 @@ CREATE TABLE filters (
     contact_id  BIGINT NOT NULL,
     filter_spec TEXT NOT NULL,
 
-    CONSTRAINT filters_pk PRIMARY KEY(filter_id)
+    CONSTRAINT filters_pk PRIMARY KEY(filter_name, contact_id)
 )
 WITHOUT OIDS;
 
@@ -182,6 +182,12 @@ ALTER TABLE users ADD CONSTRAINT users_companies_fk
       REFERENCES companies(company_id)
       ON DELETE CASCADE;
 
+/****** 5. filters TABLE FOREIGN KEYS: ******/
+
+ALTER TABLE filters ADD CONSTRAINT filters_users_fk
+      FOREIGN KEY (contact_id)
+      REFERENCES users(contact_id)
+      ON DELETE CASCADE;
 
 /****** 6. files TABLE FOREIGN KEYS: ******/
 /* this constraint is causing problems as the foreign key is not
@@ -209,15 +215,7 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       INSERT INTO files (file_name) VALUES('recording_2');
       INSERT INTO files (file_name) VALUES('recording_3');
       INSERT INTO tags (tag_name, company_id) VALUES('important', 100);
-      INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter', 450, '{
-        to: 100,
-        from: '',
-        contact_id: '',
-        min: '',
-        max: '',
-        date: '',
-        tags: ''
-      }');
+
 
 /* Create a call referencing this file */
 
@@ -239,5 +237,26 @@ INSERT INTO participants(call_id, company_id, number, internal, participant_role
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
 
 INSERT INTO users (contact_id, company_id) VALUES(238, (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'));
+INSERT INTO users (contact_id, company_id) VALUES(100, (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'));
+
+INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter', 238, '{
+  to: 100,
+  from: '',
+  contact_id: '',
+  min: '',
+  max: '',
+  date: '',
+  tags: ''
+}');
+INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter', 100, '{
+  to: 100,
+  from: '',
+  contact_id: '',
+  min: '',
+  max: '',
+  date: '',
+  tags: ''
+}');
+
 
 COMMIT;
