@@ -4,7 +4,7 @@ const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
 const fetchCalls = require('../../src/db/dbFetchCalls.js');
 const pg = require('pg');
 
-tape('test if one can check the participants table by user name and company', (t) => {
+tape('test if one can check the participants table by contact_id and company', (t) => {
   t.plan(1);
   const contact_id = '4387735';
   const company_id = '100';
