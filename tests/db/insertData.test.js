@@ -41,7 +41,6 @@ const obj = {
     filter_spec: {
       to: 100,
       from: '',
-      contact_id: '',
       min: '',
       max: '',
       date: '',
