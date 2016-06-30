@@ -9,16 +9,7 @@ const obj = {
   file_id: 100,
   tag_name: 'important',
   filter_name: 'test-filter',
-  contact_id: 450,
-  filter_spec: {
-    to: 100,
-    from: '',
-    contact_id: '',
-    min: '',
-    max: '',
-    date: '',
-    tags: ''
-  }
+  contact_id: 238
 };
 
 tape('test the getID functions', (t) => {
