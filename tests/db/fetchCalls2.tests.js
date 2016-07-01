@@ -15,9 +15,9 @@ const injectObj = {
   }
 };
 
-tape('test if checkFilters returns an array of filter objects', (t) => {
+tape('test fetchCalls functions', (t) => {
   t.plan(1);
-  const actual = fetchCalls.checkFilters(injectObj);
+  const actual = fetchCalls.toAndFromQueryStringCreator(injectObj);
   const expected = [{to: 100}];
   t.deepEqual(actual, expected, 'checkFilters returns an array with 1 object');
 });
