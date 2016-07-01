@@ -225,16 +225,16 @@ INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-06 12:43
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_B'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '8', true, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '7', false, 'DESTINATION', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '7', true, 'DESTINATION', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '8', false, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '8', true, 'SOURCE', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '9', true, 'DESTINATION', 4387738);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '7', true, 'SOURCE', 3222);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '8', false, 'DESTINATION', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '8', true, 'DESTINATION', 4387735);
-INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '7', false, 'SOURCE', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '8', true, 'caller', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '7', false, 'callee', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '7', true, 'callee', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '8', false, 'caller', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '8', true, 'caller', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '102', '100', '9', true, 'callee', 4387738);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '7', true, 'caller', 3222);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '103', '101', '8', false, 'callee', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '8', true, 'callee', 4387735);
+INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '104', '100', '7', false, 'caller', 3222);
 
 INSERT INTO users (contact_id, company_id) VALUES(238, (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'));
 INSERT INTO users (contact_id, company_id) VALUES(100, (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'));
