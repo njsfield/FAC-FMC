@@ -34,7 +34,7 @@ var maxTimeString = 'duration <= (\'';
 var dateString = 'date > (\'';
 var datePlusOneString = 'date < (select timestamp with time zone \'epoch\' + ';
 var datePlusOneStringEnd = ' * interval \'1\' second)';
-var untaggedCalls = 'tag_id = null';
+// var untaggedCalls = 'tag_id = null';
 
 const toAndFromQueryStringCreator = (obj) => {
   if (obj.to !== '' && obj.from !== '') {
@@ -86,8 +86,8 @@ const dateQueryStringCreator = (obj) => {
 
 // untaggedCallsStringCreator(filters);
 toAndFromQueryStringCreator(filters);
-dateQueryStringCreator(filters);
-minAndMaxQueryStringCreator(filters);
+// dateQueryStringCreator(filters);
+// minAndMaxQueryStringCreator(filters);
 
 queryString += queryArr.join(' and ');
 
@@ -98,5 +98,12 @@ pg.connect(postgresURL, (err, dbClient) => {
   dbClient.query(queryString, (error, response) => {
     if (error) throw error;
     console.log(response.rows, '<<<<<<<<<<<<<<RESPONSE');
+    return response;
   });
 });
+
+module.exports = {
+  toAndFromQueryStringCreator,
+  minAndMaxQueryStringCreator,
+  dateQueryStringCreator
+};
