@@ -2,14 +2,17 @@
 
 const pg = require('pg');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
-const startOfJoinString = 'select date, file_id, contact_id, participant_role, number, internal, duration from participants inner join calls on participants.call_id = calls.call_id and participants.company_id = calls.company_id where ';
+var queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration from participants inner join calls on participants.call_id = calls.call_id and participants.company_id = calls.company_id where ';
+
+/** joins tags_calls, calls, participants but no data in tags_calls means response is empty */
+// var tagsQueryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = c.company_id inner join tags_calls t on c.call_id = t.call_id where ';
 
 const injectObj = {
   company_id: 101,
   contact_id: 4387735,
   filters: {
-    to: 239 ,
-    from: 238,
+    to: 239,
+    from: '',
     min: '',
     max: '',
     date: '',
@@ -19,51 +22,77 @@ const injectObj = {
 
 const filters = injectObj.filters;
 
-var queryString = '';
+var queryArr = [];
+// var queryString = '';
 var fromAndTo = 'participant_role in (\'callee\', \'caller\') and number in (\'';
-// var callsToString = 'participant_role = (\'callee\') and number = (\'';
-// var callsFromString = 'participant_role = (\'caller\') and number = (\'';
-// var minTimeString = 'and duration >= (\'';
-// var maxTimeString = 'and duration <= (\'';
-// var dateString = 'date > (\'2016-06-15\') and date < (\'2016-06-16\')';
+var minAndMax = 'duration in (\'';
 
-var arr = [];
-const queryStringCreator = (obj) => {
-  queryString += startOfJoinString;
+var callsToString = 'participant_role = (\'callee\') and number = (\'';
+var callsFromString = 'participant_role = (\'caller\') and number = (\'';
+var minTimeString = 'duration >= (\'';
+var maxTimeString = 'duration <= (\'';
+var dateString = 'date > (\'';
+var datePlusOneString = 'date < (select timestamp with time zone \'epoch\' + ';
+var datePlusOneStringEnd = ' * interval \'1\' second)';
+var untaggedCalls = 'tag_id = null';
+
+const toAndFromQueryStringCreator = (obj) => {
   if (obj.to !== '' && obj.from !== '') {
-    queryString += `${fromAndTo}${obj.to}\', \'${obj.from}\')`;
+    queryArr.push(`${fromAndTo}${obj.to}\', \'${obj.from}\')`);
   }
-  // if (obj.to !== '') {
-  //   obj.to += '\') ';
-  //   callsToString += obj.to;
-  //   arr.push(callsToString);
-  // }
-  // if (obj.from !== '') {
-  //   obj.from += '\') ';
-  //   callsFromString += obj.from;
-  //   queryString += callsFromString;
-  // }
-  // if (obj.min !== '') {
-  //   obj.min += '\') ';
-  //   minTimeString += obj.min;
-  //   queryString += minTimeString;
-  // }
-  // if (obj.max !== '') {
-  //   obj.max += '\') ';
-  //   maxTimeString += obj.max;
-  //   queryString += maxTimeString;
-  // }
-  // if (obj.date !== '') {
-  //   // obj.date += '\') ';
-  //   // dateString += obj.date;
-  //   queryString += dateString;
-  // }
-  return (queryString);
+  else if (obj.to !== '') {
+    obj.to += '\') ';
+    callsToString += obj.to;
+    queryArr.push(callsToString);
+  }
+  else if (obj.from !== '') {
+    obj.from += '\') ';
+    callsFromString += obj.from;
+    queryArr.push(callsFromString);
+  }
 };
 
-queryStringCreator(filters);
-console.log(queryString, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+const minAndMaxQueryStringCreator = (obj) => {
+  if (obj.min !== '' && obj.max !== '') {
+    queryArr.push(`${minAndMax}${obj.min}\', \'${obj.max}\')`);
+  }
+  else if (obj.min !== '') {
+    obj.min += '\') ';
+    minTimeString += obj.min;
+    queryArr.push(minTimeString);
+  }
+  else if (obj.max !== '') {
+    obj.max += '\') ';
+    maxTimeString += obj.max;
+    queryArr.push(maxTimeString);
+  }
+};
 
+const dateQueryStringCreator = (obj) => {
+  const dateMillis = new Date(obj.date).getTime() + 86400000;
+  if (obj.date !== '') {
+    obj.date += '\') ';
+    queryArr.push(dateString += obj.date);
+    queryArr.push(datePlusOneString + dateMillis + datePlusOneStringEnd);
+  }
+};
+
+/** still to be properly hooked up to the untagged calls section */
+// const untaggedCallsStringCreator = (obj) => {
+//   if (obj.to === '' && obj.from === '' && obj.min === '' && obj.max === '' && obj.date === '' && obj.tags === '') {
+//     queryString += untaggedCalls;
+//   }
+// };
+
+// untaggedCallsStringCreator(filters);
+toAndFromQueryStringCreator(filters);
+dateQueryStringCreator(filters);
+minAndMaxQueryStringCreator(filters);
+
+queryString += queryArr.join(' and ');
+
+console.log(queryString, '<--- querystring');
+//
 pg.connect(postgresURL, (err, dbClient) => {
   if (err) throw err;
   dbClient.query(queryString, (error, response) => {
@@ -71,40 +100,3 @@ pg.connect(postgresURL, (err, dbClient) => {
     console.log(response.rows, '<<<<<<<<<<<<<<RESPONSE');
   });
 });
-// if (injectObj.filters.to !== '') {
-//
-// }
-
-/** Check filters object for blank fields. */
-//
-// const response =   {
-//     call_id: '104',
-//     company_id: '100',
-//     participants: {
-//       destination: {
-//         internal: true,
-//         number: '8',
-//         user: true
-//       },
-//       source: {
-//         internal: false,
-//         number: '7',
-//         user: false
-//       }
-//     },
-//     duration: '2016-01-07 12:43:35',
-//     time: '345678904',
-//     file_id: '3',
-//   }
-
-// const checkFilters = (injectObj) => {
-//   const filters = injectObj.filters;
-//
-//   if (filters.to !== '') {
-//
-//   }
-// };
-//
-// module.exports = {
-//   checkFilters
-// };
