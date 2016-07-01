@@ -1,6 +1,9 @@
 'use strict';
 const tape = require('tape');
 const fetchCalls = require('../../src/db/dbFetchCalls2.js');
+const pg = require('pg');
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+
 
 const injectObj = {
   company_id: 101,
@@ -15,9 +18,15 @@ const injectObj = {
   }
 };
 
+const filters = injectObj.filters;
+
 tape('test fetchCalls functions', (t) => {
   t.plan(1);
-  const actual = fetchCalls.toAndFromQueryStringCreator(injectObj);
-  const expected = [{to: 100}];
-  t.deepEqual(actual, expected, 'checkFilters returns an array with 1 object');
+  pg.connect(postgresURL, (err, client, done) => {
+    if (err) throw err;
+    const actual = fetchCalls.toAndFromQueryStringCreator(filters);
+    console.log(actual, '<---- actual');
+    t.deepEqual(actual, expected, 'checkFilters returns an array with 1 object');
+    done();
+  });
 });
