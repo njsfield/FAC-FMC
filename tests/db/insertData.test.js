@@ -24,7 +24,7 @@ const obj = {
     company_id: 100,
     number: 1,
     internal: false,
-    participant_role: 'source',
+    participant_role: 'caller',
     contact_id: 12345
   },
   addToTagsTable: {
