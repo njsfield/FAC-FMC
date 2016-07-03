@@ -211,11 +211,14 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       INSERT INTO companies (company_name) VALUES ('test_comp_A');
       INSERT INTO companies (company_name) VALUES ('test_comp_B');
       INSERT INTO companies (company_name) VALUES ('default');
+
       INSERT INTO files (file_name) VALUES('recording_1');
       INSERT INTO files (file_name) VALUES('recording_2');
       INSERT INTO files (file_name) VALUES('recording_3');
-      INSERT INTO tags (tag_name, company_id) VALUES('important', 100);
 
+      INSERT INTO tags (tag_name, company_id) VALUES('important', (SELECT company_id FROM companies WHERE company_name = 'test_comp_A'));
+      INSERT INTO tags (tag_name, company_id) VALUES('financial', (SELECT company_id FROM companies WHERE company_name = 'test_comp_A'));
+      INSERT INTO tags (tag_name, company_id) VALUES('business', (SELECT company_id FROM companies WHERE company_name = 'test_comp_B'));
 
 /* Create a call referencing this file */
 
