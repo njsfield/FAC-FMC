@@ -228,6 +228,9 @@ INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-06 12:43
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_B'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 INSERT INTO calls (date, company_id, file_id, duration) VALUES('2016-01-07 12:43:35', (SELECT company_id FROM companies c WHERE c.company_name='test_comp_A'),(SELECT file_id FROM files WHERE file_name='recording_3'), '345678904');
 
+INSERT INTO tags_calls (tag_id, call_id) VALUES( (SELECT tag_id FROM tags WHERE tag_name = 'important' AND company_id = (SELECT company_id FROM companies WHERE company_name = 'test_comp_A')), (SELECT call_id FROM calls where company_id = (SELECT company_id FROM companies WHERE company_name = 'test_comp_A') AND file_id = (SELECT file_id FROM files WHERE file_name='recording_1')));
+INSERT INTO tags_calls (tag_id, call_id) VALUES( (SELECT tag_id FROM tags WHERE tag_name = 'business' AND company_id = (SELECT company_id FROM companies WHERE company_name = 'test_comp_B')), (SELECT call_id FROM calls where company_id = (SELECT company_id FROM companies WHERE company_name = 'test_comp_A') AND file_id = (SELECT file_id FROM files WHERE file_name='recording_1')));
+
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '8', true, 'caller', 4387735);
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '100', '100', '7', false, 'callee', 3222);
 INSERT INTO participants(call_id, company_id, number, internal, participant_role, contact_id) VALUES( '101', '101', '7', true, 'callee', 3222);
