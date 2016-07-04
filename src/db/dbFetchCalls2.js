@@ -108,5 +108,5 @@ module.exports = {
   minAndMaxQueryStringCreator,
   dateQueryStringCreator,
   untaggedCallsStringCreator,
-  fetchCalls
+  createQueryString
 };
