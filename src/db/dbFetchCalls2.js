@@ -10,20 +10,52 @@ var dateString = 'date > (\'';
 var datePlusOneString = 'and date < (select timestamp with time zone \'epoch\' + ';
 var datePlusOneStringEnd = ' * interval \'1\' second)';
 var untaggedCalls = 'tag_id is NULL';
+var queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = c.company_id left join tags_calls t on c.call_id = t.call_id where ';
 
-/** Reference notes for super function */
-// var queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = c.company_id left join tags_calls t on c.call_id = t.call_id where ';
-// var queryArr = [];
-// queryString += queryArr.join(' and ');
-// console.log(queryString, '<--- querystring');
-// pg.connect(postgresURL, (err, dbClient) => {
-//   if (err) throw err;
-//   dbClient.query(queryString, (error, response) => {
-//     if (error) throw error;
-//     console.log(response.rows[0], '<<<ROWCOUNT');
-//     return response;
-//   });
-// });
+/**
+ * Fetches an array of call objects to be rendered in the dashboard view.
+ * @param {obj} an object for example:
+ * {
+   contact_id: 4387735,
+   company_id: 101,
+   filters: {
+     to: 239,
+     from: '',
+     min: '',
+     max: '',
+     date: '',
+     tags: ''
+   }
+ };
+ * @param {queryString} string -
+ * 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id \n
+ * from participants p inner join calls c on p.call_id = c.call_id and p.company_id = c.company_id \n
+ * left join tags_calls t on c.call_id = t.call_id where '
+ * @param {callback} function - returns the completed query string. Example: for a minimum
+ * length of 8 seconds and to the number 239:
+ * 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id \n
+ * from participants p inner join calls c on p.call_id = c.call_id and p.company_id = c.company_id \n
+ * left join tags_calls t on c.call_id = t.call_id where participant_role = ('callee') and number = ('239') \n
+ * and duration >= ('8')'
+ */
+
+const createQueryString = (obj, queryString, callback) => {
+  var queryArr = [];
+  toAndFromQueryStringCreator(obj.filters, (filters) => {
+    queryArr.push(filters);
+    minAndMaxQueryStringCreator(obj.filters, (filters2) => {
+      queryArr.push(filters2);
+      dateQueryStringCreator(obj.filters, (filters3) => {
+        queryArr.push(filters3);
+        untaggedCallsStringCreator(obj.filters, (filters4) => {
+          queryArr.push(filters4);
+        });
+      });
+    });
+  });
+  const fullQueryString = queryString += queryArr.join(' and ');
+  callback(fullQueryString);
+};
 
 const toAndFromQueryStringCreator = (obj, callback) => {
   if (obj.to !== '' && obj.from !== '') {
@@ -75,5 +107,6 @@ module.exports = {
   toAndFromQueryStringCreator,
   minAndMaxQueryStringCreator,
   dateQueryStringCreator,
-  untaggedCallsStringCreator
+  untaggedCallsStringCreator,
+  fetchCalls
 };
