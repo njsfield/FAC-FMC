@@ -24,7 +24,7 @@ const obj = {
     company_id: 100,
     number: 1,
     internal: false,
-    participant_role: 'source',
+    participant_role: 'caller',
     contact_id: 12345
   },
   addToTagsTable: {
@@ -32,7 +32,7 @@ const obj = {
     tag_name: 'urgent'
   },
   addToTagsCallsTable: {
-    call_id: 100,
+    call_id: 101,
     tag_id: 100
   },
   addToFiltersTable: {
@@ -41,7 +41,6 @@ const obj = {
     filter_spec: {
       to: 100,
       from: '',
-      contact_id: '',
       min: '',
       max: '',
       date: '',

@@ -63,7 +63,7 @@ const newDataObj = {
     company_id: 100,
     call_id: 100,
     internal: false,
-    participant_role: 'source',
+    participant_role: 'caller',
     number: 1,
     contact_id: 999
   },
