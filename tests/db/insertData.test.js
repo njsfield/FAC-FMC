@@ -32,7 +32,7 @@ const obj = {
     tag_name: 'urgent'
   },
   addToTagsCallsTable: {
-    call_id: 100,
+    call_id: 101,
     tag_id: 100
   },
   addToFiltersTable: {
