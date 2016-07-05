@@ -27,19 +27,6 @@ const pollerFlow = (dbClient, done, obj, cb) => {
   });
 };
 
-/** Checks the user_table for user_id. */
-
-const continuedPollerFlow = (dbClient, done, obj, cb) => {
-  checkTable.checkUsersTable(dbClient, obj, () => {
-    done();
-    getID.getUser_id(dbClient, obj, (res) => {
-      cb(res);
-      done();
-    });
-  });
-};
-
 module.exports = {
-  pollerFlow,
-  continuedPollerFlow
+  pollerFlow
 };
