@@ -25,13 +25,6 @@ module.exports = {
         } else {
           userRole = 'admin';
         }
-        const token = JWT.sign({
-          company_name: user.user.company,
-          contact_id: user.user.id,
-          username,
-          password,
-          userRole
-        }, process.env.JWT_KEY);
 
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
@@ -44,9 +37,16 @@ module.exports = {
               company_id: res
             };
             checkTable.checkUsersTable(dbClient, userObj, () => {});
+            const token = JWT.sign({
+              company_id: userObj.company_id,
+              contact_id: user.user.id,
+              username,
+              password,
+              userRole
+            }, process.env.JWT_KEY);
+            return reply.redirect('/dashboard').state('token', token);
           });
         });
-        return reply.redirect('/dashboard').state('token', token);
       }
       else {
         return reply.redirect('/');
