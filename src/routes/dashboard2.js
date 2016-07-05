@@ -12,7 +12,7 @@ module.exports = {
 
     const decoded = JWT.decode(request.state.token);
     const userObj = {
-      to: '',
+      to: 8,
       from: '',
       min: '',
       max: '',
@@ -25,11 +25,11 @@ module.exports = {
         return reply.redirect('/').unstate('token');
       }
       else {
-        dbFetchCalls2.createQueryString(queryString, userObj, (qString) => {
-          pg.connect(postgresURL, (err, dbClient, done) => {
-            if (err) throw err;
-            dbClient.query(qString, [100, 4387735], (err2, res) => {
-              console.log(res, '<----- res');
+        pg.connect(postgresURL, (err, dbClient, done) => {
+          if (err) throw err;
+          dbFetchCalls2.createQueryString(queryString, userObj, (qString) => {
+            console.log(decoded.contact_id);
+            dbClient.query(qString, [decoded.company_id, 4387735], (err2, res) => {
             });
           });
         });
