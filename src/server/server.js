@@ -21,7 +21,8 @@ const routes = [
   require('../routes/logout.js'),
   require('../routes/schema.js'),
   require('../routes/tagCall.js'),
-  require('../routes/publicdir.js')
+  require('../routes/publicdir.js'),
+  require('../routes/saveFilter.js')
 ];
 
 Server.connection({port});
