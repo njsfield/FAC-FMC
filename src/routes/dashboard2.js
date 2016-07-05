@@ -1,4 +1,4 @@
-const dbFetchCalls2 = require('../db/dbFetchCalls2.js');
+const filterQueryStringCreator = require('../db/filterQueryStringCreator.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
@@ -27,7 +27,7 @@ module.exports = {
       else {
         pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
-          dbFetchCalls2.createQueryString(queryString, userObj, (qString) => {
+          filterQueryStringCreator.createQueryString(queryString, userObj, (qString) => {
             console.log(decoded.contact_id);
             dbClient.query(qString, [decoded.company_id, 4387735], (err2, res) => {
             });

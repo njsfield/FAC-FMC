@@ -13,7 +13,7 @@ require('./db/getID.test.js'); //All functions tested and pass
 require('./db/checkTable.test.js'); //all bar checkTags tested and pass
 // require('./db/pollerFlow.test.js') //nothing is tested at the moment
 // require('./db/fetchCalls.tests.js');
-// require('./db/fetchCalls2.tests.js');
+// require('./db/filterQueryStringCreator.test.js');
 // require('./db/fetchAudio.tests.js');
 // require('./api/polling_calls_api.test.js');
 // require('./server/login-flow-success.test.js');
