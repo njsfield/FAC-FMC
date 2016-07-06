@@ -47,4 +47,15 @@ or
 $ npm run startmon
 ```
 
-You'll need to configure the environment variables - these will need to be shared privately.
+You'll need to configure the environment variables. Create a config.env file in the root folder and enter the following keys. Values must be acquired privately.
+
+```
+API_KEY= (string)
+JWT_KEY= (string)
+PBX_URL= (url)
+POSTGRES_URL= (url)
+POSTGRES_URL_TEST= (url)
+NODE_TLS_REJECT_UNAUTHORIZED= (number)
+```
+
+
