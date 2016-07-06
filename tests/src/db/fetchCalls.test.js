@@ -1,7 +1,8 @@
 'use strict';
 const tape = require('tape');
 const postgresURL = process.env.POSTGRES_URL_TEST;
-const fetchCalls = require('../../src/db/dbFetchCalls.js');
+const fetchCalls = require('../../../src/db/fetchCalls.js');
+
 const pg = require('pg');
 
 tape('test if one can check the participants table by contact_id and company', (t) => {
@@ -39,7 +40,7 @@ tape('findOtherParticipant function locates the caller or callee for any given p
     call_id: '100',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
@@ -50,12 +51,12 @@ tape('findOtherParticipant function locates the caller or callee for any given p
     call_id: '100',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: false,
         number: '7',
         user: false
@@ -76,12 +77,12 @@ tape('find file_id, duration and time for the call', (t) => {
     call_id: '102',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: true,
         number: '9',
         user: false
@@ -128,12 +129,12 @@ const fullResponse = [
     call_id: '100',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: false,
         number: '7',
         user: false
@@ -147,12 +148,12 @@ const fullResponse = [
     call_id: '102',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: true,
         number: '9',
         user: false
@@ -166,12 +167,12 @@ const fullResponse = [
     call_id: '104',
     company_id: '100',
     participants: {
-      destination: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      source: {
+      callee: {
         internal: false,
         number: '7',
         user: false

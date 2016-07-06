@@ -1,8 +1,8 @@
 'use strict';
 
-const pollCalls = require('./api/polling_calls_api.js');
-// const insertData = require('./dbFunctions/insertData.js');
-const pollerFlow = require('./dbFunctions/pollerFlow.js').pollerFlow;
+const pollCalls = require('./api/pollingCalls.js');
+// const insertData = require('./db/insertData.js');
+const pollerFlow = require('./db/pollerFlow.js').pollerFlow;
 const postgresURL = process.env.POSTGRES_URL;
 const pg = require('pg');
 const companyName = 'default';
@@ -32,7 +32,7 @@ const companyName = 'default';
  *
  * Loop 3:
  * If participants.length > 0
- * Update the participants table -> polling_calls_api/retrieveCallerDetails(participants)
+ * Update the participants table -> pollingCalls/retrieveCallerDetails(participants)
  *
  * Additional features:
  * 1. - Create a function that selects the highest index of the participants table and sets
@@ -46,7 +46,7 @@ const companyName = 'default';
  * 3. Use push instead of concat to avoid clogging memory space.
  */
 
-pollCalls.pollForFileInfo(companyName, (fileObjs) => {
+pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
   let participantsArray = [];
   pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;

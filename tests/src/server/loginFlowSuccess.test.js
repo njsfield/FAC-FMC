@@ -1,7 +1,7 @@
 'use strict';
 require('env2')('config.env');
 const pg = require('pg');
-const server = require('../../src/server/server.js');
+const server = require('../../../src/server/server.js');
 const nock = require('nock');
 const tape = require('tape');
 const JWT = require('jsonwebtoken');
@@ -68,6 +68,5 @@ tape('test the login user flow for a successful api response from IPC for correc
     expected = '/dashboard';
     t.deepEqual(actual, expected, 'redirects to dashboard view');
     teardown();
-    pg.end();
   });
 });

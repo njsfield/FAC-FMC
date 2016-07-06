@@ -28,7 +28,7 @@ $ psql template1 postgres
 * Run the schema:
 
 ```
-$ \i src/db/db_schema.txt
+$ \i schema.txt
 ```
 
 * Then, in a separate tab, run either:

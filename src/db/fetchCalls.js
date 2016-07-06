@@ -79,13 +79,14 @@ const responseFormatting = (call_id, company_id) => {
 
 // step 4: locates caller or callee.
 const findOtherParticipant = (callObj, dbClient, done, callback) => {
-  const participant = callObj.participants.source ? 'callee' : 'caller';
+  const participant = callObj.participants.caller ? 'callee' : 'caller';
   dbClient.query('SELECT number, internal, participant_role FROM participants ' +
     'WHERE company_id = $1 AND call_id = $2 AND participant_role = $3',
     [callObj.company_id, callObj.call_id, participant], (error, result) => {
       if (error) throw error;
       done();
       const response = result.rows;
+      console.log(response);
       const participant_role = response[0].participant_role.toLowerCase();
       callObj.participants[participant_role] = {
         user: false,

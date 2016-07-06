@@ -1,6 +1,6 @@
 const tape = require('tape');
 const pg = require('pg');
-const postgresURL = process.env.POSTGRES_URL_TEST;
+const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
 // test that the fmctest database is made
 
 tape('test that the fmctest database and tables exists', (t) => {

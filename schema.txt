@@ -1,7 +1,3 @@
-\c template1
-CREATE DATABASE fmc;
-\c fmc
-
 BEGIN;
 DROP TABLE IF EXISTS companies CASCADE;
 DROP TABLE IF EXISTS files CASCADE;
@@ -215,6 +211,10 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       INSERT INTO companies (company_name) VALUES ('test_comp_A');
       INSERT INTO companies (company_name) VALUES ('test_comp_B');
       INSERT INTO companies (company_name) VALUES ('default');
+
+      INSERT INTO users (contact_id, company_id) VALUES (4387735, '100');
+      INSERT INTO users (contact_id, company_id) VALUES (3222, '101');
+      INSERT INTO users (contact_id, company_id) VALUES ('4387738', '100');
 
       INSERT INTO files (file_name) VALUES('recording_1');
       INSERT INTO files (file_name) VALUES('recording_2');

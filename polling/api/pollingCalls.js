@@ -14,7 +14,7 @@ const apiKey = process.env.API_KEY;
     file_name: '2016.06.15.14.37.20-1465997840-239-238.wav' }
  */
 
-const pollForFileInfo = (company_name, callback) => {
+const retrieveCompanyCalls = (company_name, callback) => {
   const options = {
     method: 'POST',
     url: process.env.PBX_URL + '/rest/call/list',
@@ -49,7 +49,7 @@ const pollForFileInfo = (company_name, callback) => {
 };
 
 /**
- * Fetches the actual wav file using the file_names returned from pollForFileInfo().
+ * Fetches the actual wav file using the file_names returned from retrieveCompanyCalls().
  * @param {string} file_name
  * @param {function} callback - Returns wav file to root folder.
  */
@@ -125,7 +125,7 @@ const retrieveCallerDetails = (company_name, extension_list, callback) => {
 };
 
 module.exports = {
-  pollForFileInfo,
+  retrieveCompanyCalls,
   retrieveWav,
   retrieveCallerDetails
 };

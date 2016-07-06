@@ -1,7 +1,8 @@
 const pg = require('pg');
 const tape = require('tape');
 const postgresURL = process.env.POSTGRES_URL_TEST;
-const insertData = require('../../polling/dbFunctions/insertData.js');
+const insertData = require('../../../polling/db/insertData.js');
+
 const obj = {
   addToCompaniesTable: {
     company_name: 'new_company'
@@ -97,8 +98,8 @@ tape('test the insertData functions', (t) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to filters table');
       done();
-      // pg.end();
     });
+    pg.end();
     // insertData.editTagsTable(client, obj.editTagsTable, (res) => {
     //   const actual = res.command;
     //   const expected2 = 'UPDATE';
