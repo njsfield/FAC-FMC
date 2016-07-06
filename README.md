@@ -23,12 +23,7 @@ $ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 * Login to psql as the Postgres user:
 
 ```
-$ psql postgres
-```
-* Connect to the fmc database:
-
-```
-$ \c fmc
+$ psql template1 postgres
 ```
 * Run the schema:
 
@@ -47,4 +42,34 @@ or
 $ npm run startmon
 ```
 
-You'll need to configure the environment variables - these will need to be shared privately.
+* To run the tests, run the following in a separate terminal tab:
+```
+npm t
+```
+
+You'll need to configure the environment variables. Create a config.env file in the root folder and enter the following keys.
+
+```
+API_KEY= (string e.g. gdeh6e3bkewjd983hje8h9)
+```
+To be obtained from IPCortex.
+```
+JWT_KEY= (string e.g. hdeu998hjewhw97hfwefkjwf)
+```
+To be created in the src/server/server.js in the auth strategy object. See these [docs](https://github.com/dwyl/hapi-auth-jwt2) for details.
+```
+PBX_URL= (url e.g. https:// ...  .net)
+```
+To be obtained from IPCortex.
+```
+POSTGRES_URL= (url e.g. postgres://postgresusername:postgrespassword@hostname/databasename )
+```
+Needed to run any queries to the database.
+```
+POSTGRES_URL_TEST= (url e.g. postgres://postgresusername:postgrespassword@hostname/databasename )
+```
+Needed to run any queries to the database in the tests.
+```
+NODE_TLS_REJECT_UNAUTHORIZED=0
+```
+Turns off SSL authentication for development purposes.
