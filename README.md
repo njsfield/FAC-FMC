@@ -23,12 +23,7 @@ $ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 * Login to psql as the Postgres user:
 
 ```
-$ psql postgres
-```
-* Connect to the fmc database:
-
-```
-$ \c fmc
+$ psql template1 postgres
 ```
 * Run the schema:
 
@@ -47,6 +42,11 @@ or
 $ npm run startmon
 ```
 
+* To run the tests, run the following in a separate terminal tab:
+```
+npm t
+```
+
 You'll need to configure the environment variables. Create a config.env file in the root folder and enter the following keys.
 
 ```
@@ -62,20 +62,14 @@ PBX_URL= (url e.g. https:// ...  .net)
 ```
 To be obtained from IPCortex.
 ```
-POSTGRES_URL= (url e.g. postgres:// ... )
+POSTGRES_URL= (url e.g. postgres://postgresusername:postgrespassword@hostname/databasename )
 ```
-To be obtained from Founders and Coders. Needed to run any queries to the database.
+Needed to run any queries to the database.
 ```
-POSTGRES_URL_TEST= (url e.g. postgres:// ... )
+POSTGRES_URL_TEST= (url e.g. postgres://postgresusername:postgrespassword@hostname/databasename )
 ```
-To be obtained from Founders and Coders. Needed to run any queries to the database in the tests.
+Needed to run any queries to the database in the tests.
 ```
 NODE_TLS_REJECT_UNAUTHORIZED=0
 ```
-
-To run the tests, run the following in a separate terminal tab:
-```
-npm t
-```
-
 
