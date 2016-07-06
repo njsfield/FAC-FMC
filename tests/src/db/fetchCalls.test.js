@@ -39,7 +39,7 @@ tape('findOtherParticipant function locates the caller or callee for any given p
     call_id: '100',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
@@ -50,12 +50,12 @@ tape('findOtherParticipant function locates the caller or callee for any given p
     call_id: '100',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: false,
         number: '7',
         user: false
@@ -76,12 +76,12 @@ tape('find file_id, duration and time for the call', (t) => {
     call_id: '102',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: true,
         number: '9',
         user: false
@@ -128,12 +128,12 @@ const fullResponse = [
     call_id: '100',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: false,
         number: '7',
         user: false
@@ -147,12 +147,12 @@ const fullResponse = [
     call_id: '102',
     company_id: '100',
     participants: {
-      source: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      destination: {
+      callee: {
         internal: true,
         number: '9',
         user: false
@@ -166,12 +166,12 @@ const fullResponse = [
     call_id: '104',
     company_id: '100',
     participants: {
-      destination: {
+      caller: {
         internal: true,
         number: '8',
         user: true
       },
-      source: {
+      callee: {
         internal: false,
         number: '7',
         user: false

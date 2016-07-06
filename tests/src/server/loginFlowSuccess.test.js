@@ -68,6 +68,5 @@ tape('test the login user flow for a successful api response from IPC for correc
     expected = '/dashboard';
     t.deepEqual(actual, expected, 'redirects to dashboard view');
     teardown();
-    pg.end();
   });
 });
