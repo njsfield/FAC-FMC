@@ -1,7 +1,8 @@
 const pg = require('pg');
 const tape = require('tape');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 const insertData = require('../../../polling/db/insertData.js');
+
 const obj = {
   addToCompaniesTable: {
     company_name: 'new_company'

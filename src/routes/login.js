@@ -5,7 +5,7 @@ require('env2')('config.env');
 const JWT = require('jsonwebtoken');
 const loginApi = require('../../polling/api/checkCallerIdentification.js');
 const pg = require('pg');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+const postgresURL = process.env.POSTGRES_URL;
 const checkTables = require('../../polling/db/checkTables.js');
 const getIds = require('../../polling/db/getIds.js');
 

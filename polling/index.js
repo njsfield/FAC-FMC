@@ -3,7 +3,7 @@
 const pollCalls = require('./api/pollingCalls.js');
 // const insertData = require('./db/insertData.js');
 const pollerFlow = require('./db/pollerFlow.js').pollerFlow;
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+const postgresURL = process.env.POSTGRES_URL;
 const pg = require('pg');
 const companyName = 'default';
 

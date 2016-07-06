@@ -2,7 +2,7 @@ const fetchCalls = require('../db/fetchCalls.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+const postgresURL = process.env.POSTGRES_URL;
 
 module.exports = {
   method: 'GET',
