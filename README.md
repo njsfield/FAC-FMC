@@ -25,10 +25,21 @@ $ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 ```
 $ psql template1 postgres
 ```
+
+* Create the database fmc:
+
+```
+$ create database fmc;
+```
+* Connect to fmc:
+
+```
+$ \c fmc;
+```
 * Run the schema:
 
 ```
-$ \i schema.txt
+$ \i src/db/db_schema.txt
 ```
 
 * Then, in a separate tab, run either:
