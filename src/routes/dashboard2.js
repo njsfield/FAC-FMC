@@ -2,7 +2,7 @@ const filterQueryStringCreator = require('../db/filterQueryStringCreator.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+const postgresURL = process.env.POSTGRES_URL;
 const queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = ($1) and p.contact_id = ($2) left join tags_calls t on c.call_id = t.call_id where ';
 
 module.exports = {

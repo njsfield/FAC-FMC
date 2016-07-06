@@ -1,5 +1,5 @@
 const pg = require('pg');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+const postgresURL = process.env.POSTGRES_URL;
 const JWT = require('jsonwebtoken');
 const checkTable = require('../../polling/dbFunctions/checkTable.js');
 const getId = require('../../polling/dbFunctions/getID.js');
