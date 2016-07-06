@@ -1,6 +1,6 @@
 const tape = require('tape');
 const pg = require('pg');
-const pollCalls = require('../../polling/api/polling_calls_api.js');
+const pollCalls = require('../../../polling/api/pollingCalls.js');
 const virtualExt = {
   short: ['241'],
   long: ['241', '239']
@@ -8,12 +8,12 @@ const virtualExt = {
 
 tape('test polling calls api functions ', (t) => {
   t.plan(8);
-  pollCalls.pollForFileInfo('default', (file_objs) => {
+  pollCalls.retrieveCompanyCalls('default', (file_objs) => {
     const actual = file_objs[0].company_name;
     const expected = 'default';
     t.deepEqual(actual, expected, 'company name is as expected in returned object for correct parameter');
   });
-  pollCalls.pollForFileInfo('wrong', (response) => {
+  pollCalls.retrieveCompanyCalls('wrong', (response) => {
     const actual = response;
     const expected = 'Company name does not exist.';
     t.deepEqual(actual, expected, 'incorrect company name returns expected callback response');

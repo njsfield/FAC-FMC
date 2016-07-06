@@ -3,11 +3,11 @@
 
 require('env2')('config.env');
 const JWT = require('jsonwebtoken');
-const loginApi = require('../../polling/api/check_caller_identification_api.js');
+const loginApi = require('../../polling/api/checkCallerIdentification.js');
 const pg = require('pg');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
-const checkTable = require('../../polling/dbFunctions/checkTable.js');
-const getID = require('../../polling/dbFunctions/getID.js');
+const checkTables = require('../../polling/db/checkTables.js');
+const getIds = require('../../polling/db/getIds.js');
 
 module.exports = {
   method: 'POST',
@@ -31,12 +31,12 @@ module.exports = {
           const compObj = {
             company_name: user.user.company
           };
-          getID.getCompany_id(dbClient, compObj, (res) => {
+          getIds.getCompany_id(dbClient, compObj, (res) => {
             const userObj = {
               contact_id: user.user.id,
               company_id: res
             };
-            checkTable.checkUsersTable(dbClient, userObj, () => {});
+            checkTables.checkUsersTable(dbClient, userObj, () => {});
             const token = JWT.sign({
               company_id: userObj.company_id,
               contact_id: user.user.id,

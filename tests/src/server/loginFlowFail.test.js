@@ -1,7 +1,7 @@
 'use strict';
 require('env2')('config.env');
 const pg = require('pg');
-const server = require('../../src/server/server.js');
+const server = require('../../../src/server/server.js');
 const nock = require('nock');
 const tape = require('tape');
 const pbxUrl = process.env.PBX_URL;

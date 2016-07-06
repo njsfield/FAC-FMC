@@ -1,7 +1,7 @@
 const Hapi = require('hapi');
 const Server = new Hapi.Server();
 const port = process.env.PORT || 3000;
-const views = require('./views.js');
+const handlebarsViews = require('./handlebarsViews.js');
 const validate = require('../auth/validate.js');
 
 const plugins = [
@@ -17,11 +17,11 @@ const routes = [
   require('../routes/editTag.js'),
   require('../routes/fetchAudio.js'),
   require('../routes/filteredCalls.js'),
-  require('../routes/index.js'),
+  require('../routes/home.js'),
   require('../routes/logout.js'),
   require('../routes/schema.js'),
   require('../routes/tagCall.js'),
-  require('../routes/publicdir.js'),
+  require('../routes/publicDirectory.js'),
   require('../routes/saveFilter.js')
 ];
 
@@ -30,7 +30,7 @@ Server.connection({port});
 Server.register(plugins, (error) => {
   if (error) throw error;
 
-  Server.views(views);
+  Server.views(handlebarsViews);
 
   Server.route(routes);
 

@@ -1,4 +1,4 @@
-const dbFetchCalls = require('../db/dbFetchCalls.js');
+const fetchCalls = require('../db/fetchCalls.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
@@ -18,7 +18,7 @@ module.exports = {
           if (err) throw err;
           dbClient.query('SELECT company_id FROM users WHERE contact_id=($1)', [decoded.contact_id], (err2, res) => {
             if (err2) throw err2;
-            dbFetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
+            fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
               const calls = {
                 calls: result
               };

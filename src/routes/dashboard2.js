@@ -42,7 +42,7 @@ module.exports = {
 //   if (err) throw err;
 //   dbClient.query('SELECT company_id FROM users WHERE contact_id=($1)', [decoded.contact_id], (err2, res) => {
 //     if (err2) throw err2;
-//     dbFetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
+//     fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
 //       console.log(result, '<----- result');
 //       const calls = {
 //         calls: result

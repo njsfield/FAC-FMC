@@ -1,6 +1,6 @@
 const tape = require('tape');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
-const fetchAudio = require('../../src/db/dbFetchAudio.js');
+const fetchAudio = require('../../../src/db/fetchAudio.js');
 const pg = require('pg');
 tape('check that we can fetch the audio with a file_id', (t) => {
   t.plan(1);

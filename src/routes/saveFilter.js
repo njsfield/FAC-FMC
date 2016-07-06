@@ -1,4 +1,4 @@
-const dbCheckTables = require('../../polling/dbFunctions/checkTable.js');
+const checkTables = require('../../polling/db/checkTables.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
