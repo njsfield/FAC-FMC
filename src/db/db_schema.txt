@@ -1,3 +1,7 @@
+\c template1
+CREATE DATABASE fmc;
+\c fmc
+
 BEGIN;
 DROP TABLE IF EXISTS companies CASCADE;
 DROP TABLE IF EXISTS files CASCADE;
