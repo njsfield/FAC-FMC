@@ -47,15 +47,35 @@ or
 $ npm run startmon
 ```
 
-You'll need to configure the environment variables. Create a config.env file in the root folder and enter the following keys. Values must be acquired privately.
+You'll need to configure the environment variables. Create a config.env file in the root folder and enter the following keys.
 
 ```
-API_KEY= (string)
-JWT_KEY= (string)
-PBX_URL= (url)
-POSTGRES_URL= (url)
-POSTGRES_URL_TEST= (url)
-NODE_TLS_REJECT_UNAUTHORIZED= (number)
+API_KEY= (string e.g. gdeh6e3bkewjd983hje8h9)
+```
+To be obtained from IPCortex.
+```
+JWT_KEY= (string e.g. hdeu998hjewhw97hfwefkjwf)
+```
+To be created in the src/server/server.js in the auth strategy object. See these [docs](https://github.com/dwyl/hapi-auth-jwt2) for details.
+```
+PBX_URL= (url e.g. https:// ...  .net)
+```
+To be obtained from IPCortex.
+```
+POSTGRES_URL= (url e.g. postgres:// ... )
+```
+To be obtained from Founders and Coders. Needed to run any queries to the database.
+```
+POSTGRES_URL_TEST= (url e.g. postgres:// ... )
+```
+To be obtained from Founders and Coders. Needed to run any queries to the database in the tests.
+```
+NODE_TLS_REJECT_UNAUTHORIZED=0
+```
+
+To run the tests, run the following in a separate terminal tab:
+```
+npm t
 ```
 
 
