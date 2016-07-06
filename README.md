@@ -72,4 +72,4 @@ Needed to run any queries to the database in the tests.
 ```
 NODE_TLS_REJECT_UNAUTHORIZED=0
 ```
-
+Turns off SSL authentication for development purposes.
