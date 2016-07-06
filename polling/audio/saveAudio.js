@@ -1,7 +1,7 @@
 const fs = require('fs');
 const polling_calls_api = require('../api/polling_calls_api.js');
 const pg = require('pg');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmc';
+const postgresURL = process.env.POSTGRES_URL;
 const getID = require('../dbFunctions/getID.js');
 
 const saveAudio = (file_name) => {
