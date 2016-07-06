@@ -1,6 +1,6 @@
 const pg = require('pg');
 const tape = require('tape');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 const getID = require('../../polling/dbFunctions/getID.js');
 const obj = {
   company_name: 'test_comp_A',

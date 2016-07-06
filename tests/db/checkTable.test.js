@@ -1,6 +1,6 @@
 const pg = require('pg');
 const tape = require('tape');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 const checkTable = require('../../polling/dbFunctions/checkTable.js');
 
 const existingDataObj = {
