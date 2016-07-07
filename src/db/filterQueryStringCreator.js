@@ -9,7 +9,7 @@ const maxTimeString = 'duration <= (\'';
 const dateString = 'date > (\'';
 const datePlusOneString = 'and date < (select timestamp with time zone \'epoch\' + ';
 const datePlusOneStringEnd = ' * interval \'1\' second)';
-const untaggedCalls = 'tag_id is NULL';
+const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
 // const queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = ($1) and p.contact_id = ($2) left join tags_calls t on c.call_id = t.call_id where ';
 
 const toAndFromQueryStringCreator = (obj, callback) => {
