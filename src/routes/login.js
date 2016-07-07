@@ -41,7 +41,6 @@ module.exports = {
               company_id: userObj.company_id,
               contact_id: user.user.id,
               username,
-              password,
               userRole
             }, process.env.JWT_KEY);
             return reply.redirect('/dashboard').state('token', token);
