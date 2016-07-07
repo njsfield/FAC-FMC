@@ -16,5 +16,5 @@ require('./polling/api/pollingCalls.test.js');
 require('./src/db/fetchCalls.test.js');
 // require('./src/db/filterQueryStringCreator.test.js');
 require('./src/db/fetchAudio.test.js');
-// require('./src/server/loginFlowSuccess.test.js');
-// require('./src/server/loginFlowFail.test.js');
+require('./src/server/loginFlowSuccess.test.js');
+require('./src/server/loginFlowFail.test.js');
