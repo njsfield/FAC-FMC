@@ -99,20 +99,20 @@ const untaggedCallsStringCreator = (obj, callback) => {
  */
 
 const createQueryString = (queryString, obj, callback) => {
-  var queryArr = [];
+  let stringArr = [];
   toAndFromQueryStringCreator(obj, (filters) => {
-    if (filters !== undefined) queryArr.push(filters);
+    if (filters !== undefined) stringArr.push(filters);
 
     minAndMaxQueryStringCreator(obj, (filters2) => {
-      if (filters2 !== undefined) queryArr.push(filters2);
+      if (filters2 !== undefined) stringArr.push(filters2);
 
       dateQueryStringCreator(obj, (filters3) => {
-        if (filters3 !== undefined) queryArr.push(filters3);
+        if (filters3 !== undefined) stringArr.push(filters3);
 
         untaggedCallsStringCreator(obj, (filters4) => {
-          if (filters4 !== undefined) queryArr.push(filters4);
+          if (filters4 !== undefined) stringArr.push(filters4);
 
-          const fullQueryString = queryString += queryArr.join(' and ');
+          const fullQueryString = queryString += stringArr.join(' and ');
           callback(fullQueryString);
         });
       });
