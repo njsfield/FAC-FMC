@@ -1,5 +1,6 @@
 const xhr = new XMLHttpRequest();
 
+/** AJAX to send saved filter spec and name to /save-filter route */
 const saveFilter = () => {
   const filterObj = {
     to: document.getElementById('to').value,
@@ -8,6 +9,7 @@ const saveFilter = () => {
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
     tags: document.getElementById('tags').value,
+    untagged: document.getElementById('untagged').value,
     filter_name: document.getElementById('filter_name').value
   };
   xhr.onreadystatechange = function () {
@@ -23,6 +25,7 @@ const saveFilter = () => {
 const saveButton = document.getElementById('save_filter');
 saveButton.addEventListener('click', saveFilter);
 
+/** AJAX to send filter spec and name to /filtered-calls route to filter user's calls*/
 const searchFilter = () => {
   console.log('button clicked');
   const filterObj = {
@@ -32,6 +35,7 @@ const searchFilter = () => {
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
     tags: document.getElementById('tags').value,
+    untagged: document.getElementById('untagged').value
   };
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
@@ -45,3 +49,18 @@ const searchFilter = () => {
 
 const searchButton = document.getElementById('filter_search');
 searchButton.addEventListener('click', searchFilter);
+
+/** AJAX to send filter spec and name to /filtered-calls route to filter calls by saved filter_name*/
+const getFilterSpec = () => {
+  const filterSpec = select.options[select.selectedIndex].value;
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4 && xhr.status === 200) {
+      console.log('success');
+    }
+  };
+  xhr.open('post', '/filtered-calls');
+  xhr.send(JSON.stringify(filterSpec));
+};
+
+const select = document.getElementById('dropdown');
+select.addEventListener('change', getFilterSpec);
