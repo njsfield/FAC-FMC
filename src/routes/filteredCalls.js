@@ -8,6 +8,7 @@ module.exports = {
   method: 'POST',
   path: '/filtered-calls',
   handler: (request, reply) => {
+    const filterSpec = JSON.parse(request.payload);
     const decoded = JWT.decode(request.state.token);
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
