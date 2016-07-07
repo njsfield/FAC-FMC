@@ -26,7 +26,7 @@ module.exports = {
       min: '',
       max: '',
       date: '',
-      tags: ''
+      tags: ['important', 'business']
     };
 
     validate(decoded, request, (error, isValid) => {
@@ -40,6 +40,7 @@ module.exports = {
           filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
             dbClient.query(qString, qa, (err2, res) => {
               reply(res.rows);
+              done();
             });
           });
         });
@@ -47,22 +48,3 @@ module.exports = {
     });
   }
 };
-
-// pg.connect(postgresURL, (err, dbClient, done) => {
-//   if (err) throw err;
-//   dbClient.query('SELECT company_id FROM users WHERE contact_id=($1)', [decoded.contact_id], (err2, res) => {
-//     if (err2) throw err2;
-//     fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
-//       console.log(result, '<----- result');
-//       const calls = {
-//         calls: result
-//       };
-//       reply.view('dashboard', calls);
-//     });
-//   });
-// });
-
-// contact_id hard=4387735
-// company_id hard=101
-// contact_id soft=decoded.contact_id
-// company_id soft=res.rows[0].company_id
