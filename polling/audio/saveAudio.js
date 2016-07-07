@@ -15,7 +15,6 @@ const saveAudio = (file_name) => {
       });
       done();
     });
-    pg.end();
   });
 };
 

@@ -38,6 +38,5 @@ tape('test the getFilter_name functions', (t) => {
       t.deepEqual(actual, expected, 'getFilter_name got all the correct filter_names and specs from filters table for two filters');
       done();
     });
-    // pg.end();
   });
 });

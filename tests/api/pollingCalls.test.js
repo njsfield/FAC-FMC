@@ -37,18 +37,15 @@ tape('test polling calls api functions ', (t) => {
     const actual = res.values.length;
     const expected = 0;
     t.deepEqual(actual, expected, 'incorrect company name won\'t add values to the array');
-    pg.end();
   });
   pollCalls.retrieveWav('2016.06.15.14.36.01-1465997761-239-238.wav', (res) => {
     const actual = !(res.result === 'fail');
     const expected = true;
     t.deepEqual(actual, expected, 'passed right file name, returns wav file');
-    pg.end();
   });
   pollCalls.retrieveWav('2016.06.15.14.36.01-1239-238.wav', (res) => {
     const actual = !(res.result === 'fail');
     const expected = false;
     t.deepEqual(actual, expected, 'passed wrong file name, doesn\'t return file');
-    pg.end();
   });
 });
