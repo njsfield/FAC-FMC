@@ -10,7 +10,7 @@ const datePlusOneString = 'and date < (select timestamp with time zone \'epoch\'
 const datePlusOneStringEnd = ' * interval \'1\' second)';
 
 const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
-// const queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = ($1) and p.contact_id = ($2) left join tags_calls t on c.call_id = t.call_id where ';
+const taggedCalls = ' calls.call_id = (select call_id from tags_calls where tag_id = (select tag_id from tags where tag_name =';
 
 const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
   if (obj.to !== '' && obj.from !== '') {
@@ -52,7 +52,6 @@ const dateQueryStringCreator = (obj, queryArr, callback) => {
   const dateMillis = (new Date(obj.date).getTime() + 86400000)/1000;
   if (obj.date !== '') {
     queryArr.push(obj.date);
-    // const filter = obj.date + '\') ';
     const string = dateString + '$' + queryArr.length + datePlusOneString + dateMillis + datePlusOneStringEnd;
     callback(queryArr, string);
   }
@@ -61,12 +60,17 @@ const dateQueryStringCreator = (obj, queryArr, callback) => {
   }
 };
 
-const untaggedCallsStringCreator = (obj, callback) => {
-  if (obj.to === '' && obj.from === '' && obj.min === '' && obj.max === '' && obj.date === '' && obj.tags === '') {
-    callback(untaggedCalls);
+const taggedCallsStringCreator = (obj, queryArr, callback) => {
+  let tagsQueryArray = [];
+  if (obj.tags.length < 1) {
+    callback(queryArr, untaggedCalls);
   }
   else {
-    callback();
+    obj.tags.forEach((tag) => {
+      queryArr.push(tag);
+      tagsQueryArray.push(taggedCalls + '$' + queryArr.length + ')) ');
+    });
+    callback(queryArr, tagsQueryArray.join(' and '));
   }
 };
 
@@ -109,45 +113,20 @@ const createQueryString = (queryString, queryArr, obj, callback) => {
       dateQueryStringCreator(obj, qa3, (qa4, filters3) => {
         if (filters3 !== undefined) stringArr.push(filters3);
 
-        untaggedCallsStringCreator(obj, (filters4) => {
-          if (filters4 !== undefined) stringArr.push(filters4);
-
+        taggedCallsStringCreator(obj, qa4, (qa5, filters4) => {
+          stringArr.push(filters4);
           const fullQueryString = queryString += stringArr.join(' and ');
-          callback(fullQueryString, qa4);
+          callback(fullQueryString, qa5);
         });
       });
     });
   });
 };
 
-// const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
-//
-//   if (obj.to !== '' && obj.from !== '') {
-//     queryArr.push(obj.to);
-//     let str = `${toString2}$${queryArr.length}`;
-//     queryArr.push(obj.from);
-//     str += `$${queryArr.length}`;
-//     callback(str, queryArr);
-//     // `${fromAndTo}$${queryArr.length}\', \'${obj.from}\')`
-//   }
-//   else if (obj.to !== '') {
-//     // const filter = obj.to + '\') ';
-//     // const string = callsToString + filter;
-//     callback(toString2);
-//   }
-//   else if (obj.from !== '') {
-//     const filter = obj.from + '\') ';
-//     const string = callsFromString + filter;
-//     callback(string);
-//   }
-//   else {
-//     callback();
-//   }
-// };
 module.exports = {
   toAndFromQueryStringCreator,
   minAndMaxQueryStringCreator,
   dateQueryStringCreator,
-  untaggedCallsStringCreator,
+  taggedCallsStringCreator,
   createQueryString
 };
