@@ -20,7 +20,8 @@ module.exports = {
         'duration-min': parsePayload.duration_min,
         'duration-max': parsePayload.duration_max,
         date: parsePayload.date,
-        tags: parsePayload.tags
+        tags: parsePayload.tags,
+        untagged: parsePayload.untagged
       }
     };
 
