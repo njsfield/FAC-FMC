@@ -10,18 +10,20 @@ module.exports = {
   handler: (request, reply) => {
     const decoded = JWT.decode(request.state.token);
 
+    const parsePayload = JSON.parse(request.payload);
     const filterObj = {
-      filter_name: request.payload.filter_name,
+      filter_name: parsePayload.filter_name,
       contact_id: decoded.contact_id,
       filter_spec: {
-        to: request.payload.to,
-        from: request.payload.from,
-        'duration-min': request.payload.duration_min,
-        'duration-max': request.payload.duration_max,
-        date: request.payload.date,
-        tags: request.payload.tags
+        to: parsePayload.to,
+        from: parsePayload.from,
+        'duration-min': parsePayload.duration_min,
+        'duration-max': parsePayload.duration_max,
+        date: parsePayload.date,
+        tags: parsePayload.tags
       }
     };
+
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
         return reply.redirect('/').unstate('token');

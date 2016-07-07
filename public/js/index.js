@@ -1,53 +1,47 @@
 const xhr = new XMLHttpRequest();
 
 const saveFilter = () => {
-  console.log('button clicked');
+  const filterObj = {
+    to: document.getElementById('to').value,
+    from: document.getElementById('from').value,
+    duration_min: document.getElementById('duration_min').value,
+    duration_max: document.getElementById('duration_max').value,
+    date: document.getElementById('date').value,
+    tags: document.getElementById('tags').value,
+    filter_name: document.getElementById('filter_name').value
+  };
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
-      window.location.reload();
+      console.log('success');
+      window.location.href = '/dashboard';
     }
   };
-  xhr.open('get', '/fetch-audio/' + file_id);
-  xhr.send();
+  xhr.open('post', '/save-filter');
+  xhr.send(JSON.stringify(filterObj));
 };
 
-button.addEventListener('click', saveFilter);
+const saveButton = document.getElementById('save_filter');
+saveButton.addEventListener('click', saveFilter);
 
-// $( document ).ready(function() {
-//
-//   $('#save_filter').submit(function() {
-//     $('#filter_search').submit = (e) => {
-//       e.preventDefault();
-//       console.log('submit action prevented');
-//     };
-//   });
+const searchFilter = () => {
+  console.log('button clicked');
+  const filterObj = {
+    to: document.getElementById('to').value,
+    from: document.getElementById('from').value,
+    duration_min: document.getElementById('duration_min').value,
+    duration_max: document.getElementById('duration_max').value,
+    date: document.getElementById('date').value,
+    tags: document.getElementById('tags').value,
+  };
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4 && xhr.status === 200) {
+      console.log('success');
+      window.location.href = '/dashboard';
+    }
+  };
+  xhr.open('post', '/filtered-calls');
+  xhr.send(JSON.stringify(filterObj));
+};
 
-// function saveFilter() {
-//   console.log('save filter');
-//   if (event.keyCode === 13) {
-//     document.getElementById('filter').submit();
-//   }
-// }
-
-  // function preventSearch () {
-  //   console.log('stuff is happening');
-  //   $('#save_filter').onkeypress = (e) => {
-  //     console.log(e.which, '<------ e.which');
-  //     console.log(e.keyCode, '<----- e.keycode');
-  //     if (e.keyCode === 13) {
-  //       document.getElementById('filter').submit();
-  //     }
-  //   };
-  // }
-  //
-
-  // $('#filter_search').onkeypress = (e) => {
-  //   if(e.keyCode == 13) {
-  //     e.preventDefault();
-  //   }
-  // };
-  // $('#filter').submit = (e) => {
-  //   e.preventDefault();
-  //   console.log('submit action prevented');
-  // };
-// });
+const searchButton = document.getElementById('filter_search');
+searchButton.addEventListener('click', searchFilter);
