@@ -1,6 +1,11 @@
 <ul class="list-group">
   <li class="list-group-item"><h3>Filter your calls:</h3>
-    <select name="saved-filters"></select>
+    <select name="saved-filters">
+      <option selected disabled>Your saved filters</option>
+      {{#each filters}}
+        <option value="{{filter_name}}">{{filter_name}}</option>
+      {{/each}}
+    </select>
   </li>
   <form action="/filtered-calls" method="post">
     <div class="form-group">
