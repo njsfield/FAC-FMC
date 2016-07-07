@@ -1,9 +1,9 @@
 <ul class="list-group">
   <li class="list-group-item"><h3>Filter your calls:</h3>
-    <select name="saved-filters">
+    <select id="dropdown" name="saved-filters">
       <option selected disabled>Your saved filters</option>
       {{#each filters}}
-        <option value="{{filter_name}}">{{filter_name}}</option>
+        <option value="{{filter_spec}}">{{filter_name}}</option>
       {{/each}}
     </select>
   </li>
