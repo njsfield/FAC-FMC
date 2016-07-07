@@ -30,7 +30,7 @@ module.exports = {
         console.log('string');
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
-          dbCheckTables.checkFiltersTable(dbClient, filterObj, (res) => {
+          checkTables.checkFiltersTable(dbClient, filterObj, (res) => {
             reply.redirect('/dashboard');
           });
         });
