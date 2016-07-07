@@ -36,10 +36,9 @@ module.exports = {
       else {
         pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
-          const queryArr = [4387735, 100];
-          filterQueryStringCreator.createQueryString(queryString, userObj, (qString) => {
-            console.log(qString, '<<<<<<<<<<<qString');
-            dbClient.query(qString, queryArr, (err2, res) => {
+          const queryArray = [4387735, 100];
+          filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
+            dbClient.query(qString, qa, (err2, res) => {
               reply(res.rows);
             });
           });
