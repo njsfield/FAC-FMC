@@ -12,7 +12,7 @@ const queryString = `SELECT calls.*,
 FROM calls
     LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
     LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
-WHERE `;
+WHERE where (caller_contact=$1 OR callee_contact=$1) AND company_id=$2`;
 
 module.exports = {
   method: 'GET',
@@ -36,11 +36,12 @@ module.exports = {
       else {
         pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
+          const queryArr = [4387735, 100];
           filterQueryStringCreator.createQueryString(queryString, userObj, (qString) => {
             console.log(qString, '<<<<<<<<<<<qString');
-            // console.log(decoded.contact_id);
-            // dbClient.query(qString, [decoded.company_id, 4387735], (err2, res) => {
-            // });
+            dbClient.query(qString, queryArr, (err2, res) => {
+              console.log(res, '<<<<<<<<<<<< response')
+            });
           });
         });
       }
