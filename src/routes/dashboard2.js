@@ -12,7 +12,7 @@ const queryString = `SELECT calls.*,
 FROM calls
     LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
     LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
-WHERE where (caller_contact=$1 OR callee_contact=$1) AND company_id=$2`;
+WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 AND `;
 
 module.exports = {
   method: 'GET',
@@ -40,7 +40,7 @@ module.exports = {
           filterQueryStringCreator.createQueryString(queryString, userObj, (qString) => {
             console.log(qString, '<<<<<<<<<<<qString');
             dbClient.query(qString, queryArr, (err2, res) => {
-              console.log(res, '<<<<<<<<<<<< response')
+              reply(res.rows);
             });
           });
         });
