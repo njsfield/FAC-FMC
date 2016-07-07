@@ -1,5 +1,5 @@
 const fetchCalls = require('../db/fetchCalls.js');
-const getFilterName = require('../../polling/db/getFilterName.js');
+const getFilterNameAndSpec = require('../../polling/db/getFilterNameAndSpec.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
@@ -20,7 +20,7 @@ module.exports = {
           dbClient.query('SELECT company_id FROM users WHERE contact_id=($1)', [decoded.contact_id], (err2, res) => {
             if (err2) throw err2;
             fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
-              getFilterName.getFilter_name(dbClient, decoded, (response) => {
+              getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (response) => {
                 const calls = {
                   calls: result,
                   filters: response
