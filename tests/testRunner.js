@@ -13,7 +13,7 @@ require('./polling/db/getIds.test.js'); //All functions tested and pass
 require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
 require('./polling/api/pollingCalls.test.js');
 require('./src/db/fetchCalls.test.js');
-require('./src/db/filterQueryStringCreator.test.js');
+// require('./src/db/filterQueryStringCreator.test.js');
 require('./src/db/fetchAudio.test.js');
 // require('./src/server/loginFlowSuccess.test.js');
 // require('./src/server/loginFlowFail.test.js');
