@@ -1,7 +1,7 @@
 const pg = require('pg');
 const tape = require('tape');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
-const getTagNames = require('../../../polling/db/getTagNamesArr.js');
+const getTagNames = require('../../../src/db/getTagNamesArr.js');
 
 const tagNameObjOne = {
   company_id: 100

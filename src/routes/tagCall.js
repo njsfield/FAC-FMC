@@ -22,7 +22,6 @@ module.exports = {
             tag_name: request.payload.tag,
             company_id: decoded.company_id
           };
-          console.log(tag);
           checkTables.checkTagsTable(dbClient, tag, () => {
 
             getIds.getTag_id(dbClient, tag, (tag_id) => {
@@ -30,7 +29,6 @@ module.exports = {
                 tag_id: tag_id,
                 call_id: request.payload.call_id
               };
-              console.log(tagsCalls, 'tagsCalls-------');
               insert.addToTagsCallsTable(dbClient, tagsCalls, () => {
                 reply.redirect('/dashboard');
                 done();
