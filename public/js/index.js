@@ -2,13 +2,26 @@ const xhr = new XMLHttpRequest();
 
 /** AJAX to send saved filter spec and name to /save-filter route */
 const saveFilter = () => {
+  /** get checked input from the scrollbar checboxes div */
+  const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
+  const savedTagsArr = [];
+  for(var i=0; i<scrollbarCheckboxes.length; i++) {
+    if(scrollbarCheckboxes[i].checked) {
+      savedTagsArr.push(scrollbarCheckboxes[i].value);
+    }
+  }
+  /** split content on tags input to store each tag in a new array */
+  const tags = document.getElementById('tags').value;
+  const arrTags = tags.split(';');
+  
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
     duration_min: document.getElementById('duration_min').value,
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
-    tags: document.getElementById('tags').value,
+    tags: arrTags,
+    saved_tags: savedTagsArr,
     untagged: document.getElementById('untagged').value,
     filter_name: document.getElementById('filter_name').value
   };
@@ -27,14 +40,25 @@ saveButton.addEventListener('click', saveFilter);
 
 /** AJAX to send filter spec and name to /filtered-calls route to filter user's calls*/
 const searchFilter = () => {
-  console.log('button clicked');
+
+  const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
+  const savedTagsArr = [];
+  for(var i=0; i<scrollbarCheckboxes.length; i++) {
+    if(scrollbarCheckboxes[i].checked) {
+      savedTagsArr.push(scrollbarCheckboxes[i].value);
+    }
+  }
+  const tags = document.getElementById('tags').value;
+  const arrTags = tags.split(';');
+
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
     duration_min: document.getElementById('duration_min').value,
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
-    tags: document.getElementById('tags').value,
+    tags: arrTags,
+    saved_tags: savedTagsArr,
     untagged: document.getElementById('untagged').value
   };
   xhr.onreadystatechange = function () {

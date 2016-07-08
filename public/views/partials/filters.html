@@ -14,8 +14,16 @@
       <input type="text" id="duration_min" name="duration_min" class="form-control" placeholder="Duration (min):">
       <input type="text" id="duration_max" name="duration_max" class="form-control" placeholder="Duration (max):">
       <input type="date" id="date" name="date" class="form-control" placeholder="Date:">
-      <input type="text" id="tags" name="tags" class="form-control" placeholder="Tags:">
-      <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
+      <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important">
+      <div class="scrollbar-tags form-control">
+        Saved Tags:<br>
+        {{#each tags}}
+          <input type="checkbox" class="saved-tag" name="company_tag" value="{{tag_name}}"> {{tag_name}} <br>
+        {{/each}}
+      </div>
+      <div class="form-control">
+        <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
+      </div>
       <button id="filter_search" class="btn btn-primary btn-lg">Search</button>
       <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Save as</button>
     </div>

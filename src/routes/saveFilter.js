@@ -21,10 +21,11 @@ module.exports = {
         'duration-max': parsePayload.duration_max,
         date: parsePayload.date,
         tags: parsePayload.tags,
+        saved_tags: parsePayload.saved_tags,
         untagged: parsePayload.untagged
       }
     };
-
+    console.log(filterObj, '-----------');
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
         return reply.redirect('/').unstate('token');
