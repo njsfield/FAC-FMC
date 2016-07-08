@@ -63,6 +63,9 @@ const dateQueryStringCreator = (obj, queryArr, callback) => {
 const taggedCallsStringCreator = (obj, queryArr, callback) => {
   let tagsQueryArray = [];
   if (obj.tags.length < 1) {
+    callback(queryArr);
+  }
+  else if (obj.tags === 'untagged') {
     callback(queryArr, untaggedCalls);
   }
   else {
@@ -102,20 +105,21 @@ const taggedCallsStringCreator = (obj, queryArr, callback) => {
  */
 
 const createQueryString = (queryString, queryArr, obj, callback) => {
-  let stringArr = [];
+  let stringArr = [queryString];
 
   toAndFromQueryStringCreator(obj, queryArr, (qa2, filters) => {
-    if (filters !== undefined) stringArr.push(filters);
+    if (filters) stringArr.push(filters);
 
     minAndMaxQueryStringCreator(obj, qa2, (qa3, filters2) => {
-      if (filters2 !== undefined) stringArr.push(filters2);
+      if (filters2) stringArr.push(filters2);
 
       dateQueryStringCreator(obj, qa3, (qa4, filters3) => {
-        if (filters3 !== undefined) stringArr.push(filters3);
+        if (filters3) stringArr.push(filters3);
 
         taggedCallsStringCreator(obj, qa4, (qa5, filters4) => {
-          stringArr.push(filters4);
-          const fullQueryString = queryString += stringArr.join(' and ');
+          if (filters4) stringArr.push(filters4);
+
+          const fullQueryString = stringArr.join(' and ');
           callback(fullQueryString, qa5);
         });
       });
