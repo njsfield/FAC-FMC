@@ -21,16 +21,15 @@ module.exports = {
         'duration-max': parsePayload.duration_max,
         date: parsePayload.date,
         tags: parsePayload.tags,
+        saved_tags: parsePayload.saved_tags,
         untagged: parsePayload.untagged
       }
     };
-
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
         return reply.redirect('/').unstate('token');
       }
       else {
-        console.log('string');
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
           checkTables.checkFiltersTable(dbClient, filterObj, (res) => {

@@ -18,23 +18,20 @@ module.exports = {
       else {
         pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
-          getIds.getCompany_id(dbClient, decoded, (company_id) => {
-            const tag = {
-              tag_name: request.payload.tag,
-              company_id: company_id
-            };
-            checkTables.checkTagsTable(dbClient, tag, () => {
+          const tag = {
+            tag_name: request.payload.tag,
+            company_id: decoded.company_id
+          };
+          checkTables.checkTagsTable(dbClient, tag, () => {
 
-              getIds.getTag_id(dbClient, tag, (tag_id) => {
-                const tagsCalls = {
-                  tag_id: tag_id,
-                  call_id: request.payload.call_id
-                };
-
-                insert.addToTagsCallsTable(dbClient, tagsCalls, () => {
-                  reply.redirect('/dashboard');
-                  done();
-                });
+            getIds.getTag_id(dbClient, tag, (tag_id) => {
+              const tagsCalls = {
+                tag_id: tag_id,
+                call_id: request.payload.call_id
+              };
+              insert.addToTagsCallsTable(dbClient, tagsCalls, () => {
+                reply.redirect('/dashboard');
+                done();
               });
             });
           });

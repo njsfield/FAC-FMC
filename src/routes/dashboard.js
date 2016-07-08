@@ -1,5 +1,6 @@
 const fetchCalls = require('../db/fetchCalls.js');
-const getFilterNameAndSpec = require('../../polling/db/getFilterNameAndSpec.js');
+const getFilterNameAndSpec = require('../../src/db/getFilterNameAndSpec.js');
+const getTagNames = require('../../src/db/getTagNamesArr.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
@@ -19,13 +20,16 @@ module.exports = {
           if (err) throw err;
           dbClient.query('SELECT company_id FROM users WHERE contact_id=($1)', [decoded.contact_id], (err2, res) => {
             if (err2) throw err2;
-            fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
-              getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (response) => {
-                const calls = {
-                  calls: result,
-                  filters: response
-                };
-                reply.view('dashboard', calls);
+            fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (calls) => {
+              getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
+                getTagNames.getTagNamesArr(dbClient, decoded, (tags) => {
+                  const userCalls = {
+                    calls,
+                    filters,
+                    tags
+                  };
+                  reply.view('dashboard', userCalls);
+                });
               });
             });
           });
