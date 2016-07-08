@@ -17,12 +17,11 @@
       <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important">
       <div class="scrollbar-tags form-control">
         Saved Tags:<br>
-        {{#each tags}}
+        {{#each savedTags}}
         <div>
           <input type="checkbox" class="saved-tag" name="company_tag" value="{{tag_name}}"> {{tag_name}} <br>
         </div>
         {{/each}}
-        <input type="button" value="Delete selected tags" id="deleteButton" class="btn btn-secondary">
       </div>
       <div class="form-control">
         <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
