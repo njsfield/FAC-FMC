@@ -1,6 +1,5 @@
 'use strict';
 require('env2')('config.env');
-const pg = require('pg');
 const server = require('../../../src/server/server.js');
 const nock = require('nock');
 const tape = require('tape');
@@ -30,7 +29,7 @@ nock(pbxUrl)
                   perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } });
 
 tape('test the login user flow for a successful api response from IPC for correct login details', (t) => {
-  t.plan(7);
+  t.plan(6);
   server.inject({
     method: 'POST',
     url: '/login',
@@ -51,10 +50,6 @@ tape('test the login user flow for a successful api response from IPC for correc
     actual = decoded.username;
     expected = 'testuser';
     t.deepEqual(actual, expected, 'expected username is present in the token');
-
-    actual = decoded.password;
-    expected = 'testpassword';
-    t.deepEqual(actual, expected, 'expected password is present in the token');
 
     actual = decoded.userRole;
     expected = 'user';

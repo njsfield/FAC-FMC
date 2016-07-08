@@ -99,7 +99,6 @@ tape('test the insertData functions', (t) => {
       t.deepEqual(actual, expected, 'added to filters table');
       done();
     });
-    pg.end();
     // insertData.editTagsTable(client, obj.editTagsTable, (res) => {
     //   const actual = res.command;
     //   const expected2 = 'UPDATE';

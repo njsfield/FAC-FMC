@@ -265,6 +265,13 @@ INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('test-filter',
   date: '',
   tags: ''
 }');
-
+INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('super-filter', 100, '{
+  to: 110,
+  from: '',
+  min: '',
+  max: '',
+  date: '',
+  tags: ''
+}');
 
 COMMIT;

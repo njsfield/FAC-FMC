@@ -46,6 +46,5 @@ tape('test the getIds functions', (t) => {
       t.deepEqual(actual, expected, 'getFilter_id got the correct filter_id from filters table');
       done();
     });
-    pg.end();
   });
 });

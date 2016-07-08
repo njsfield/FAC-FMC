@@ -34,3 +34,9 @@ body {
   margin-bottom: 0;
   margin-left: 1px;
 }
+
+/************** filter form *************/
+
+input[type="checkbox"] {
+  color: white;
+}

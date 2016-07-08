@@ -37,7 +37,6 @@ tape('test that the fmctest database and tables exists', (t) => {
       }
       t.ok(results, 'companies table exists');
       done();
-      pg.end();
     });
   });
 });

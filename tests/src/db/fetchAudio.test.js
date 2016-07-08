@@ -15,5 +15,4 @@ tape('check that we can fetch the audio with a file_id', (t) => {
       done();
     });
   });
-  pg.end();
 });

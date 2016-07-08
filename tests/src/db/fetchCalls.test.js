@@ -18,7 +18,6 @@ tape('test if one can check the participants table by contact_id and company', (
       t.equals( actual, expected, 'grabbed the participants rows for a user');
     });
   });
-  pg.end();
 });
 
 tape('restructureCallsResults function prepares data for response', (t) => {
@@ -31,7 +30,6 @@ tape('restructureCallsResults function prepares data for response', (t) => {
       t.deepEqual(actual, expected, 'calls results restructured');
     });
   });
-  pg.end();
 });
 
 tape('findOtherParticipant function locates the caller or callee for any given participant', (t) => {
@@ -98,7 +96,6 @@ tape('find file_id, duration and time for the call', (t) => {
       t.deepEqual(expected, actual, 'congrats full response complete');
     });
   });
-  pg.end();
 });
 
 const partipantsQueryResult =

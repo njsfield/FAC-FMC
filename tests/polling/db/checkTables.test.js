@@ -174,7 +174,6 @@ tape('test the checkTables functions', (t) => {
       done();
     });
     /////////////////////////// end /////////////////////////////
-    pg.end();
   });
 });
 
@@ -194,7 +193,6 @@ tape('test the checkTables functions', (t) => {
 //       done()
 //     })
 //     t.end()
-//     pg.end()
 //   })
 // })
 //
@@ -214,7 +212,6 @@ tape('test the checkTables functions', (t) => {
 //       done()
 //     })
 //     t.end()
-//     pg.end()
 //   })
 // })
 
@@ -232,6 +229,5 @@ tape('test the checkTables functions', (t) => {
 //       done();
 //     });
 //     t.end();
-//     pg.end();
 //   });
 // });

@@ -39,6 +39,5 @@ tape('test the login user flow for a successful api response from IPC for incorr
     expected = '/';
     t.deepEqual(actual, expected, 'redirects to login view');
     teardown();
-    pg.end();
   });
 });

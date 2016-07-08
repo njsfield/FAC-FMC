@@ -86,7 +86,6 @@ const findOtherParticipant = (callObj, dbClient, done, callback) => {
       if (error) throw error;
       done();
       const response = result.rows;
-      console.log(response);
       const participant_role = response[0].participant_role.toLowerCase();
       callObj.participants[participant_role] = {
         user: false,
