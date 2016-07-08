@@ -14,8 +14,9 @@ tape('test the getFilterTagNamesArr function', (t) => {
   pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
     getTagNames.getFilterTagNamesArr(dbClient, tagNameObjOne, (res) => {
+      console.log(res, '<------ res');
       res.forEach((el) => {
-        if (el.tag_name === 'important') {
+        if (el.tag_name === 'important' && el.tag_id === '100') {
           actual = true;
         }
       });

@@ -88,3 +88,17 @@ const getFilterSpec = () => {
 
 const select = document.getElementById('dropdown');
 select.addEventListener('change', getFilterSpec);
+
+/** AJAX to delete tags from call*/
+const deleteTag = (tag_id) => {
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4 && xhr.status === 200) {
+      console.log('success');
+    }
+  };
+  xhr.open('post', '/delete-tag/' + tag_id);
+  xhr.send();
+};
+
+const deleteButton = document.getElementById('delete-button');
+deleteButton.addEventListener('click', deleteTag);

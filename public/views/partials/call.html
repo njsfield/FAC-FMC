@@ -6,10 +6,10 @@
         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}">
           <div class='row'>
             <div class="col-xs-3">
-              {{ participants.caller.number}}
+              {{caller_number}}
             </div>
             <div class="col-xs-3">
-              {{participants.callee.number}}
+              {{callee_number}}
             </div>
             <div class="col-xs-3">
               {{date}}
@@ -28,8 +28,9 @@
           <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
         </div>
         <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
-        {{#each call-tag}}
-          <span>{{tag_name}}</span>
+        {{#each tag_name}}
+          <span class="btn-success">{{this}}</span>
+          <span id="delete-button" onclick="deleteTag({{savedTags.tag_id}})">x</span>
         {{/each}}
         <div class="panel-body">Listen to your calls : {{ file_id }}</div>
       </form>
