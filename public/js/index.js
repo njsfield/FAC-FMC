@@ -104,5 +104,5 @@ deleteButton.addEventListener('click', ()=> {
 });
 
 const deleteTag = (checkBox) => {
-  checkBox.parentNode.parentNode.removeChild(checkBox);
+  checkBox.parentElement.removeChild(checkBox);
 };
