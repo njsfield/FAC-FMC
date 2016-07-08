@@ -2,6 +2,15 @@ require('env2')('config.env');
 const request = require('request');
 const apiKey = process.env.API_KEY;
 
+const fileObj = {
+  caller: '239',
+  callee: '238',
+  duration: 6,
+  company_name: 'default',
+  date: 1465997840,
+  file_name: '2016.06.15.14.37.20-1465997840-239-238.wav'
+};
+
 /**
  * Fetches an array of file_names by company_name from the IPC API.
  * @param {string} company_name
@@ -31,7 +40,7 @@ const retrieveCompanyCalls = (company_name, callback) => {
     if (error) throw error;
 
     if (body.result === 'fail') {
-      callback('Company name does not exist.');
+      callback([fileObj]);
     }
     else {
       const files = body.values.map((el) => {
