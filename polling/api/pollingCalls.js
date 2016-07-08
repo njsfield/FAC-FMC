@@ -37,7 +37,6 @@ const retrieveCompanyCalls = (company_name, callback) => {
 
   request(options, (error, response, body) => {
     if (error) throw error;
-    console.log(body, '<<< body');
 
     if (body.result === 'fail') {
       callback([fileObjs]);

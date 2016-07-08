@@ -47,21 +47,16 @@ let participantsArray = [];
 const storeCompanyCalls = (dbClient, done, companyName) => {
   pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
     participantsArray = [];
-    console.log(fileObjs);
     fileObjs.forEach((obj, i) => {
       pollerFlow(dbClient, done, obj, (result) => {
         if(result.command === 'INSERT') {
 
           const callerQueryObj = createCallParticipantObj(obj, 'caller');
-          console.log(callerQueryObj, '<<<<<< callerQueryObj');
-          insertData.addToParticipantsTable(dbClient, callerQueryObj, (response) => {
-            console.log(response);
+          insertData.addToParticipantsTable(dbClient, callerQueryObj, () => {
           });
 
           const calleeQueryObj= createCallParticipantObj(obj, 'callee');
-          console.log(calleeQueryObj, '<<<< Callee');
-          insertData.addToParticipantsTable(dbClient, calleeQueryObj, (response) => {
-            console.log(response);
+          insertData.addToParticipantsTable(dbClient, calleeQueryObj, () => {
           });
 
           checkParticipantsArray([obj.callee, obj.caller]);
@@ -73,14 +68,14 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
           if (participantsArray.length > 0) {
 
             pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
+              console.log(res, '<<<<<<<<<<<<<<<<');
 
               if (res.numrows === 0) {
                 console.log('no data returned from api call to IPC');
               }
               else {
                 res.values.forEach((extObj) => {
-                  updateData(dbClient, extObj, (response) => {
-                    console.log(response);
+                  updateData(dbClient, extObj, () => {
                   });
                 });
               }
