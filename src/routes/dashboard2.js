@@ -39,7 +39,8 @@ module.exports = {
           const queryArray = [4387735, 100];
           filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
             dbClient.query(qString, qa, (err2, res) => {
-              reply(res.rows);
+              const userCalls = res.rows;
+              reply.view('dashboard', userCalls);
               done();
             });
           });
