@@ -12,7 +12,7 @@ const queryString = `SELECT calls.*,
 FROM calls
     LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
     LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
-WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 AND `;
+WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 `;
 
 module.exports = {
   method: 'GET',
