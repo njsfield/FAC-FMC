@@ -1,10 +1,7 @@
 'use strict';
 
 const pollCalls = require('./api/pollingCalls.js');
-// const insertData = require('./db/insertData.js');
 const pollerFlow = require('./db/pollerFlow.js').pollerFlow;
-const postgresURL = process.env.POSTGRES_URL;
-const pg = require('pg');
 const insertData = require('./db/insertData.js');
 const updateData = require('./db/updateData.js').updateParticipantsTable;
 let participantsArray = [];
@@ -47,60 +44,57 @@ let participantsArray = [];
  *
  * 3. Use push instead of concat to avoid clogging memory space.
  */
-const storeCompanyCalls = (companyName) => {
+const storeCompanyCalls = (dbClient, done, companyName) => {
   pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
-    console.log(fileObjs, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
     participantsArray = [];
-    pg.connect(postgresURL, (err, dbClient, done) => {
-      if (err) throw err;
-      fileObjs.forEach((obj, i) => {
-        pollerFlow(dbClient, done, obj, (result) => {
-          if(result.command === 'INSERT') {
+    console.log(fileObjs);
+    fileObjs.forEach((obj, i) => {
+      pollerFlow(dbClient, done, obj, (result) => {
+        if(result.command === 'INSERT') {
 
-            const callerQueryObj = createCallParticipantObj(obj, 'caller');
-            insertData.addToParticipantsTable(dbClient, callerQueryObj, (err1) => {
-              if (err1) throw err1;
-            });
+          const callerQueryObj = createCallParticipantObj(obj, 'caller');
+          console.log(callerQueryObj, '<<<<<< callerQueryObj');
+          insertData.addToParticipantsTable(dbClient, callerQueryObj, (response) => {
+            console.log(response);
+          });
 
-            const calleeQueryObj= createCallParticipantObj(obj, 'callee');
-            insertData.addToParticipantsTable(dbClient, calleeQueryObj, (err2) => {
-              if (err2) throw err2;
-            });
+          const calleeQueryObj= createCallParticipantObj(obj, 'callee');
+          console.log(calleeQueryObj, '<<<< Callee');
+          insertData.addToParticipantsTable(dbClient, calleeQueryObj, (response) => {
+            console.log(response);
+          });
 
-            checkParticipantsArray([obj.callee, obj.caller]);
-          }
-          done();
+          checkParticipantsArray([obj.callee, obj.caller]);
+        }
+        done();
 
           // this function is called once all the participants have been checked
-          if (i === fileObjs.length -1 ) {
-            if (participantsArray.length > 0) {
+        if (i === fileObjs.length -1 ) {
+          if (participantsArray.length > 0) {
 
-              pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
+            pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
 
-                if (res.numrows === 0) {
-                  console.log('no data returned from api call to IPC');
-                }
-                else {
-                  res.values.forEach((extObj) => {
-                    updateData(dbClient, extObj, (response) => {
-                      console.log(response);
-                    });
+              if (res.numrows === 0) {
+                console.log('no data returned from api call to IPC');
+              }
+              else {
+                res.values.forEach((extObj) => {
+                  updateData(dbClient, extObj, (response) => {
+                    console.log(response);
                   });
-                }
+                });
+              }
 
-              });
-            }
-            else {
-              console.log('no new participants were added');
-            }
+            });
           }
-        });
+          else {
+            console.log('no new participants were added');
+          }
+        }
       });
     });
   });
 };
-
-storeCompanyCalls('default');
 
 const createCallParticipantObj = (obj, type) => {
   return {
