@@ -28,6 +28,9 @@
           <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
         </div>
         <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
+        {{#each call-tag}}
+          <span>{{tag_name}}</span>
+        {{/each}}
         <div class="panel-body">Listen to your calls : {{ file_id }}</div>
       </form>
     </div>

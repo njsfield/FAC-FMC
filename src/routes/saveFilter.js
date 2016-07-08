@@ -25,13 +25,11 @@ module.exports = {
         untagged: parsePayload.untagged
       }
     };
-    console.log(filterObj, '-----------');
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
         return reply.redirect('/').unstate('token');
       }
       else {
-        console.log('string');
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
           checkTables.checkFiltersTable(dbClient, filterObj, (res) => {

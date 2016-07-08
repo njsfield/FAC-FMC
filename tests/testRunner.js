@@ -7,11 +7,11 @@ const sql = fs.readFileSync(`${__dirname}/../schema.txt`).toString();
 schema.getSchema(connectionString, sql);
 
 // // require in files
-require('./polling/db/getTagNamesArr.test.js');
+require('./src/db/getTagNamesArr.test.js');
 // require('./src/server/loginFlowSuccess.test.js');
 // require('./src/server/loginFlowFail.test.js');
 // require('./polling/db/checkTablesExists.test.js'); //all bar checkTags tested and pass
-// require('./polling/db/getFilterNameAndSpec.test.js'); //All functions tested and pass
+require('./src/db/getFilterNameAndSpec.test.js'); //All functions tested and pass
 // require('./polling/db/insertData.test.js'); //all tested and pass
 // require('./polling/db/getIds.test.js'); //All functions tested and pass
 // require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass

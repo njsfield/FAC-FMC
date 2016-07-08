@@ -1,7 +1,7 @@
 const pg = require('pg');
 const tape = require('tape');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
-const getFilterNameAndSpec = require('../../../polling/db/getFilterNameAndSpec.js');
+const getFilterNameAndSpec = require('../../../src/db/getFilterNameAndSpec.js');
 
 const filter_nameObj1 = {
   contact_id: 238
