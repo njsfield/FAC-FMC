@@ -5,6 +5,43 @@ html {
 font-family: 'Lato', sans-serif;
 }
 
+/*login page*/
+
+#login-button-container {
+  margin: auto;
+}
+
+#header-title {
+  text-align: center;
+  padding: 10px;
+}
+#find-my-call {
+  font-size: 50px;
+  color: white;
+}
+
+#logo-container {
+  padding-top: 30px;
+  padding-left: 125px;
+  padding-right: 125px;
+  padding-bottom: 30px;
+}
+
+#logo {
+  width: 100%;
+}
+
+#login_button {
+  width: 100%;
+}
+.login-form {
+  padding: 10%;
+}
+.form-container {
+  background-color: #00416F;
+  padding: 20px;
+  border-radius: 10px;
+}
 /*dashboard layout*/
 
 #call-container {
