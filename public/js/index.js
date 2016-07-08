@@ -2,6 +2,13 @@ const xhr = new XMLHttpRequest();
 
 /** AJAX to send saved filter spec and name to /save-filter route */
 const saveFilter = () => {
+  const scrollbar_checkboxes = document.getElementsByClassName('saved-tag');
+  const saved_tags_arr = [];
+  for(var i=0; i<scrollbar_checkboxes.length; i++) {
+    if(scrollbar_checkboxes[i].checked) {
+      saved_tags_arr.push(scrollbar_checkboxes[i].value);
+    }
+  }
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
@@ -9,6 +16,7 @@ const saveFilter = () => {
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
     tags: document.getElementById('tags').value,
+    saved_tags: saved_tags_arr,
     untagged: document.getElementById('untagged').value,
     filter_name: document.getElementById('filter_name').value
   };
@@ -27,7 +35,13 @@ saveButton.addEventListener('click', saveFilter);
 
 /** AJAX to send filter spec and name to /filtered-calls route to filter user's calls*/
 const searchFilter = () => {
-  console.log('button clicked');
+  const scrollbar_checkboxes = document.getElementsByClassName('saved-tag');
+  const saved_tags_arr = [];
+  for(var i=0; i<scrollbar_checkboxes.length; i++) {
+    if(scrollbar_checkboxes[i].checked) {
+      saved_tags_arr.push(scrollbar_checkboxes[i].value);
+    }
+  }
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
@@ -35,6 +49,7 @@ const searchFilter = () => {
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
     tags: document.getElementById('tags').value,
+    saved_tags: saved_tags_arr,
     untagged: document.getElementById('untagged').value
   };
   xhr.onreadystatechange = function () {

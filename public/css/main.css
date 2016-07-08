@@ -40,3 +40,9 @@ body {
 input[type="checkbox"] {
   color: white;
 }
+
+.scrollbar-tags {
+  overflow: scroll;
+  height: 130px !important;
+  background: white;
+}
