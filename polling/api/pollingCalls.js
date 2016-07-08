@@ -13,6 +13,14 @@ const apiKey = process.env.API_KEY;
     date: 1465997840,
     file_name: '2016.06.15.14.37.20-1465997840-239-238.wav' }
  */
+const fileObjs = {
+  caller: '239',
+  callee: '238',
+  duration: 6,
+  company_name: 'default',
+  date: 1465997840,
+  file_name: '2016.06.15.14.37.20-1465997840-239-238.wav'
+};
 
 const retrieveCompanyCalls = (company_name, callback) => {
   const options = {
@@ -31,7 +39,7 @@ const retrieveCompanyCalls = (company_name, callback) => {
     if (error) throw error;
 
     if (body.result === 'fail') {
-      callback('Company name does not exist.');
+      callback([fileObjs]);
     }
     else {
       const files = body.values.map((el) => {
