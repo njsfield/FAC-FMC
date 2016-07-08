@@ -5,6 +5,9 @@ const pollCalls = require('./api/pollingCalls.js');
 const pollerFlow = require('./db/pollerFlow.js').pollerFlow;
 const postgresURL = process.env.POSTGRES_URL;
 const pg = require('pg');
+const insertData = require('./db/insertData.js');
+const updateData = require('./db/updateData.js').updateParticipantsTable;
+let participantsArray = [];
 
 /**
  * API calls are made to IPC to update the participants table on a regular basis.
@@ -47,41 +50,44 @@ const pg = require('pg');
 const poller = (companyName) => {
   pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
     console.log(fileObjs, '<<<<<<<<<<<<<<<<<<<<<<<');
-    let participantsArray = [];
+    participantsArray = [];
     pg.connect(postgresURL, (err, dbClient, done) => {
       if (err) throw err;
       fileObjs.forEach((obj, i) => {
         pollerFlow(dbClient, done, obj, (result) => {
           if(result.command === 'INSERT') {
-            const callerQueryArray = [obj.call_id, obj.company_id, obj.caller, false, 'caller', null];
-            dbClient.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role)' +
-            'VALUES ($1, $2, $3, $4, $5)', callerQueryArray, (error) => {
-              if (error) throw error;
+
+            const callerQueryObj = createCallParticipantObj(obj, 'caller');
+            insertData.addToParticipantsTable(dbClient, callerQueryObj, (err1) => {
+              if (err1) throw err1;
             });
-            const calleeQueryArray = [obj.call_id, obj.company_id, obj.callee, false, 'callee', null];
-            dbClient.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role)' +
-            'VALUES ($1, $2, $3, $4, $5, $6)', calleeQueryArray, (error) => {
-              if (error) throw error;
+
+            const calleeQueryObj= createCallParticipantObj(obj, 'callee');
+            insertData.addToParticipantsTable(dbClient, calleeQueryObj, (err2) => {
+              if (err2) throw err2;
             });
-            if (participantsArray.indexOf(obj.callee) < 0 ) participantsArray.push(obj.callee);
-            if (participantsArray.indexOf(obj.caller) < 0 ) participantsArray.push(obj.caller);
+
+            checkParticipantsArray([obj.callee, obj.caller]);
           }
           done();
+
+          // this function is called once all the participants have been checked
           if (i === fileObjs.length -1 ) {
             if (participantsArray.length > 0) {
+
               pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
+
                 if (res.numrows === 0) {
                   console.log('no data returned from api call to IPC');
                 }
                 else {
                   res.values.forEach((extObj) => {
-                    const queryArray = [true,extObj.owner, extObj.company, extObj.virt_exten];
-                    dbClient.query('UPDATE participants SET internal=($1), contact_id=($2) WHERE company_id=(SELECT company_id FROM companies WHERE company_name=$3) AND number=($4)',
-                    queryArray, (error, response) => {
-                      console.log(response, '<---- response');
+                    updateData(dbClient, extObj, (response) => {
+                      console.log(response);
                     });
                   });
                 }
+
               });
             }
             else {
@@ -95,6 +101,24 @@ const poller = (companyName) => {
 };
 
 poller('testcompany');
+
+const createCallParticipantObj = (obj, type) => {
+  return {
+    call_id: obj.call_id,
+    company_id: obj.company_id,
+    number: obj[type],
+    internal: false,
+    participant_role: type,
+    contact_id: null
+  };
+};
+
+const checkParticipantsArray = (callParticipants) => {
+  callParticipants.forEach ( (participant) => {
+    if (participantsArray.indexOf(participant) < 0 ) participantsArray.push(participant);
+  });
+};
+
 
 module.exports = {
   poller
