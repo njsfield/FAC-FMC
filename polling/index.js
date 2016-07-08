@@ -78,7 +78,6 @@ pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
                   const queryArray = [true,extObj.owner, extObj.company, extObj.virt_exten];
                   dbClient.query('UPDATE participants SET internal=($1), contact_id=($2) WHERE company_id=(SELECT company_id FROM companies WHERE company_name=$3) AND number=($4)',
                 queryArray, (error, response) => {
-                  console.log(response, '<---- response');
                 });
                 });
               }

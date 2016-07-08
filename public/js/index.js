@@ -13,7 +13,7 @@ const saveFilter = () => {
   /** split content on tags input to store each tag in a new array */
   const tags = document.getElementById('tags').value;
   const arrTags = tags.split(';');
-  
+
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
@@ -88,3 +88,21 @@ const getFilterSpec = () => {
 
 const select = document.getElementById('dropdown');
 select.addEventListener('change', getFilterSpec);
+
+/** delete saved tag from filter form from the client side */
+
+var deleteButton = document.getElementById('deleteButton');
+console.log(deleteButton, 'deleteButton-------');
+
+deleteButton.addEventListener('click', ()=> {
+  var removeCheckBoxes = document.getElementsByName('company_tag');
+  for(var i=0; i<removeCheckBoxes.length; i++) {
+    if(removeCheckBoxes[i].checked) {
+      deleteTag(removeCheckBoxes[i]);
+    }
+  }
+});
+
+const deleteTag = (checkBox) => {
+  checkBox.parentNode.parentNode.removeChild(checkBox);
+};

@@ -22,7 +22,7 @@ module.exports = {
             if (err2) throw err2;
             fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (calls) => {
               getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
-                getTagNames.getTagNamesArr(dbClient, decoded, (tags) => {
+                getTagNames.getFilterTagNamesArr(dbClient, decoded, (tags) => {
                   const userCalls = {
                     calls,
                     filters,
