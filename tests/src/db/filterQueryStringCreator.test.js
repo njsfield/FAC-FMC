@@ -101,7 +101,6 @@ tape('test fetchCalls functions', (t) => {
     t.deepEqual(actual, expected, 'filtering with no filters set returns the expected string to render all untagged calls');
   });
   fetchCalls.createQueryString(queryString, userObj, (res) => {
-    console.log(res);
     const actual = res;
     const expected = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = ($1) and p.contact_id = ($2) left join tags_calls t on c.call_id = t.call_id where participant_role = (\'callee\') and number = (\'8\') ';
     t.deepEqual(actual, expected, 'complete query string is as expected');

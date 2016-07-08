@@ -9,18 +9,18 @@ const tagNameObjOne = {
 
 var actual;
 
-tape('test the getTagNamesArr function', (t) => {
+tape('test the getFilterTagNamesArr function', (t) => {
   t.plan(1);
   pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
-    getTagNames.getTagNamesArr(dbClient, tagNameObjOne, (res) => {
+    getTagNames.getFilterTagNamesArr(dbClient, tagNameObjOne, (res) => {
       res.forEach((el) => {
         if (el.tag_name === 'important') {
           actual = true;
         }
       });
       const expected = true;
-      t.deepEqual(actual, expected, 'getTagNamesArr returned the expected array of tag_names for that contact_id');
+      t.deepEqual(actual, expected, 'getFilterTagNamesArr returned the expected array of tag_names for that contact_id');
       done();
     });
   });

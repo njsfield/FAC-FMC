@@ -13,7 +13,7 @@ const saveFilter = () => {
   /** split content on tags input to store each tag in a new array */
   const tags = document.getElementById('tags').value;
   const arrTags = tags.split(';');
-  
+
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,

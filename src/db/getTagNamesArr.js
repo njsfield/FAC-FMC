@@ -1,4 +1,4 @@
-const getTagNamesArr = (dbClient, obj, cb) => {
+const getFilterTagNamesArr = (dbClient, obj, cb) => {
   const queryArray = [obj.company_id];
   dbClient.query('SELECT tag_name FROM tags WHERE company_id=($1)', queryArray, (err, res) => {
     if (err) throw err;
@@ -8,5 +8,5 @@ const getTagNamesArr = (dbClient, obj, cb) => {
 };
 
 module.exports = {
-  getTagNamesArr
+  getFilterTagNamesArr
 };
