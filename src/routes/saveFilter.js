@@ -25,6 +25,7 @@ module.exports = {
         untagged: parsePayload.untagged
       }
     };
+    console.log(filterObj, '-----------');
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
         return reply.redirect('/').unstate('token');
