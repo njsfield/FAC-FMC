@@ -1,5 +1,3 @@
-'use strict';
-
 /** Fetches audio from the files table based on file_id.
 * @param {object} dbClient - Client server from the Postgreql database.
 * @param {integer} file_id - Id used to fetch audio files.
