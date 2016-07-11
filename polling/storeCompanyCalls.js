@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const getFile_id = require('./db/getIds.js').getFile_id;
 const pollCalls = require('./api/pollingCalls.js');
 const pollerFlow = require('./db/pollerFlow.js').pollerFlow;
 const insertData = require('./db/insertData.js');
