@@ -7,8 +7,9 @@ const sql = fs.readFileSync(`${__dirname}/../schema.txt`).toString();
 schema.getSchema(connectionString, sql);
 
 // // require in files
-require('./src/db/getTagNamesArr.test.js');
+// require('./src/db/getTagNamesArr.test.js');
 // require('./src/db/deleteTag.test.js');
+require('./src/db/getTagIdForDeletion.test.js');
 // require('./src/server/loginFlowSuccess.test.js');
 // require('./src/server/loginFlowFail.test.js');
 // require('./polling/db/checkTablesExists.test.js'); //all bar checkTags tested and pass
