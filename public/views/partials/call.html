@@ -32,12 +32,11 @@
           <span class="btn-success tag_name">{{this}}</span>
           <span id="delete-button">x</span>
         {{/each}}
-        
-        <audio controls src='' id='boomSound'> </audio>
-        <button id='button'>click me</button>
-
         <div class="panel-body">Listen to your calls : {{ file_id }}</div>
       </form>
+
+      <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
+
     </div>
   </div>
   {{/each}}
