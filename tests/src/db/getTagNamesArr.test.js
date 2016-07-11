@@ -15,7 +15,7 @@ tape('test the getFilterTagNamesArr function', (t) => {
     if (err) throw err;
     getTagNames.getFilterTagNamesArr(dbClient, tagNameObjOne, (res) => {
       res.forEach((el) => {
-        if (el.tag_name === 'important') {
+        if (el.tag_name === 'important' && el.tag_id === '100') {
           actual = true;
         }
       });
