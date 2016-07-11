@@ -34,6 +34,9 @@
         {{/each}}
         <div class="panel-body">Listen to your calls : {{ file_id }}</div>
       </form>
+
+      <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
+
     </div>
   </div>
   {{/each}}
