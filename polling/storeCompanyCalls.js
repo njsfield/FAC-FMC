@@ -47,6 +47,7 @@ let participantsArray = [];
  * 3. Use push instead of concat to avoid clogging memory space.
  */
 const storeCompanyCalls = (dbClient, done, companyName) => {
+  console.log('hey');
   pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
     participantsArray = [];
     fileObjs.forEach((obj, i) => {
@@ -63,11 +64,11 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
 
           checkParticipantsArray([obj.callee, obj.caller]);
 
-          pollCalls.retrieveWav(obj.file_name, (data) => {
-            getFile_id(dbClient, obj, (fileId) => {
-              fs.writeFileSync(process.env.SAVE_FILE_PATH + `/${fileId}.wav`, data);
-            });
-          });
+          // pollCalls.retrieveWav(obj.file_name, (data) => {
+          //   getFile_id(dbClient, obj, (fileId) => {
+          //     fs.writeFileSync(process.env.SAVE_FILE_PATH + `/${fileId}.wav`, data);
+          //   });
+          // });
         }
         done();
 

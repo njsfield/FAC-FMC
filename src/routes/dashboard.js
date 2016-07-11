@@ -28,7 +28,7 @@ module.exports = {
       min: '',
       max: '',
       date: '',
-      tags: ['important', 'business']
+      tags: []
     };
 
     validate(decoded, request, (error, isValid) => {
@@ -38,7 +38,7 @@ module.exports = {
       else {
         pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
-          const queryArray = [4387735, 100];
+          const queryArray = [decoded.contact_id, decoded.company_id];
           filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
             dbClient.query(qString, qa, (err2, res) => {
               getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
