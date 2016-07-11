@@ -65,7 +65,7 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
 
           pollCalls.retrieveWav(obj.file_name, (data) => {
             getFile_id(dbClient, obj, (fileId) => {
-              fs.writeFileSync(process.env.SAVE_FILE_PATH + `/${fileId}.wav`, data);
+              fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${fileId}.wav`, data);
             });
           });
         }
