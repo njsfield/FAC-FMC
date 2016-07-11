@@ -27,9 +27,9 @@ font-family: 'Lato', sans-serif;
   padding-bottom: 30px;
 }
 
-#logo {
-  width: 100%;
-}
+/*#logo {
+  width: 50%;
+}*/
 
 #login_button {
   width: 100%;
@@ -47,9 +47,10 @@ font-family: 'Lato', sans-serif;
 #call-container {
   background-color: #00416F;
   padding: 2em;
-  border-radius: 4px;
-  height: 600px;
+  border-radius: 10px;
+  height: 1000px;
   margin-bottom: 1em;
+  overflow-y: scroll;
 }
 
 #search-bar {
@@ -67,10 +68,24 @@ body {
   color: white;
 }
 .call-heading {
-  margin-top: -13px;
-  margin-bottom: 0;
+  margin-top: 40px;
+  margin-bottom: 13px;
   margin-left: 1px;
 }
+#dashboard-logo-container {
+  margin: 30px 0;
+}
+
+#dashboard-title {
+  color: white;
+  font-size: 33px;
+  margin-left: 15px;
+}
+
+.dashboard-title-container {
+  text-align: center
+}
+
 
 /************** filter form *************/
 
