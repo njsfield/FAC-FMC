@@ -22,8 +22,6 @@ font-family: 'Lato', sans-serif;
 
 #logo-container {
   padding-top: 30px;
-  padding-left: 125px;
-  padding-right: 125px;
   padding-bottom: 30px;
 }
 
@@ -97,4 +95,15 @@ input[type="checkbox"] {
   overflow: scroll;
   height: 130px !important;
   background: white;
+}
+
+.filter-list {
+  border: none;
+  background-color: #00A6A3;
+
+}
+
+.list-group-item {
+  border: none;
+  background-color: #00A6A3;
 }
