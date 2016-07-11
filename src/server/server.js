@@ -13,7 +13,6 @@ const plugins = [
 const routes = [
   require('../routes/login.js'),
   require('../routes/dashboard.js'),
-  require('../routes/dashboard2.js'),
   require('../routes/editTag.js'),
   require('../routes/fetchAudio.js'),
   require('../routes/filteredCalls.js'),
@@ -22,7 +21,8 @@ const routes = [
   require('../routes/schema.js'),
   require('../routes/tagCall.js'),
   require('../routes/publicDirectory.js'),
-  require('../routes/saveFilter.js')
+  require('../routes/saveFilter.js'),
+  require('../routes/deleteTag.js')
 ];
 
 Server.connection({port});
