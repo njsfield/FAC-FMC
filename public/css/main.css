@@ -92,18 +92,57 @@ input[type="checkbox"] {
 }
 
 .scrollbar-tags {
-  overflow: scroll;
+  overflow-y: scroll;
   height: 130px !important;
   background: white;
 }
 
 .filter-list {
-  border: none;
-  background-color: #00A6A3;
+  /*border: none;
+  background-color: #00A6A3;*/
 
 }
 
 .list-group-item {
-  border: none;
+  /*border: none;
+  background-color: #00A6A3;*/
+}
+
+.btn-primary {
   background-color: #00A6A3;
+  border: 1px solid #00A6A3;
+}
+
+#filter-calls {
+  font-size: 20px;
+}
+#dropdown {
+  background-image: none;
+background-color: #00A6A3;
+border: none;
+color: white;
+padding: 7px;
+border-radius: 6px;
+width: 100%
+}
+
+#dropdown-option {
+  background-image: none;
+  background-color: #00A6A3;
+  border: none;
+  color: white;
+  padding: 7px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+#saved-filters {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+
+/*calls list css*/
+.panel-default>.panel-heading {
+
 }
