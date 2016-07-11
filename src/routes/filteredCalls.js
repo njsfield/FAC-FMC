@@ -1,8 +1,5 @@
-// const fetchCalls = require('../db/fetchCalls.js');
 const validate = require('../auth/validate.js');
-// const pg = require('pg');
 const JWT = require('jsonwebtoken');
-// const postgresURL = process.env.POSTGRES_URL;
 
 module.exports = {
   method: 'POST',
@@ -15,16 +12,7 @@ module.exports = {
         return reply.redirect('/').unstate('token');
       }
       else {
-        // pg.connect(postgresURL, (err, dbClient, done) => {
-        //   if (err) throw err;
-        //
-        //   fetchCalls.fetchCalls(dbClient, done, 4387735, 101, (result) => {
-        //     const calls = {
-        //       calls: result
-        //     };
         reply.redirect('/dashboard');
-          // });
-        // });
       }
     });
   }
