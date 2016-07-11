@@ -62,6 +62,12 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
           });
 
           checkParticipantsArray([obj.callee, obj.caller]);
+
+          pollCalls.retrieveWav(obj.file_name, (data) => {
+            getFile_id(dbClient, obj, (fileId) => {
+              fs.writeFileSync(`${__dirname}/../../../fmc-audio/${fileId}.wav`, data);
+            });
+          });
         }
         done();
 
@@ -70,7 +76,6 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
           if (participantsArray.length > 0) {
 
             pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
-              console.log(res, '<<<<<<<<<<<<<<<<');
 
               if (res.numrows === 0) {
                 console.log('no data returned from api call to IPC');
