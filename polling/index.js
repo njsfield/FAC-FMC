@@ -7,7 +7,7 @@ pollingCompanies(res => {
   if(res.result !== 'fail') {
     pg.connect(postgresURL, (err, dbClient, done) => {
       if (err) throw err;
-      res.user.companies.forEach((company, i) => {
+      res.user.companies.forEach((company) => {
         storeCompanyCalls(dbClient, done, company);
       });
     });

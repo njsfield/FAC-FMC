@@ -1,12 +1,11 @@
-const fetchAudio = require('../db/fetchAudio.js');
+const fs = require('fs');
+
 module.exports = {
   method: 'GET',
   path: '/fetch-audio/{file_id}',
   handler: (request, reply) => {
-    const postgresURL = process.env.POSTGRES_URL;
-    const file_id = request.params.file_id;
-    fetchAudio.fetchAudio(postgresURL, file_id, (results) => {
-      reply(results);
-    });
+    const fileId = request.params.file_id;
+    const response = reply(fs.createReadStream(process.env.PLAY_AUDIO_PATH + `${fileId}.wav`));
+    response.type('audio/wav');
   }
 };
