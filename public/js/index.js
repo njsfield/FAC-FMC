@@ -91,15 +91,21 @@ select.addEventListener('change', getFilterSpec);
 
 /** AJAX to delete tags from call*/
 
-const deleteTag = () => {
+const deleteTag = (e) => {
+  const tagName = e.target.id;
+  const callId = e.target.className;
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       console.log('success');
+      window.location.href = '/dashboard';
     }
   };
-  xhr.open('delete', '/delete-tag/' + document.getElementsByClassName('tag_name')[0].textContent + '/' + document.getElementsByName('call_id')[0].value);
+  xhr.open('post', '/delete-tag/' + tagName + '/' + callId);
   xhr.send();
 };
 
-const deleteButton = document.getElementById('delete-button');
-deleteButton.addEventListener('click', deleteTag);
+const deleteButton = document.getElementsByTagName('em');
+console.log(deleteButton);
+for (var i=0; i < deleteButton.length; i++) {
+  deleteButton[i].addEventListener('click', deleteTag);
+}
