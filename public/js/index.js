@@ -57,9 +57,8 @@ const searchFilter = () => {
     duration_min: document.getElementById('duration_min').value,
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
-    tags: arrTags,
-    saved_tags: savedTagsArr,
-    untagged: document.getElementById('untagged').value
+    tags: arrTags.concat(savedTagsArr),
+    // untagged: document.getElementById('untagged').value
   };
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
@@ -105,7 +104,6 @@ const deleteTag = (e) => {
 };
 
 const deleteButton = document.getElementsByTagName('em');
-console.log(deleteButton);
 for (var i=0; i < deleteButton.length; i++) {
   deleteButton[i].addEventListener('click', deleteTag);
 }
