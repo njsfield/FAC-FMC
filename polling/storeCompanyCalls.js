@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const getFile_id = require('./db/getIds.js').getFile_id;
 const pollCalls = require('./api/pollingCalls.js');
 const pollerFlow = require('./db/pollerFlow.js').pollerFlow;
 const insertData = require('./db/insertData.js');
@@ -60,6 +62,12 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
           });
 
           checkParticipantsArray([obj.callee, obj.caller]);
+
+          pollCalls.retrieveWav(obj.file_name, (data) => {
+            getFile_id(dbClient, obj, (fileId) => {
+              fs.writeFileSync(process.env.SAVE_FILE_PATH + `/${fileId}.wav`, data);
+            });
+          });
         }
         done();
 
@@ -68,7 +76,6 @@ const storeCompanyCalls = (dbClient, done, companyName) => {
           if (participantsArray.length > 0) {
 
             pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
-              console.log(res, '<<<<<<<<<<<<<<<<');
 
               if (res.numrows === 0) {
                 console.log('no data returned from api call to IPC');
