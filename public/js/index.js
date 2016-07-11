@@ -90,13 +90,14 @@ const select = document.getElementById('dropdown');
 select.addEventListener('change', getFilterSpec);
 
 /** AJAX to delete tags from call*/
-const deleteTag = (tag_id) => {
+
+const deleteTag = () => {
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       console.log('success');
     }
   };
-  xhr.open('post', '/delete-tag/' + tag_id);
+  xhr.open('delete', '/delete-tag/' + document.getElementsByClassName('tag_name')[0].textContent + '/' + document.getElementsByName('call_id')[0].value);
   xhr.send();
 };
 
