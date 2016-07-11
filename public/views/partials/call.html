@@ -24,14 +24,22 @@
     <div id="collapse{{@index}}" class="panel-collapse collapse">
       <form action="/tag-call" method="POST">
         <input id="call_id" type="hidden" name="call_id" value="{{ call_id }}">
-        <div class="form-group">
-          <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
+        <div class='row tag-calls-container'>
+          <div class="col-xs-4">
+            <div class="form-group">
+              <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
+          </div>
         </div>
-        <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
-        {{#each tag_name}}
+        <div class="row tag-cards">
+          {{#each tag_name}}
           <span class="btn-success tag_name">{{this}}</span>
           <span id="delete-button">x</span>
-        {{/each}}
+          {{/each}}
+        </div>
         <div class="panel-body">Listen to your calls : {{ file_id }}</div>
       </form>
     </div>
