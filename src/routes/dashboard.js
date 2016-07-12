@@ -21,6 +21,8 @@ module.exports = {
   path: '/dashboard',
   handler: (request, reply) => {
 
+    console.log(request.query, '<---- payload');
+
     const decoded = JWT.decode(request.state.token);
     const userObj = {
       to: '',
@@ -30,6 +32,10 @@ module.exports = {
       date: '',
       tags: []
     };
+    if (request.query!=null) {
+      if (request.query.tags!=null)
+        userObj.tags = request.query.tags.split(';');
+    }
 
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
