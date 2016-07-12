@@ -50,14 +50,16 @@ module.exports = {
               getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
                 getTagNames.getFilterTagNamesArr(dbClient, decoded, (savedTags) => {
                   res.rows.forEach( (call) => {
-                    const date = call.date.toString().substr(4, 7);
+                    const month = call.date.toString().substr(4, 3);
+                    const day = call.date.toString().substr(8, 2);
+                    const year = call.date.toString().substr(13, 2);
+                    const date = day + ' ' + month + ' ' + year;
                     const time = call.date.toString().substr(16, 5);
                     call.date = date + ', ' + time;
                     const totalSec = call.duration;
-                    const hours = parseInt( totalSec / 3600 ) % 24;
-                    const minutes = parseInt( totalSec / 60 ) % 60;
+                    const minutes = parseInt( totalSec / 60 );
                     const seconds = totalSec % 60;
-                    call.duration = (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+                    call.duration = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
                   });
                   const userCalls = {
                     calls: res.rows,

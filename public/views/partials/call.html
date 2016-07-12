@@ -22,6 +22,17 @@
       </div>
     </div>
     <div id="collapse{{@index}}" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="row tag-cards">
+          <div class='col-xs-12'>
+          {{#each tag_name}}
+          <div class='tag-card'>
+            <span class="tag_name">{{this}}</span>
+            <span class="delete-button">x</span>
+          </div>
+          {{/each}}
+        </div>
+        </div>
       <form action="/tag-call" method="POST">
         <input id="call_id" type="hidden" class="delete-tag" name="call_id" value="{{ call_id }}">
         <div class='row tag-calls-container'>
@@ -34,15 +45,18 @@
             <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
           </div>
         </div>
-        <div class="row tag-cards">
-          {{#each tag_name}}
-          <span class="btn-success tag_name">{{this}}</span>
-          <em id={{this}} class={{../call_id}}>x</em>
-        {{/each}}
-        <div class="panel-body">Listen to your calls : {{ file_id }}</div>
-      <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
+
+
+      </form>
+      <div class="row">
+        <div class="col-xs-12">
+          <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
+        </div>
+
+      </div>
+
     </div>
-  </form>
+    </div>
   </div>
   {{/each}}
 </div>
