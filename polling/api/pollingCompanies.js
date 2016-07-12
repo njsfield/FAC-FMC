@@ -11,15 +11,15 @@ const pollingCompanies = (callback) => {
     body: {
       auth: {
         type: 'auth',
-        key: process.env.COMPANIES
+        key: process.env.API_KEY
       }
     },
     json: true
   };
 
-  request(options, function (error, response, user) {
+  request(options, function (error, response, companies) {
     if (error) throw (error);
-    callback(user);
+    callback(companies);
   });
 };
 

@@ -1,5 +1,7 @@
 const storeCompanyCalls = require('./storeCompanyCalls.js').storeCompanyCalls;
 const pollingCompanies = require('./api/pollingCompanies.js').pollingCompanies;
+const checkCompaniesTable = require('./db/checkTables.js').checkCompaniesTable;
+
 const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
 
@@ -8,7 +10,9 @@ pollingCompanies(res => {
     pg.connect(postgresURL, (err, dbClient, done) => {
       if (err) throw err;
       res.user.companies.forEach((company) => {
-        storeCompanyCalls(dbClient, done, company);
+        checkCompaniesTable(dbClient, {company_name: company}, () => {
+          storeCompanyCalls(dbClient, done, company);
+        });
       });
     });
   }
