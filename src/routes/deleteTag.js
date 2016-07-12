@@ -27,7 +27,6 @@ module.exports = {
           getTagId.getTagIdForDeletion(dbClient, deleteTagObj, (tag_id) => {
             deleteTagObj.tag_id = tag_id;
             deleteTag.deleteTag(dbClient, deleteTagObj, () => {
-              console.log('hjv');
               reply.redirect('/dashboard');
             });
           });
