@@ -105,7 +105,6 @@ const deleteTag = (e) => {
 };
 
 const deleteButton = document.getElementsByTagName('em');
-console.log(deleteButton);
 for (var i=0; i < deleteButton.length; i++) {
   deleteButton[i].addEventListener('click', deleteTag);
 }
