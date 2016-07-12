@@ -20,7 +20,6 @@ module.exports = {
   method: 'GET',
   path: '/dashboard',
   handler: (request, reply) => {
-    console.log(request.url.search, 'request ---------');
     var baseUrl = request.url.search.replace(/firstIndex\=\d+\&?/,'');
     if (baseUrl == '?')
       baseUrl = '';
@@ -58,7 +57,6 @@ module.exports = {
       }
       if (request.query.firstIndex!=null && !isNaN(request.query.firstIndex))
         userObj.firstIndex = parseInt(request.query.firstIndex, 10);
-      console.log(userObj, 'userObj----------------');
     }
 
     validate(decoded, request, (error, isValid) => {
@@ -70,8 +68,6 @@ module.exports = {
           if (err) throw err;
           const queryArray = [decoded.contact_id, decoded.company_id];
           filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
-            console.log(qString, 'qString-----------');
-            console.log(queryArray, '--------------queryArray------------');
             dbClient.query(qString, qa, (err2, res) => {
               getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
                 getTagNames.getFilterTagNamesArr(dbClient, decoded, (savedTags) => {
@@ -87,6 +83,8 @@ module.exports = {
                     const seconds = totalSec % 60;
                     call.duration = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
                   });
+                  userObj.tags = userObj.tags.join(';');
+
                   const userCalls = {
                     calls: res.rows,
                     filters,
