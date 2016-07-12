@@ -7,6 +7,15 @@ const updateParticipantsTable = (dbClient, obj, callback) => {
   });
 };
 
+const updateLastPollTable = (dbClient, object, callback) => {
+  const queryArray = [object.last_poll];
+  dbClient.query('UPDATE last_poll SET last_poll = (TO_TIMESTAMP($1))', queryArray, (error, response) => {
+    if (error) throw error;
+    callback(response);
+  });
+};
+
 module.exports = {
-  updateParticipantsTable
+  updateParticipantsTable,
+  updateLastPollTable
 };
