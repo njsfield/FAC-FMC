@@ -16,6 +16,8 @@ schedule.scheduleJob('* */12 * * *', () => {
           });
         });
       });
+    } else {
+      console.log(res.message);
     }
   });
 });
