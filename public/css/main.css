@@ -106,6 +106,7 @@ input[type="checkbox"] {
 .list-group-item {
   /*border: none;
   background-color: #00A6A3;*/
+  background-color: #C2CFD9;
 }
 
 .btn-primary {
@@ -144,9 +145,31 @@ width: 100%
 
 /*calls list css*/
 .panel-default>.panel-heading {
-
+  background-color: #C2CFD9;
 }
 
 .tag-calls-container {
   padding: 1em;
+}
+
+audio {
+  width: 100%;
+}
+
+.tag-card {
+  border: 1px solid #FF9531;
+  display: inline-block;
+  color: white;
+  padding: 6px;
+  border-radius: 4px;
+  margin-left: 1em;
+  background-color: #FF9531;
+}
+
+.delete-button {
+  margin-left: 15px;
+  margin-right: 5px;
+}
+.tag-cards {
+  padding: 0.5em;
 }
