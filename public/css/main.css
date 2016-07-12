@@ -157,7 +157,7 @@ audio {
 }
 
 .tag-card {
-  border: 1px solid #fc8414;
+  border: 1px solid #FF9531;
   display: inline-block;
   color: white;
   padding: 6px;
@@ -178,10 +178,10 @@ audio {
   padding-left: 0px;
 }
 .btn-success:hover {
-  background-color: #FF9531;
-  border: 1px solid #fc8414;
+  background-color: #00A6A3;
+  border: 1px solid #027a76;
 }
 .btn-success {
-  background-color: #FF9531;
-  border: 1px solid #fc8414;
+  background-color: #00A6A3;
+  border: 1px solid #00A6A3;
 }
