@@ -100,6 +100,3 @@ const deleteTag = () => {
   xhr.open('delete', '/delete-tag/' + document.getElementsByClassName('tag_name')[0].textContent + '/' + document.getElementsByName('call_id')[0].value);
   xhr.send();
 };
-
-const deleteButton = document.getElementById('delete-button');
-deleteButton.addEventListener('click', deleteTag);
