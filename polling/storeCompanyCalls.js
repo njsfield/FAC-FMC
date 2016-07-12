@@ -49,52 +49,56 @@ let participantsArray = [];
 const storeCompanyCalls = (dbClient, done, companyName) => {
   pollCalls.retrieveCompanyCalls(companyName, (fileObjs) => {
     participantsArray = [];
-    fileObjs.forEach((obj, i) => {
-      pollerFlow(dbClient, done, obj, (result) => {
-        if(result.command === 'INSERT') {
+    if (fileObjs.result !== 'fail') {
+      fileObjs.forEach((obj, i) => {
+        pollerFlow(dbClient, done, obj, (result) => {
+          if(result.command === 'INSERT') {
 
-          const callerQueryObj = createCallParticipantObj(obj, 'caller');
-          insertData.addToParticipantsTable(dbClient, callerQueryObj, () => {
-          });
-
-          const calleeQueryObj= createCallParticipantObj(obj, 'callee');
-          insertData.addToParticipantsTable(dbClient, calleeQueryObj, () => {
-          });
-
-          checkParticipantsArray([obj.callee, obj.caller]);
-
-          pollCalls.retrieveWav(obj.file_name, (data) => {
-            getFile_id(dbClient, obj, (fileId) => {
-              fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${fileId}.wav`, data);
+            const callerQueryObj = createCallParticipantObj(obj, 'caller');
+            insertData.addToParticipantsTable(dbClient, callerQueryObj, () => {
             });
-          });
-        }
-        done();
+
+            const calleeQueryObj= createCallParticipantObj(obj, 'callee');
+            insertData.addToParticipantsTable(dbClient, calleeQueryObj, () => {
+            });
+
+            checkParticipantsArray([obj.callee, obj.caller]);
+
+            pollCalls.retrieveWav(obj.file_name, (data) => {
+              getFile_id(dbClient, obj, (fileId) => {
+                fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${fileId}.wav`, data);
+              });
+            });
+          }
+          done();
 
           // this function is called once all the participants have been checked
-        if (i === fileObjs.length -1 ) {
-          if (participantsArray.length > 0) {
+          if (i === fileObjs.length -1 ) {
+            if (participantsArray.length > 0) {
 
-            pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
+              pollCalls.retrieveCallerDetails(companyName, participantsArray, (res) => {
 
-              if (res.numrows === 0) {
-                console.log('no data returned from api call to IPC');
-              }
-              else {
-                res.values.forEach((extObj) => {
-                  updateData(dbClient, extObj, () => {
+                if (res.numrows === 0) {
+                  console.log('no data returned from api call to IPC');
+                }
+                else {
+                  res.values.forEach((extObj) => {
+                    updateData(dbClient, extObj, () => {
+                    });
                   });
-                });
-              }
+                }
 
-            });
+              });
+            }
+            else {
+              console.log('no new participants were added');
+            }
           }
-          else {
-            console.log('no new participants were added');
-          }
-        }
+        });
       });
-    });
+    } else {
+      console.log(fileObjs.message);
+    }
   });
 };
 

@@ -274,4 +274,6 @@ INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('super-filter'
   tags: ''
 }');
 
+INSERT INTO last_poll (last_poll) VALUES (now());
+
 COMMIT;
