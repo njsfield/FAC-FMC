@@ -23,39 +23,33 @@
     </div>
     <div id="collapse{{@index}}" class="panel-collapse collapse">
       <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
+          </div>
+        </div>
         <div class="row tag-cards">
-          <div class='col-xs-12'>
-          {{#each tag_name}}
-          <div class='tag-card'>
-            <span class="tag_name">{{this}}</span>
-            <span class="delete-button">x</span>
-          </div>
-          {{/each}}
-        </div>
-        </div>
-      <form action="/tag-call" method="POST">
-        <input id="call_id" type="hidden" class="delete-tag" name="call_id" value="{{ call_id }}">
-        <div class='row tag-calls-container'>
-          <div class="col-xs-4">
-            <div class="form-group">
-              <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
+          <form action="/tag-call" method="POST">
+            <div class="col-xs-3">
+              <div class="form-group">
+                <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
+                <input id="call_id" type="hidden" name="call_id" value="{{ call_id }}">
+              </div>
             </div>
-          </div>
-          <div class="col-xs-2">
-            <button id="tag_button" type="submit" class="btn btn-success">TAG CALL</button>
+            <div class="col-xs-2 tag-bar">
+              <button id="tag_button" type="submit" class="btn btn-success">Tag Call</button>
+            </div>
+          </form>
+          <div class='col-xs-7'>
+            {{#each tag_name}}
+            <div class='tag-card'>
+              <span class="tag_name">{{this}}</span>
+              <span class="delete-button">x</span>
+            </div>
+            {{/each}}
           </div>
         </div>
-
-
-      </form>
-      <div class="row">
-        <div class="col-xs-12">
-          <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
-        </div>
-
       </div>
-
-    </div>
     </div>
   </div>
   {{/each}}
