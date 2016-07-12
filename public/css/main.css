@@ -162,7 +162,8 @@ audio {
   color: white;
   padding: 6px;
   border-radius: 4px;
-  margin-left: 1em;
+  margin-right: 1em;
+  margin-bottom: 1em;
   background-color: #FF9531;
 }
 
@@ -171,5 +172,16 @@ audio {
   margin-right: 5px;
 }
 .tag-cards {
-  padding: 0.5em;
+  padding-top: 1em;
+}
+.tag-bar {
+  padding-left: 0px;
+}
+.btn-success:hover {
+  background-color: #00A6A3;
+  border: 1px solid #027a76;
+}
+.btn-success {
+  background-color: #00A6A3;
+  border: 1px solid #00A6A3;
 }

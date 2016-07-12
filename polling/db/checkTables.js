@@ -96,7 +96,10 @@ const checkFiltersTable = (dbClient, obj, cb) => {
     if (res.rows[0][boolKey] === false) {
       insertData.addToFiltersTable(dbClient, obj, cb);
     } else {
-      cb(res);
+      cb({
+        success: false,
+        message: 'filter name already exists'
+      });
     }
   });
 };
