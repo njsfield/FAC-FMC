@@ -17,11 +17,10 @@ module.exports = {
       filter_spec: {
         to: parsePayload.to,
         from: parsePayload.from,
-        'duration-min': parsePayload.duration_min,
-        'duration-max': parsePayload.duration_max,
+        min: parsePayload.duration_min,
+        max: parsePayload.duration_max,
         date: parsePayload.date,
         tags: parsePayload.tags,
-        saved_tags: parsePayload.saved_tags,
         untagged: parsePayload.untagged
       }
     };
@@ -33,7 +32,8 @@ module.exports = {
         pg.connect(postgresURL, (err, dbClient) => {
           if (err) throw err;
           checkTables.checkFiltersTable(dbClient, filterObj, (res) => {
-            reply.redirect('/dashboard');
+            // reply.redirect('/dashboard');
+            reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
           });
         });
       }

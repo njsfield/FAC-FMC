@@ -10,7 +10,7 @@ const datePlusOneString = 'and date < (select timestamp with time zone \'epoch\'
 const datePlusOneStringEnd = ' * interval \'1\' second)';
 
 const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
-const taggedCalls = ' calls.call_id = (select call_id from tags_calls where tag_id = (select tag_id from tags where tag_name =';
+const taggedCalls = ' calls.call_id IN (select call_id from tags_calls where tag_id IN (select tag_id from tags where ';
 
 const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
   if (obj.to !== '' && obj.from !== '') {
@@ -62,18 +62,18 @@ const dateQueryStringCreator = (obj, queryArr, callback) => {
 
 const taggedCallsStringCreator = (obj, queryArr, callback) => {
   let tagsQueryArray = [];
-  if (obj.tags.length < 1) {
-    callback(queryArr);
-  }
-  else if (obj.tags === 'untagged') {
+  if (obj.untagged === true) {
     callback(queryArr, untaggedCalls);
+  }
+  else if (obj.tags.length < 1) {
+    callback(queryArr);
   }
   else {
     obj.tags.forEach((tag) => {
       queryArr.push(tag);
-      tagsQueryArray.push(taggedCalls + '$' + queryArr.length + ')) ');
+      tagsQueryArray.push('tag_name=' + '$' + queryArr.length);
     });
-    callback(queryArr, tagsQueryArray.join(' and '));
+    callback(queryArr, taggedCalls + tagsQueryArray.join(' OR ') + '))');
   }
 };
 

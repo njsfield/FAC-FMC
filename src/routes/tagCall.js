@@ -11,9 +11,13 @@ module.exports = {
   path: '/tag-call',
   handler: (request, reply) => {
     const decoded = JWT.decode(request.state.token);
+    var regex = /^\s+$/ ;
     validate(decoded, request, (error, isValid) => {
       if (error || !isValid) {
         return reply.redirect('/').unstate('token');
+      }
+      else if (request.payload.tag.match(regex) || request.payload.tag === '') {
+        return reply.redirect('/dashboard');
       }
       else {
         pg.connect(postgresURL, (err, dbClient, done) => {
