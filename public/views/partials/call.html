@@ -24,12 +24,14 @@
     <div id="collapse{{@index}}" class="panel-collapse collapse">
       <div class="panel-body">
         <div class="row tag-cards">
+          <div class='col-xs-12'>
           {{#each tag_name}}
           <div class='tag-card'>
             <span class="tag_name">{{this}}</span>
             <span class="delete-button">x</span>
           </div>
           {{/each}}
+        </div>
         </div>
       <form action="/tag-call" method="POST">
         <input id="call_id" type="hidden" name="call_id" value="{{ call_id }}">
