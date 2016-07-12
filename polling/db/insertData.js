@@ -70,6 +70,14 @@ const addToFiltersTable = (dbClient, object, callback) => {
     callback(response);
   });
 };
+
+const insertIntoLastPollTable = (dbClient, object, callback) => {
+  const queryArray = [object.last_poll];
+  dbClient.query('INSERT INTO last_poll (last_poll) VALUES (TO_TIMESTAMP($1))', queryArray, (error, response) => {
+    if (error) throw error;
+    callback(response);
+  });
+};
 //
 // const editTagsTable = (dbClient, object, callback) => {
 //   const queryArray = [object.tag_name, object.tag_id];
@@ -87,6 +95,7 @@ module.exports = {
   addToParticipantsTable,
   addToTagsTable,
   addToTagsCallsTable,
-  addToFiltersTable
+  addToFiltersTable,
+  insertIntoLastPollTable
   // editTagsTable
 };

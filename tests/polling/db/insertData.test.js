@@ -47,6 +47,9 @@ const obj = {
       date: '',
       tags: ''
     }
+  },
+  last_poll: {
+    last_poll: 1468324008
   }
   // editTagsTable: {
   //   tag_id: 100,
@@ -56,7 +59,7 @@ const obj = {
 const expected = 'INSERT';
 
 tape('test the insertData functions', (t) => {
-  t.plan(8);
+  t.plan(9);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
     insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
@@ -97,6 +100,11 @@ tape('test the insertData functions', (t) => {
     insertData.addToFiltersTable(client, obj.addToFiltersTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to filters table');
+      done();
+    });
+    insertData.insertIntoLastPollTable(client, obj.last_poll, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to last_poll table');
       done();
     });
     // insertData.editTagsTable(client, obj.editTagsTable, (res) => {
