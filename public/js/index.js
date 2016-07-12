@@ -2,6 +2,11 @@ const xhr = new XMLHttpRequest();
 
 /** AJAX to send saved filter spec and name to /save-filter route */
 const saveFilter = (e) => {
+
+  const error = document.getElementById('error-message');
+  error.innerHTML = '';
+  document.getElementById('filter_name').value = '';
+
   e.stopPropagation();
   e.preventDefault();
   /** get checked input from the scrollbar checboxes div */
@@ -37,15 +42,16 @@ const saveFilter = (e) => {
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       console.log('success');
-      jQuery('#myModal').modal('hide');
 
       var response = JSON.parse(xhr.response.toString());
       if (response.success) {
         jQuery('#dropdown').append(
           '<option id="dropdown-option" value="'+ESCAPE(response.description)+'">'+ESCAPE(filterObj.filter_name)+'</option>'
         );
+        jQuery('#myModal').modal('hide');
       }
       else {
+        error.innerHTML = 'You are already using this name for another saved filter.';
         // FAILED!!! insert error message
       }
     }

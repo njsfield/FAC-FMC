@@ -21,20 +21,35 @@ module.exports = {
   path: '/dashboard',
   handler: (request, reply) => {
 
-    console.log(request.query, '<---- payload');
-
     const decoded = JWT.decode(request.state.token);
-    const userObj = {
+    var userObj = {
       to: '',
       from: '',
       min: '',
       max: '',
       date: '',
-      tags: []
+      tags: [],
+      untagged: false
     };
     if (request.query!=null) {
-      if (request.query.tags!=null)
-        userObj.tags = request.query.tags.split(';');
+      if (request.query.to!=null)
+        userObj.to = request.query.to;
+      if (request.query.from!=null)
+        userObj.from = request.query.from;
+      if (request.query.min!=null)
+        userObj.min = request.query.min;
+      if (request.query.max!=null)
+        userObj.max = request.query.max;
+      if (request.query.date!=null)
+        userObj.date = request.query.date;
+      if (request.query.untagged!=null)
+        userObj.untagged = true;
+      else {
+        if (request.query.tags!=null && request.query.tags.search(/\S/)>=0)
+          userObj.tags = request.query.tags.split(';');
+        if(request.query.company_tag!=null)
+          userObj.tags = userObj.tags.concat(request.query.company_tag);
+      }
     }
 
     validate(decoded, request, (error, isValid) => {
@@ -46,6 +61,7 @@ module.exports = {
           if (err) throw err;
           const queryArray = [decoded.contact_id, decoded.company_id];
           filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
+
             dbClient.query(qString, qa, (err2, res) => {
               getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
                 getTagNames.getFilterTagNamesArr(dbClient, decoded, (savedTags) => {

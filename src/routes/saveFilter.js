@@ -33,7 +33,7 @@ module.exports = {
           if (err) throw err;
           checkTables.checkFiltersTable(dbClient, filterObj, (res) => {
             // reply.redirect('/dashboard');
-            reply(JSON.stringify({success: true, description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
+            reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
           });
         });
       }
