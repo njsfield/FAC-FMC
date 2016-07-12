@@ -1,14 +1,23 @@
 <ul class="list-group">
   <li class="list-group-item filter-list">
-    <h3>Filter your calls:</h3>
+    <p id='filter-calls'>Filter Your Calls:</p>
   </li>
   <li class="list-group-item filter-list">
-    <select id="dropdown" name="saved-filters">
-      <option selected disabled>Your saved filters</option>
-      {{#each filters}}
-        <option value="{{filter_spec}}">{{filter_name}}</option>
-      {{/each}}
-    </select>
+    <div class="row">
+      <div class='col-xs-4'>
+        <p id='saved-filters'> Saved Filters: </p>
+      </div>
+      <div class='col-xs-8'>
+        <select id="dropdown" name="saved-filters">
+          <option selected disabled id='dropdown-option'>Your saved filters</option>
+          {{#each filters}}
+          <option value="{{filter_spec}}">{{filter_name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+
+
   </li>
   <div id="filter">
     <div class="form-group">
