@@ -23,22 +23,22 @@
     <div class="form-group">
       <form action="/dashboard" method="get">
       <li class="list-group-item filter-list">
-        <input type="text" id="to" name="to" class="form-control" placeholder="To:">
+        <input type="text" id="to" name="to" class="form-control" placeholder="To:" value="{{userObj.to}}">
       </li>
       <li class="filter-list list-group-item ">
-        <input type="text" id="from" name="from" class="form-control" placeholder="From:">
+        <input type="text" id="from" name="from" class="form-control" placeholder="From:" value="{{userObj.from}}">
       </li>
       <li class="list-group-item filter-list">
-        <input type="text" id="duration_min" name="min" class="form-control" placeholder="Duration (min):">
+        <input type="text" id="duration_min" name="min" class="form-control" placeholder="Duration (min):" value="{{userObj.min}}">
       </li>
       <li class="list-group-item filter-list">
-        <input type="text" id="duration_max" name="max" class="form-control" placeholder="Duration (max):">
+        <input type="text" id="duration_max" name="max" class="form-control" placeholder="Duration (max):" value="{{userObj.max}}">
       </li>
       <li class="list-group-item filter-list">
-        <input type="date" id="date" name="date" class="form-control" placeholder="Date:">
+        <input type="date" id="date" name="date" class="form-control" placeholder="Date:" value="{{userObj.date}}">
       </li>
       <li class="list-group-item filter-list">
-        <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important">
+        <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
       </li>
       <li class="list-group-item filter-list">
         <div class="scrollbar-tags form-control">

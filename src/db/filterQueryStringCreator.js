@@ -12,6 +12,9 @@ const datePlusOneStringEnd = ' * interval \'1\' second)';
 const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
 const taggedCalls = ' calls.call_id IN (select call_id from tags_calls where tag_id IN (select tag_id from tags where ';
 
+const limit = 'LIMIT ';
+
+
 const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
   if (obj.to !== '' && obj.from !== '') {
     queryArr.push(obj.to, obj.from);
@@ -77,6 +80,20 @@ const taggedCallsStringCreator = (obj, queryArr, callback) => {
   }
 };
 
+const limitCallsCreator = (obj, queryArr) => {
+  var sequel = '';
+  if (obj.firstIndex > 0) {
+    queryArr.push(obj.firstIndex);
+    sequel += ' OFFSET $' + queryArr.length;
+  }
+  if (obj.maxRows < 1 || obj.maxRows > 100)
+    obj.maxRows = 20;
+
+  queryArr.push(obj.maxRows + 1);
+  sequel += ' LIMIT $' + queryArr.length;
+  return sequel;
+};
+
 /**
  * Fetches an array of call objects to be rendered in the dashboard view.
  * @param {obj} an object for example:
@@ -119,7 +136,8 @@ const createQueryString = (queryString, queryArr, obj, callback) => {
         taggedCallsStringCreator(obj, qa4, (qa5, filters4) => {
           if (filters4) stringArr.push(filters4);
 
-          const fullQueryString = stringArr.join(' and ');
+          var fullQueryString = stringArr.join(' and ');
+          fullQueryString += limitCallsCreator(obj, qa5);
           callback(fullQueryString, qa5);
         });
       });
@@ -132,5 +150,6 @@ module.exports = {
   minAndMaxQueryStringCreator,
   dateQueryStringCreator,
   taggedCallsStringCreator,
-  createQueryString
+  createQueryString,
+  limitCallsCreator
 };

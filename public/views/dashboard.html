@@ -33,6 +33,12 @@
       </div>
       <div class="col-xs-8">
         {{> call}}
+        {{#if nextPage}}
+          <a href='/dashboard{{nextPage}}'>next page</a><br>
+        {{/if}}
+        {{#if prevPage}}
+          <a href='/dashboard{{prevPage}}'>prev page</a><br>
+        {{/if}}
       </div>
     </div>
   </div>
