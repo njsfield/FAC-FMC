@@ -129,12 +129,16 @@ width: 100%
 
 #dropdown-option {
   background-image: none;
-  background-color: #00A6A3;
+  background-color: white;
   border: none;
-  color: white;
+  color: black;
   padding: 7px;
   border-radius: 6px;
   width: 100%;
+}
+
+option {
+  padding: 7px;
 }
 
 #saved-filters {
@@ -163,6 +167,7 @@ audio {
   padding: 6px;
   border-radius: 4px;
   margin-right: 1em;
+  padding-left: 15px;
   margin-bottom: 1em;
   background-color: #FF9531;
 }
@@ -189,4 +194,8 @@ audio {
 #logout-btn {
   float: right;
   margin-top: 30px;
+}
+
+.tag_name {
+  margin-left: 10px;
 }
