@@ -24,15 +24,10 @@ const addToFilesTable = (dbClient, object, callback) => {
 };
 
 const addToCallsTable = (dbClient, object, callback) => {
-  const queryArray = [object.date];
-  dbClient.query('SELECT TIMESTAMP WITH TIME ZONE \'epoch\' + ($1) * INTERVAL \'1\' second', queryArray, (err, res) => {
-    const objKey = Object.keys(res.rows[0]);
-    const timestamp = res.rows[0][objKey];
-    const queryArray2 = [timestamp, object.company_id, object.file_id, object.duration];
-    dbClient.query('INSERT INTO calls (date, company_id, file_id, duration) VALUES ($1, $2, $3, $4)', queryArray2, (error, response) => {
-      if (error) throw error;
-      callback(response);
-    });
+  const queryArray2 = [object.date, object.company_id, object.file_id, object.duration];
+  dbClient.query('INSERT INTO calls (date, company_id, file_id, duration) VALUES ((TO_TIMESTAMP($1)), $2, $3, $4)', queryArray2, (error, response) => {
+    if (error) throw error;
+    callback(response);
   });
 };
 
