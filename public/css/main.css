@@ -119,9 +119,9 @@ input[type="checkbox"] {
 }
 #dropdown {
   background-image: none;
-background-color: #00A6A3;
+background-color: white;
 border: none;
-color: white;
+color: black;
 padding: 7px;
 border-radius: 6px;
 width: 100%
@@ -184,4 +184,9 @@ audio {
 .btn-success {
   background-color: #00A6A3;
   border: 1px solid #00A6A3;
+}
+
+#logout-btn {
+  float: right;
+  margin-top: 30px;
 }
