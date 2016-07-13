@@ -20,6 +20,9 @@ module.exports = {
   method: 'GET',
   path: '/dashboard',
   handler: (request, reply) => {
+    var baseUrl = request.url.search.replace(/firstIndex\=\d+\&?/,'');
+    if (baseUrl == '?')
+      baseUrl = '';
 
     const decoded = JWT.decode(request.state.token);
     var userObj = {
@@ -29,7 +32,9 @@ module.exports = {
       max: '',
       date: '',
       tags: [],
-      untagged: false
+      untagged: false,
+      firstIndex: 0,
+      maxRows: 2
     };
     if (request.query!=null) {
       if (request.query.to!=null)
@@ -50,6 +55,8 @@ module.exports = {
         if(request.query.company_tag!=null)
           userObj.tags = userObj.tags.concat(request.query.company_tag);
       }
+      if (request.query.firstIndex!=null && !isNaN(request.query.firstIndex))
+        userObj.firstIndex = parseInt(request.query.firstIndex, 10);
     }
 
     validate(decoded, request, (error, isValid) => {
@@ -61,7 +68,6 @@ module.exports = {
           if (err) throw err;
           const queryArray = [decoded.contact_id, decoded.company_id];
           filterQueryStringCreator.createQueryString(queryString, queryArray, userObj, (qString, qa) => {
-
             dbClient.query(qString, qa, (err2, res) => {
               getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
                 getTagNames.getFilterTagNamesArr(dbClient, decoded, (savedTags) => {
@@ -77,11 +83,21 @@ module.exports = {
                     const seconds = totalSec % 60;
                     call.duration = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
                   });
+                  userObj.tags = userObj.tags.join(';');
+
                   const userCalls = {
                     calls: res.rows,
                     filters,
-                    savedTags
+                    savedTags,
+                    userObj
                   };
+                  if (res.rows.length > userObj.maxRows) {
+                    userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                    res.rows.length = userObj.maxRows;
+                  }
+                  if (userObj.firstIndex > 0) {
+                    userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                  }
                   reply.view('dashboard', userCalls);
                   done();
                 });
