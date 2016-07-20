@@ -11,13 +11,12 @@ const insertData = require('./insertData.js');
 
 const checkCompaniesTable = (dbClient, obj, cb) => {
   const queryArray = [obj.company_name];
-  dbClient.query('SELECT EXISTS (SELECT * FROM companies WHERE company_name=($1))', queryArray, (err, res) => {
+  dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    if (res.rows[0][boolKey] === false) {
+    if (res.rows === 0) {
       insertData.addToCompaniesTable( dbClient, obj, cb);
     } else {
-      cb(res);
+      cb(res.rows[0].company_id);
     }
   });
 };
@@ -31,7 +30,6 @@ const checkFilesTable = (dbClient, obj, cb) => {
       insertData.addToFilesTable(dbClient, obj, cb);
     } else {
       cb(res);
-
     }
   });
 };
