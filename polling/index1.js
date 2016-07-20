@@ -1,5 +1,6 @@
 'use strict';
 // require node modules
+require('env2')('config.env');
 const pg = require('pg');
 const schedule = require('node-schedule');
 // require keys
@@ -11,6 +12,7 @@ const retrieveCompanyCalls = require('./api/retrieveCompanyCalls.js');
 const checkCompaniesTable = require('./db/checkTables.js').checkCompaniesTable;
 const checkLastPollTable = require('./db/checkTables.js').checkLastPollTable;
 const calculatePollTimes = require('./api/calculatePollTimes.js');
+const checkFilesTable = require('./db/checkTables.js').checkFilesTable;
 
 const pollPABX= () => {
   //
@@ -33,9 +35,20 @@ const pollPABX= () => {
               companiesObj[company_name]['last_poll'] = last_poll;
               calculatePollTimes(startPollTime, last_poll).forEach( (timeObj) => {
 
-                retrieveCompanyCalls(company_name, timeObj, (res) => {
-                  console.log(res);
-                } );
+                retrieveCompanyCalls(company_name, timeObj, (arrOfCalls) => {
+                  if (arrOfCalls.result !== 'fail') {
+                    console.log(arrOfCalls, '<<<<<<<<<<<<<<<<<<<<<ARROFCALLS');
+                    arrOfCalls.forEach(call => {
+                      checkFilesTable(dbClient, call, done, (file_id, command) => {
+                        console.log(file_id, command);
+                        if (command === 'INSERT') {
+                          // retrieve wav files
+
+                        }
+                      });
+                    });
+                  }
+                });
               });
             });
           });
