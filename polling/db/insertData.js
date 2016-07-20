@@ -1,3 +1,4 @@
+const getCompany_id = require('./getIds.js').getCompany_id;
 
 /**
  * Each function adds data to tables. What is inserted by each function
@@ -11,7 +12,7 @@ const addToCompaniesTable = (dbClient, object, callback) => {
   const queryArray = [object.company_name];
   dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error, response) => {
     if (error) throw error;
-    callback(response);
+    getCompany_id(dbClient, object, callback);
   });
 };
 

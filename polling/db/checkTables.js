@@ -9,7 +9,7 @@ const insertData = require('./insertData.js');
  * @param {function} callback - Returns response.
  */
 
-const checkCompaniesTable = (dbClient, obj, cb) => {
+const checkCompaniesTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_name];
   dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
@@ -18,6 +18,7 @@ const checkCompaniesTable = (dbClient, obj, cb) => {
     } else {
       cb(res.rows[0].company_id);
     }
+    done();
   });
 };
 
