@@ -1,7 +1,11 @@
+'use strict';
 module.exports = (startPoll, lastPoll) => {
+  if (lastPoll === null ) {
+    return [{}];
+  }
   const diff = startPoll - lastPoll;
-  const hours = diff / 3600000;
-  const days = Math.ceil(hours / 24);
+  let hours = Math.ceil(diff / 3600000);
+  let days = Math.ceil(hours / 24);
   let result = [];
   if (hours < 24) {
     hours += 2;
