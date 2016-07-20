@@ -275,6 +275,6 @@ INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES('super-filter'
   tags: ''
 }');
 
-INSERT INTO last_poll (last_poll) VALUES (now());
+INSERT INTO last_poll (last_poll, company_id) VALUES (now(), 100);
 
 COMMIT;

@@ -11,9 +11,9 @@ const checkLastPollTable = require('db/checkTables.js').checkLastPollTable;
 
 const pollPABX= () => {
   //
-  const lastPollTime = Date.now();
+  const startPollTime = Date.now();
   let particpantsArray = [];
-  let companyNameToIDObj = {};
+  let companiesObj = {};
   // get the names of companies that we have to poll for
   retrieveCompanyNames(companyNamesPoll => {
     if (companyNamesPoll.result === 'fail') {
@@ -21,19 +21,18 @@ const pollPABX= () => {
     } else {
       pg.connect(postgresURL, (err, dbClient, done) => {
         if (err) throw err;
-        companyNamesPoll.user.companies.forEach( company => {
+        companyNamesPoll.user.companies.forEach(company => {
           // create company name to id obj
           checkCompaniesTable(dbClient, {company_name: company}, done, (company_id) => {
-            companyNameToIDObj[company] = company_id;
+            companiesObj[company] = {company_id: company_id};
+            //get last poll date for company
+            checkLastPollTable(dbClient, {company_id: company_id}, done, (last_poll) => {
+              companiesObj[company]['last_poll'] = last_poll;
+            });
           });
           // check if exists in last poll table if doesnt exist poll 21 days and grab last pol date
-          checkLastPollTable(dbClient, {company_id: company_id}, done, (last_poll) => {
-            console.log(last_poll);
-          });
         });
       });
     }
   });
 };
-
-module.export;

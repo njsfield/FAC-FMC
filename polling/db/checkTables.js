@@ -14,7 +14,7 @@ const checkCompaniesTable = (dbClient, obj, done, cb) => {
   dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
     if (res.rows === 0) {
-      insertData.addToCompaniesTable( dbClient, obj, cb);
+      insertData.addToCompaniesTable(dbClient, obj, cb);
     } else {
       cb(res.rows[0].company_id);
     }
@@ -103,6 +103,18 @@ const checkFiltersTable = (dbClient, obj, cb) => {
   });
 };
 
+const checkLastPollTable = (dbClient, obj, done, cb) => {
+  const queryArray = [obj.company_id];
+  dbClient.query('select extract (epoch FROM last_poll) from last_poll WHERE company_id=($1)', queryArray, (err, res) => {
+    if (err) throw err;
+    if (res.rows === 0) {
+      cb(null);
+    } else {
+      cb(res.rows[0] * 1000);
+    }
+  });
+};
+
 module.exports = {
   checkFilesTable,
   checkCompaniesTable,
@@ -110,5 +122,6 @@ module.exports = {
   checkUsersTable,
   checkParticipantsTable,
   checkTagsTable,
-  checkFiltersTable
+  checkFiltersTable,
+  checkLastPollTable
 };

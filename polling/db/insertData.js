@@ -8,12 +8,13 @@ const getCompany_id = require('./getIds.js').getCompany_id;
  * @param {function} callback - Returns response.
  */
 
-const addToCompaniesTable = (dbClient, object, callback) => {
+const addToCompaniesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.company_name];
-  dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error, response) => {
+  dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error) => {
     if (error) throw error;
     getCompany_id(dbClient, object, callback);
   });
+  done();
 };
 
 const addToFilesTable = (dbClient, object, callback) => {
