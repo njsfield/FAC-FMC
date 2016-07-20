@@ -127,6 +127,7 @@ WITHOUT OIDS;
 
 /****** 9. LAST_POLL TABLE ******/
 CREATE TABLE last_poll (
+    company_id BIGINT NOT NULL,
     last_poll TIMESTAMP
 )
 WITHOUT OIDS;
