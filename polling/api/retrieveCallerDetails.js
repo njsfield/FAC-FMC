@@ -14,7 +14,7 @@ company: 'default',
 scoped_exten: '238',
 owner: 255 }
 */
-module.exports = (company_name, extension_list, callback) => {
+module.exports = (extension_list, callback) => {
   const options = {
     method: 'post',
     url: process.env.PBX_URL + '/rest/dialplan/read',
@@ -27,7 +27,6 @@ module.exports = (company_name, extension_list, callback) => {
       type: 'extension',
       scope: {     // eg "400"
         'virt_exten': extension_list,    // eg "400_company",
-        'company': company_name,
       },
       auth: {
         type: 'auth',

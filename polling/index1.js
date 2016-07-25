@@ -8,6 +8,8 @@ const schedule = require('node-schedule');
 const postgresURL = process.env.POSTGRES_URL;
 // require local modules
 const {checkFilesTable, checkCompaniesTable, checkCallsTable, checkLastPollTable} = require('./db/checkTables.js');
+const updateParticipantsTable = require('./db/updateData.js').updateParticipantsTable;
+const retrieveCallerDetails = require('./api/retrieveCallerDetails.js');
 const {insertIntoParticipantsTable} = require('./db/insertData.js');
 const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
 const retrieveCompanyCalls = require('./api/retrieveCompanyCalls.js');
@@ -28,20 +30,24 @@ const pollPABX= () => {
     } else {
       pg.connect(postgresURL, (err, dbClient, done) => {
         if (err) throw err;
-        companyNamesPoll.user.companies.forEach(company_name => {
+        const companyNames = companyNamesPoll.user.companies;
+        companyNames.forEach((company_name, companyIndex) => {
           // create company name to id obj
           checkCompaniesTable(dbClient, {company_name: company_name}, done, (company_id) => {
             companiesObj[company_name] = {company_id: company_id};
             //get last poll date for company
             checkLastPollTable(dbClient, {company_id: company_id}, done, (last_poll) => {
               companiesObj[company_name]['last_poll'] = last_poll;
-              calculatePollTimes(startPollTime, last_poll).forEach( (timeObj) => {
+              const pollTimes = calculatePollTimes(startPollTime, last_poll);
+              pollTimes.forEach((timeObj, pollTimeIndex) => {
                 retrieveCompanyCalls(company_name, timeObj, (arrOfCalls) => {
+
                   if (arrOfCalls.result !== 'fail') {
-                    arrOfCalls.forEach(call => {
+                    arrOfCalls.forEach((call, callIndex) => {
                       call.company_id = company_id;
                       checkFilesTable(dbClient, call, done, (file_id, command) => {
                         call.file_id = file_id;
+
                         if (command === 'INSERT') {
                           // retrieve wav files
                           retrieveWav(call.file_name, (data) => {
@@ -52,15 +58,33 @@ const pollPABX= () => {
                           call.call_id = call_id;
                           const callerQueryObj = createCallParticipantObj(call, 'caller');
                           insertIntoParticipantsTable(dbClient, callerQueryObj, done, () => {
+                            selectMinParticipantsId(dbClient, companiesObj[company_name], done, (minParticipantId) => {
+                              companiesObj[company_name].minParticipantId = minParticipantId;
+                            });
                           });
                           const calleeQueryObj= createCallParticipantObj(call, 'callee');
                           insertIntoParticipantsTable(dbClient, calleeQueryObj, done, () => {
                           });
-                          checkParticipantsArray([calleeQueryObj, callerQueryObj]);
-
+                          checkParticipantsArray([calleeQueryObj.number, callerQueryObj.number]);
+                          if(companyIndex === companyNames.length -1 && pollTimeIndex === pollTimes.length -1 && callIndex === arrOfCalls.length -1 ) {
+                            retrieveCallerDetails(participantsArray, (response) => {
+                            });
+                          }
                         });
                       });
                     });
+                  } else {
+                    if (companyIndex === companyNames.length -1) {
+                      setTimeout(function() {retrieveCallerDetails(participantsArray, (response) => {
+                        response.values.forEach( participant => {
+                          updateParticipantsTable(dbClient, participant, companiesObj[company_name], done, (res) => {
+                            console.log(res, '<<<<<<<<<<<<<<');
+                          });
+                        })
+                        ;
+                      });
+                      }, 5000);
+                    }
                   }
                 });
               });
@@ -74,6 +98,19 @@ const pollPABX= () => {
 };
 
 pollPABX();
+
+const selectMinParticipantsId = (dbClient, companyObj, done, callback) => {
+  const queryArray = [companyObj.company_id, companyObj.last_poll];
+  dbClient.query('select calls.date, participants.participant_id from calls left join participants on calls.call_id=participants.call_id where participants.company_id =$1 and calls.date > $2', queryArray, (err, res) => {
+    if (err) throw err;
+    if (res.rowCount !== 0) {
+      callback(res.rows[0]);
+    } else {
+      callback(null);
+    }
+    // [0].participant_id
+  });
+};
 
 // pollPABX helpers
 const createCallParticipantObj = (obj, type) => {
