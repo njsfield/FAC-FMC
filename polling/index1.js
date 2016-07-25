@@ -7,20 +7,19 @@ const schedule = require('node-schedule');
 // require keys
 const postgresURL = process.env.POSTGRES_URL;
 // require local modules
-
+const {checkFilesTable, checkCompaniesTable, checkCallsTable, checkLastPollTable} = require('./db/checkTables.js');
+const {insertIntoParticipantsTable} = require('./db/insertData.js');
 const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
 const retrieveCompanyCalls = require('./api/retrieveCompanyCalls.js');
-const checkCompaniesTable = require('./db/checkTables.js').checkCompaniesTable;
-const checkLastPollTable = require('./db/checkTables.js').checkLastPollTable;
 const calculatePollTimes = require('./api/calculatePollTimes.js');
-const checkFilesTable = require('./db/checkTables.js').checkFilesTable;
 const retrieveWav = require('./api/retrieveWavFiles.js');
-const checkCallsTable = require('./db/checkTables.js').checkCallsTable;
+
+// upper scope objects
+let participantsArray = [];
 
 const pollPABX= () => {
   //
   const startPollTime = Date.now();
-  let particpantsArray = [];
   let companiesObj = {};
   // get the names of companies that we have to poll for
   retrieveCompanyNames(companyNamesPoll => {
@@ -50,7 +49,15 @@ const pollPABX= () => {
                           });
                         }
                         checkCallsTable(dbClient, call, done, (call_id) => {
-                          console.log(call_id, '<<<<CALL ID INDEX1');
+                          call.call_id = call_id;
+                          const callerQueryObj = createCallParticipantObj(call, 'caller');
+                          insertIntoParticipantsTable(dbClient, callerQueryObj, done, () => {
+                          });
+                          const calleeQueryObj= createCallParticipantObj(call, 'callee');
+                          insertIntoParticipantsTable(dbClient, calleeQueryObj, done, () => {
+                          });
+                          checkParticipantsArray([calleeQueryObj, callerQueryObj]);
+
                         });
                       });
                     });
@@ -67,3 +74,21 @@ const pollPABX= () => {
 };
 
 pollPABX();
+
+// pollPABX helpers
+const createCallParticipantObj = (obj, type) => {
+  return {
+    call_id: obj.call_id,
+    company_id: obj.company_id,
+    number: obj[type],
+    internal: false,
+    participant_role: type,
+    contact_id: null
+  };
+};
+
+const checkParticipantsArray = (callParticipants) => {
+  callParticipants.forEach ( (participant) => {
+    if (participantsArray.indexOf(participant) < 0 ) participantsArray.push(participant);
+  });
+};
