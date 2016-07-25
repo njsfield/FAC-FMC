@@ -1,4 +1,4 @@
-const insertData = require('./insertData.js');
+const {insertIntoParticipantsTable, insertIntoCompaniesTable, insertIntoFilesTable, insertIntoCallsTable, insertIntoUsersTable, insertIntoTagsTable, insertIntoFiltersTable } = require('./insertData.js');
 
 /**
  * Each function checks a table for specific data. What is checked for in each function
@@ -14,7 +14,7 @@ const checkCompaniesTable = (dbClient, obj, done, cb) => {
   dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
     if (res.rowCount === 0) {
-      insertData.insertIntoCompaniesTable(dbClient, obj, done, () => {
+      insertIntoCompaniesTable(dbClient, obj, done, () => {
         checkCompaniesTable(dbClient, obj, done, cb);
       });
     } else {
@@ -29,7 +29,7 @@ const checkFilesTable = (dbClient, obj, done, cb) => {
   dbClient.query('SELECT * FROM files WHERE file_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
     if (res.rowCount === 0) {
-      insertData.insertIntoFilesTable(dbClient, obj, done, cb);
+      insertIntoFilesTable(dbClient, obj, done, cb);
     } else {
       cb(res.rows[0].file_id, res.command);
     }
@@ -41,7 +41,7 @@ const checkCallsTable = (dbClient, obj, done, cb) => {
   dbClient.query('SELECT * FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
     if (err) throw err;
     if (res.rowCount === 0) {
-      insertData.insertIntoCallsTable(dbClient, obj, done, () => {
+      insertIntoCallsTable(dbClient, obj, done, () => {
         checkCallsTable(dbClient, obj, done, cb);
       });
     } else {
@@ -56,7 +56,7 @@ const checkUsersTable = (dbClient, obj, done, cb) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     if (res.rows[0][boolKey] === false) {
-      insertData.insertIntoUsersTable(dbClient, obj, done, cb);
+      insertIntoUsersTable(dbClient, obj, done, cb);
     } else {
       cb(res);
     }
@@ -64,14 +64,16 @@ const checkUsersTable = (dbClient, obj, done, cb) => {
 };
 
 const checkParticipantsTable = (dbClient, obj, done, cb) => {
+
   const queryArray = [obj.call_id, obj.company_id, obj.contact_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND contact_id=($3))', queryArray, (err, res) => {
+  dbClient.query('SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND contact_id=($3)', queryArray, (err, res) => {
     if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    if (res.rows[0][boolKey] === false) {
-      insertData.insertIntoParticipantsTable(dbClient, obj, done, cb);
+    if (res.rowCount === 0) {
+      insertIntoParticipantsTable(dbClient, obj, done, () => {
+      }) ;
+      cb(obj.number);
     } else {
-      cb(res);
+      cb(null);
     }
   });
 };
@@ -82,7 +84,7 @@ const checkTagsTable = (dbClient, obj, done, cb) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     if (res.rows[0][boolKey] === false) {
-      insertData.insertIntoTagsTable(dbClient, obj, done, cb);
+      insertIntoTagsTable(dbClient, obj, done, cb);
     } else {
       cb(res);
     }
@@ -95,7 +97,7 @@ const checkFiltersTable = (dbClient, obj, done, cb) => {
     if (err) throw err;
     const boolKey = Object.keys(res.rows[0])[0];
     if (res.rows[0][boolKey] === false) {
-      insertData.insertIntoFiltersTable(dbClient, obj, done, cb);
+      insertIntoFiltersTable(dbClient, obj, done, cb);
     } else {
       cb({
         success: false,
@@ -112,7 +114,7 @@ const checkLastPollTable = (dbClient, obj, done, cb) => {
     if (res.rowCount === 0) {
       cb(null);
     } else {
-      cb(res.rows[0] * 1000);
+      cb(res.rows[0]*1000);
     }
   });
 };

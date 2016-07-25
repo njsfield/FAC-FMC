@@ -7,10 +7,11 @@ const schedule = require('node-schedule');
 // require keys
 const postgresURL = process.env.POSTGRES_URL;
 // require local modules
-const {checkFilesTable, checkCompaniesTable, checkCallsTable, checkLastPollTable} = require('./db/checkTables.js');
+const {checkFilesTable, checkCompaniesTable, checkCallsTable, checkParticipantsTable, checkLastPollTable} = require('./db/checkTables.js');
 const updateParticipantsTable = require('./db/updateData.js').updateParticipantsTable;
 const retrieveCallerDetails = require('./api/retrieveCallerDetails.js');
 const {insertIntoParticipantsTable} = require('./db/insertData.js');
+const updateLastPollTable = require('./db/updateData.js').updateLastPollTable;
 const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
 const retrieveCompanyCalls = require('./api/retrieveCompanyCalls.js');
 const calculatePollTimes = require('./api/calculatePollTimes.js');
@@ -57,17 +58,27 @@ const pollPABX= () => {
                         checkCallsTable(dbClient, call, done, (call_id) => {
                           call.call_id = call_id;
                           const callerQueryObj = createCallParticipantObj(call, 'caller');
-                          insertIntoParticipantsTable(dbClient, callerQueryObj, done, () => {
-                            selectMinParticipantsId(dbClient, companiesObj[company_name], done, (minParticipantId) => {
-                              companiesObj[company_name].minParticipantId = minParticipantId;
-                            });
-                          });
                           const calleeQueryObj= createCallParticipantObj(call, 'callee');
-                          insertIntoParticipantsTable(dbClient, calleeQueryObj, done, () => {
+                          checkParticipantsTable(dbClient, callerQueryObj, done, (result) => {
+                            if(result ) checkParticipantsArray(result);
                           });
-                          checkParticipantsArray([calleeQueryObj.number, callerQueryObj.number]);
+                          checkParticipantsTable(dbClient, calleeQueryObj, done, (result) => {
+                            if(result ) checkParticipantsArray(result);
+                          });
+
                           if(companyIndex === companyNames.length -1 && pollTimeIndex === pollTimes.length -1 && callIndex === arrOfCalls.length -1 ) {
                             retrieveCallerDetails(participantsArray, (response) => {
+                              response.values.forEach( (participant, index) => {
+                                updateParticipantsTable(dbClient, participant, companiesObj[company_name], done, () => {
+                                  companyNames.forEach((company) => {
+                                    updateLastPollTable(dbClient, {company_id: companiesObj[company].company_id, last_poll: startPollTime}, () => {
+                                      if( index === response.values.length -1 ) {
+                                        console.log('polleneded here');
+                                      }
+                                    });
+                                  });
+                                });
+                              });
                             });
                           }
                         });
@@ -76,9 +87,16 @@ const pollPABX= () => {
                   } else {
                     if (companyIndex === companyNames.length -1) {
                       setTimeout(function() {retrieveCallerDetails(participantsArray, (response) => {
-                        response.values.forEach( participant => {
-                          updateParticipantsTable(dbClient, participant, companiesObj[company_name], done, (res) => {
-                            console.log(res, '<<<<<<<<<<<<<<');
+                        response.values.forEach( (participant, index) => {
+                          updateParticipantsTable(dbClient, participant, companiesObj[company_name], done, () => {
+                            companyNames.forEach((company, index2) => {
+                              if( index === response.values.length -1 && index2 === companyNames.length -1 ) {
+                                updateLastPollTable(dbClient, {company_id: companiesObj[company].company_id, last_poll: startPollTime}, done, () => {
+                                  console.log('pollends');
+                                  pg.end();
+                                });
+                              }
+                            });
                           });
                         })
                         ;
@@ -86,6 +104,12 @@ const pollPABX= () => {
                       }, 5000);
                     }
                   }
+                  setTimeout( () => {
+                    selectMinParticipantsId(dbClient, companiesObj[company_name], done, (minParticipantId) => {
+                      console.log(minParticipantId);
+                      companiesObj[company_name].minParticipantId = minParticipantId;
+                    }, 1000);
+                  });
                 });
               });
             });
@@ -96,13 +120,13 @@ const pollPABX= () => {
     }
   });
 };
-
 pollPABX();
 
 const selectMinParticipantsId = (dbClient, companyObj, done, callback) => {
   const queryArray = [companyObj.company_id, companyObj.last_poll];
   dbClient.query('select calls.date, participants.participant_id from calls left join participants on calls.call_id=participants.call_id where participants.company_id =$1 and calls.date > $2', queryArray, (err, res) => {
     if (err) throw err;
+    console.log('min participants>>>>>>>', res);
     if (res.rowCount !== 0) {
       callback(res.rows[0]);
     } else {
@@ -113,6 +137,9 @@ const selectMinParticipantsId = (dbClient, companyObj, done, callback) => {
 };
 
 // pollPABX helpers
+const checkParticipantsArray = (callParticipant) => {
+  if (participantsArray.indexOf(callParticipant) < 0 ) participantsArray.push(callParticipant);
+};
 const createCallParticipantObj = (obj, type) => {
   return {
     call_id: obj.call_id,
@@ -124,8 +151,6 @@ const createCallParticipantObj = (obj, type) => {
   };
 };
 
-const checkParticipantsArray = (callParticipants) => {
-  callParticipants.forEach ( (participant) => {
-    if (participantsArray.indexOf(participant) < 0 ) participantsArray.push(participant);
-  });
+module.exports = {
+  participantsArray
 };
