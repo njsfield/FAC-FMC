@@ -14,7 +14,9 @@ const checkCompaniesTable = (dbClient, obj, done, cb) => {
   dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
     if (err) throw err;
     if (res.rowCount === 0) {
-      insertData.insertIntoCompaniesTable(dbClient, obj, done, cb);
+      insertData.insertIntoCompaniesTable(dbClient, obj, done, () => {
+        checkCompaniesTable(dbClient, obj, done, cb);
+      });
     } else {
       cb(res.rows[0].company_id);
     }
@@ -36,13 +38,14 @@ const checkFilesTable = (dbClient, obj, done, cb) => {
 
 const checkCallsTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id, obj.file_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM calls WHERE company_id=($1) AND file_id=($2))', queryArray, (err5, res5) => {
-    if (err5) throw err5;
-    const boolKey5 = Object.keys(res5.rows[0])[0];
-    if (res5.rows[0][boolKey5] === false) {
-      insertData.insertIntoCallsTable(dbClient, obj, done, cb);
+  dbClient.query('SELECT * FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
+    if (err) throw err;
+    if (res.rowCount === 0) {
+      insertData.insertIntoCallsTable(dbClient, obj, done, () => {
+        checkCallsTable(dbClient, obj, done, cb);
+      });
     } else {
-      cb(res5);
+      cb(res.rows[0].call_id);
     }
   });
 };

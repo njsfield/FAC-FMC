@@ -13,11 +13,9 @@ const insertIntoCompaniesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.company_name];
   dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error) => {
     if (error) throw error;
-    getCompany_id(dbClient, object, done, (company_id) => {
-      callback(company_id);
-    });
-    done();
+    callback();
   });
+  done();
 };
 
 const insertIntoFilesTable = (dbClient, object, done, callback) => {
@@ -37,6 +35,7 @@ const insertIntoCallsTable = (dbClient, object, done, callback) => {
     if (error) throw error;
     callback(response);
   });
+  done();
 };
 
 const insertIntoUsersTable = (dbClient, object, done, callback) => {

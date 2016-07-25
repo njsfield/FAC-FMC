@@ -2,6 +2,7 @@
 // require node modules
 require('env2')('config.env');
 const pg = require('pg');
+const fs = require('fs');
 const schedule = require('node-schedule');
 // require keys
 const postgresURL = process.env.POSTGRES_URL;
@@ -13,6 +14,8 @@ const checkCompaniesTable = require('./db/checkTables.js').checkCompaniesTable;
 const checkLastPollTable = require('./db/checkTables.js').checkLastPollTable;
 const calculatePollTimes = require('./api/calculatePollTimes.js');
 const checkFilesTable = require('./db/checkTables.js').checkFilesTable;
+const retrieveWav = require('./api/retrieveWavFiles.js');
+const checkCallsTable = require('./db/checkTables.js').checkCallsTable;
 
 const pollPABX= () => {
   //
@@ -34,17 +37,21 @@ const pollPABX= () => {
             checkLastPollTable(dbClient, {company_id: company_id}, done, (last_poll) => {
               companiesObj[company_name]['last_poll'] = last_poll;
               calculatePollTimes(startPollTime, last_poll).forEach( (timeObj) => {
-
                 retrieveCompanyCalls(company_name, timeObj, (arrOfCalls) => {
                   if (arrOfCalls.result !== 'fail') {
-                    console.log(arrOfCalls, '<<<<<<<<<<<<<<<<<<<<<ARROFCALLS');
                     arrOfCalls.forEach(call => {
+                      call.company_id = company_id;
                       checkFilesTable(dbClient, call, done, (file_id, command) => {
-                        console.log(file_id, command);
+                        call.file_id = file_id;
                         if (command === 'INSERT') {
                           // retrieve wav files
-
+                          retrieveWav(call.file_name, (data) => {
+                            fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${file_id}.wav`, data);
+                          });
                         }
+                        checkCallsTable(dbClient, call, done, (call_id) => {
+                          console.log(call_id, '<<<<CALL ID INDEX1');
+                        });
                       });
                     });
                   }
