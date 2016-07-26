@@ -6,7 +6,8 @@ const waterfall = require('async-waterfall');
 
 //helpers
 const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
-const processCompany = require('./helpers/processCompany.js');
+const {processCompany} = require('./helpers/processCompany.js');
+const processParticipantsArray = require('./helpers/processParticipantsArray.js');
 
 //things we use in function
 let companiesObj = {};
@@ -30,15 +31,20 @@ const pollPABX = () => {
         }
       });
     },
-
+    // for each company poll for calls and store the details in calls, files and participants tables and adds to the partcipantsArray
     function (err, dbClient, done, companyNames, callback) {
       const companyNamesQueue = ([]).concat(companyNames);
-      processCompany(err, dbClient, done, companyNamesQueue, companiesObj, startPollTime, callback);
+      processCompany(err, dbClient, done, companyNamesQueue, companiesObj, startPollTime, participantsArray, callback);
+    },
+    // check caller details from participants array to update participants table
+    function(dbClient, done, callback) {
+      console.log(participantsArray);
+      processParticipantsArray(dbClient, done, companiesObj, startPollTime, participantsArray, callback);
     }
+
   ],
 
   function (err, result) {
-    console.log(result, '<<<<<<<Result');
   });
 };
 
