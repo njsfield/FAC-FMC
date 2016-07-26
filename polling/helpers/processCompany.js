@@ -7,7 +7,6 @@ const processCompany = (error, dbClient, done, companyNamesQueue, companiesObj, 
   const company_name = companyNamesQueue.shift();
   waterfall([
     function (callback) {
-      console.log('companyanem ==' , company_name);
         // create company name to id obj
       checkCompaniesTable(dbClient, {company_name: company_name}, done, (company_id) => {
         companiesObj[company_name] = {company_id: company_id};
@@ -23,17 +22,20 @@ const processCompany = (error, dbClient, done, companyNamesQueue, companiesObj, 
     },
 // take the last poll and then calculate which time parameters one needs to poll the pabx
     function (last_poll, callback) {
-      console.log(last_poll, startPollTime);
       const pollTimesQueue = calculatePollTimes(startPollTime, last_poll);
       // for each poll time for the company poll for the calls
-      console.log(pollTimesQueue, '<<< polltimes');
       processPollTimes(error, dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, callback);
         //get last poll date for company
+    },
+
+    function (callback) {
+      selectMinParticipantsId(dbClient, companiesObj[company_name], done, () => {
+        callback(null);
+      });
     }
   ],
 
     function (err, result) {
-      console.log(result, '<<<<<');
       if (err) throw err;
       if (companyNamesQueue.length > 0) {
         processCompany(error, dbClient, done, companyNamesQueue, companiesObj, startPollTime, participantsArray, cb);
@@ -43,6 +45,22 @@ const processCompany = (error, dbClient, done, companyNamesQueue, companiesObj, 
       }
     });
 };
+
+const selectMinParticipantsId = (dbClient, companyObj, done, callback) => {
+  const queryArray = [companyObj.company_id, companyObj.last_poll];
+  console.log(companyObj.last_poll, '<<<<<<<LAST POLL');
+  dbClient.query('select calls.date, participants.participant_id from calls left join participants on calls.call_id=participants.call_id where participants.company_id =$1 and calls.date > (to_timestamp($2) at time zone \'UTC\')', queryArray, (err, res) => {
+    if (err) throw err;
+    console.log('min participants>>>>>>>', res.rows);
+    if (res.rowCount !== 0) {
+      callback(res.rows[0]);
+    } else {
+      callback(null);
+    }
+    // [0].participant_id
+  });
+};
+
 
 module.exports = {
   processCompany

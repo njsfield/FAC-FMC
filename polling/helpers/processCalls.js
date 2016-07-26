@@ -7,6 +7,13 @@ const retrieveWav = require('../api/retrieveWavFiles.js');
 const processCalls = (error, dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, cb) => {
   const thisCall = arrOfCalls.shift();
   waterfall([
+    function (callback) {
+      dbClient.query('begin', (err, res) => {
+        if (err) throw err;
+        done();
+        callback(null);
+      });
+    },
     function(callback) {
       thisCall.company_id = companiesObj[company_name].company_id;
       checkFilesTable(dbClient, thisCall, done, (file_id, command) => {
@@ -40,6 +47,16 @@ const processCalls = (error, dbClient, done, company_name, companiesObj, arrOfCa
       const calleeQueryObj= createCallParticipantObj(thisCall, 'callee');
       checkParticipantsTable(dbClient, calleeQueryObj, done, (result) => {
         if(result ) checkParticipantsArray(result, participantsArray);
+        callback(null);
+      });
+    },
+
+    function (callback) {
+      dbClient.query('commit', (err, res) => {
+        if (err) {
+
+        }
+        done();
         callback(null);
       });
     }

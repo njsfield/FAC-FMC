@@ -25,7 +25,7 @@ function(err, result) {
   if(pollTimesQueue.length > 0) {
     processPollTimes(error, dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, cb);
   } else {
-    cb(null, result);
+    cb(null);
   }
 });
 

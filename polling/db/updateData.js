@@ -17,8 +17,9 @@ const updateParticipantsTable = (dbClient, participantObj, companiesObj, done, c
 
 const updateLastPollTable = (dbClient, object, done, callback) => {
   checkLastPollTable(dbClient, object, done, (res) => {
+    const queryArray = [object.last_poll/1000, object.company_id];
     if (res) {
-      dbClient.query('UPDATE last_poll SET last_poll = (TO_TIMESTAMP($1)) where company_id=$2', queryArray, (error, response) => {
+      dbClient.query('UPDATE last_polls SET last_poll = (TO_TIMESTAMP($1) at time zone \'UTC\') where company_id=$2', queryArray, (error, response) => {
         if (error) throw error;
         done();
         callback();
@@ -31,7 +32,6 @@ const updateLastPollTable = (dbClient, object, done, callback) => {
     }
 
   });
-  const queryArray = [object.last_poll, object.company_id];
 };
 
 module.exports = {

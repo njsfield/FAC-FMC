@@ -64,7 +64,7 @@ const insertIntoTagsTable = (dbClient, object, done, callback) => {
 
 const insertIntoLastPollTable = (dbClient, object, done, callback) => {
   const queryArray = [object.last_poll/1000, object.company_id];
-  dbClient.query('INSERT INTO last_polls (last_poll, company_id) VALUES ((TO_TIMESTAMP($1)), $2)', queryArray, (error, response) => {
+  dbClient.query('INSERT INTO last_polls (last_poll, company_id) VALUES ((TO_TIMESTAMP($1) at time zone \'UTC\'), $2)', queryArray, (error, response) => {
     if (error) throw error;
     callback(response);
   });
