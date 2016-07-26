@@ -1,23 +1,45 @@
+require('env2')('config.env');
 const pg = require('pg');
-const schedule = require('node-schedule');
-const storeCompanyCalls = require('./storeCompanyCalls.js').storeCompanyCalls;
-const retrieveCompanyNames = require('./api/retrieveCompanyNames.js').retrieveCompanyNames;
-const checkCompaniesTable = require('./db/checkTables.js').checkCompaniesTable;
 const postgresURL = process.env.POSTGRES_URL;
+const schedule = require('node-schedule');
+const waterfall = require('async-waterfall');
 
-schedule.scheduleJob('* */12 * * *', () => {
-  retrieveCompanyNames(res => {
-    if(res.result !== 'fail') {
-      pg.connect(postgresURL, (err, dbClient, done) => {
-        if (err) throw err;
-        res.user.companies.forEach((company) => {
-          checkCompaniesTable(dbClient, {company_name: company}, () => {
-            storeCompanyCalls(dbClient, done, company);
+//helpers
+const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
+const processCompany = require('./helpers/processCompany.js');
+
+//things we use in function
+let companiesObj = {};
+let participantsArray = [];
+
+const pollPABX = () => {
+  const startPollTime = Date.now();
+
+  waterfall([
+    // retrieve company names from PABX in array
+    function (callback) {
+      retrieveCompanyNames(companyNamesPoll => {
+        if (companyNamesPoll.result === 'fail') {
+          console.log(companyNamesPoll.message);
+        } else {
+          pg.connect(postgresURL, (err, dbClient, done) => {
+            if (err) throw err;
+            const companyNames = companyNamesPoll.user.companies;
+            callback(null, err, dbClient, done, companyNames);
           });
-        });
+        }
       });
-    } else {
-      console.log(res.message);
+    },
+
+    function (err, dbClient, done, companyNames, callback) {
+      const companyNamesQueue = ([]).concat(companyNames);
+      processCompany(err, dbClient, done, companyNamesQueue, companiesObj, startPollTime, callback);
     }
+  ],
+
+  function (err, result) {
+    console.log(result, '<<<<<<<Result');
   });
-});
+};
+
+pollPABX();

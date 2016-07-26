@@ -3,7 +3,6 @@
 require('env2')('config.env');
 const pg = require('pg');
 const fs = require('fs');
-const schedule = require('node-schedule');
 // require keys
 const postgresURL = process.env.POSTGRES_URL;
 // require local modules
@@ -11,11 +10,13 @@ const {checkFilesTable, checkCompaniesTable, checkCallsTable, checkParticipantsT
 const updateParticipantsTable = require('./db/updateData.js').updateParticipantsTable;
 const retrieveCallerDetails = require('./api/retrieveCallerDetails.js');
 const {insertIntoParticipantsTable} = require('./db/insertData.js');
-const updateLastPollTable = require('./db/updateData.js').updateLastPollTable;
 const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
 const retrieveCompanyCalls = require('./api/retrieveCompanyCalls.js');
 const calculatePollTimes = require('./api/calculatePollTimes.js');
 const retrieveWav = require('./api/retrieveWavFiles.js');
+
+//helpers
+const updatePollTable = require('./helpers/updatePollTable.js');
 
 // upper scope objects
 let participantsArray = [];
@@ -32,6 +33,8 @@ const pollPABX= () => {
       pg.connect(postgresURL, (err, dbClient, done) => {
         if (err) throw err;
         const companyNames = companyNamesPoll.user.companies;
+
+        
         companyNames.forEach((company_name, companyIndex) => {
           // create company name to id obj
           checkCompaniesTable(dbClient, {company_name: company_name}, done, (company_id) => {
@@ -41,6 +44,7 @@ const pollPABX= () => {
               companiesObj[company_name]['last_poll'] = last_poll;
               const pollTimes = calculatePollTimes(startPollTime, last_poll);
               pollTimes.forEach((timeObj, pollTimeIndex) => {
+
                 retrieveCompanyCalls(company_name, timeObj, (arrOfCalls) => {
 
                   if (arrOfCalls.result !== 'fail') {
@@ -70,13 +74,7 @@ const pollPABX= () => {
                             retrieveCallerDetails(participantsArray, (response) => {
                               response.values.forEach( (participant, index) => {
                                 updateParticipantsTable(dbClient, participant, companiesObj[company_name], done, () => {
-                                  companyNames.forEach((company) => {
-                                    updateLastPollTable(dbClient, {company_id: companiesObj[company].company_id, last_poll: startPollTime}, () => {
-                                      if( index === response.values.length -1 ) {
-                                        console.log('polleneded here');
-                                      }
-                                    });
-                                  });
+                                  updatePollTable(dbClient, companyNames, companiesObj, startPollTime, done);
                                 });
                               });
                             });
@@ -87,16 +85,9 @@ const pollPABX= () => {
                   } else {
                     if (companyIndex === companyNames.length -1) {
                       setTimeout(function() {retrieveCallerDetails(participantsArray, (response) => {
-                        response.values.forEach( (participant, index) => {
+                        response.values.forEach( (participant) => {
                           updateParticipantsTable(dbClient, participant, companiesObj[company_name], done, () => {
-                            companyNames.forEach((company, index2) => {
-                              if( index === response.values.length -1 && index2 === companyNames.length -1 ) {
-                                updateLastPollTable(dbClient, {company_id: companiesObj[company].company_id, last_poll: startPollTime}, done, () => {
-                                  console.log('pollends');
-                                  pg.end();
-                                });
-                              }
-                            });
+                            updatePollTable(dbClient, companyNames, companiesObj, startPollTime, done);
                           });
                         })
                         ;
@@ -104,13 +95,13 @@ const pollPABX= () => {
                       }, 5000);
                     }
                   }
-                  setTimeout( () => {
-                    selectMinParticipantsId(dbClient, companiesObj[company_name], done, (minParticipantId) => {
-                      console.log(minParticipantId);
-                      companiesObj[company_name].minParticipantId = minParticipantId;
-                    }, 1000);
-                  });
                 });
+              });
+              setTimeout( () => {
+                selectMinParticipantsId(dbClient, companiesObj[company_name], done, (minParticipantId) => {
+                  console.log(minParticipantId);
+                  companiesObj[company_name].minParticipantId = minParticipantId;
+                }, 1000);
               });
             });
           });
@@ -124,9 +115,10 @@ pollPABX();
 
 const selectMinParticipantsId = (dbClient, companyObj, done, callback) => {
   const queryArray = [companyObj.company_id, companyObj.last_poll];
+  console.log(typeof companyObj.last_poll, '<<<<<<<LAST POLL');
   dbClient.query('select calls.date, participants.participant_id from calls left join participants on calls.call_id=participants.call_id where participants.company_id =$1 and calls.date > $2', queryArray, (err, res) => {
     if (err) throw err;
-    console.log('min participants>>>>>>>', res);
+    console.log('min participants>>>>>>>', res.rows);
     if (res.rowCount !== 0) {
       callback(res.rows[0]);
     } else {
