@@ -114,7 +114,7 @@ const checkLastPollTable = (dbClient, obj, done, cb) => {
     if (res.rowCount === 0) {
       cb(null);
     } else {
-      cb(res.rows[0]*1000);
+      cb(res.rows[0].date_part * 1000);
     }
   });
 };

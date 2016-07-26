@@ -3,6 +3,7 @@ module.exports = (startPoll, lastPoll) => {
   if (lastPoll === null ) {
     return [{}];
   }
+
   const diff = startPoll - lastPoll;
   let hours = Math.ceil(diff / 3600000);
   let days = Math.ceil(hours / 24);
@@ -10,6 +11,7 @@ module.exports = (startPoll, lastPoll) => {
   if (hours < 24) {
     hours += 2;
     while (hours-- > 0) {
+      startPoll = new Date(startPoll);
       result.push({
         year: startPoll.getFullYear(),
         month: startPoll.getMonth() + 1,
@@ -20,6 +22,7 @@ module.exports = (startPoll, lastPoll) => {
     }
   } else if (days < 5) {
     while (days-- > 0) {
+      startPoll = new Date(startPoll);
       result.push({
         year: startPoll.getFullYear(),
         month: startPoll.getMonth() + 1,
