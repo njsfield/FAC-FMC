@@ -1,9 +1,9 @@
-const tape = require('tape');
+const {databaseTest} = require('../../wrapping-tape-setup.js');
 const pg = require('pg');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
 // test that the fmctest database is made
 
-tape('test that the fmctest database and tables exists', (t) => {
+databaseTest('test that the fmctest database and tables exists', (t) => {
   t.plan(9);
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
