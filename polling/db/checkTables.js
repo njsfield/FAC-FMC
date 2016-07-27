@@ -72,8 +72,8 @@ const checkUsersTable = (dbClient, obj, done, cb) => {
 // if participants dont, it returns the number
 const checkParticipantsTable = (dbClient, obj, done, cb) => {
 
-  const queryArray = [obj.call_id, obj.company_id, obj.contact_id];
-  dbClient.query('SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND contact_id=($3)', queryArray, (err, res) => {
+  const queryArray = [obj.call_id, obj.company_id, obj.number];
+  dbClient.query('SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND number=($3)', queryArray, (err, res) => {
     if (err) throw err;
     if (res.rowCount === 0) {
       insertIntoParticipantsTable(dbClient, obj, done, () => {
@@ -84,7 +84,8 @@ const checkParticipantsTable = (dbClient, obj, done, cb) => {
     }
   });
 };
-
+// checkLastPollTable returns null if there is no lastpolltime in the table or returns
+// the last poll time if there is
 const checkLastPollTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id];
   dbClient.query('select extract (epoch FROM last_poll) from last_polls WHERE company_id=($1)', queryArray, (err, res) => {
