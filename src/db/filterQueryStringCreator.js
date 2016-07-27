@@ -14,7 +14,6 @@ const taggedCalls = ' calls.call_id IN (select call_id from tags_calls where tag
 
 const limit = 'LIMIT ';
 
-
 const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
   if (obj.to !== '' && obj.from !== '') {
     queryArr.push(obj.to, obj.from);

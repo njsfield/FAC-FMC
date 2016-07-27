@@ -2,7 +2,7 @@
 require('env2')('config.env');
 const server = require('../../../src/server/server.js');
 const nock = require('nock');
-const tape = require('tape');
+const test = require('../../wrapping-tape-setup.js').test;
 const JWT = require('jsonwebtoken');
 const pbxUrl = process.env.PBX_URL;
 
@@ -19,16 +19,10 @@ nock(pbxUrl)
                expires: 1467111677.992,
                result: 'success',
                user:
-                { id: 240,
-                  login: 'fac30b',
-                  name: 'Virginie Trubiano B',
-                  company: 'default',
-                  home: 'default',
-                  companies: [],
-                  session: 'ipBPs4Cq3XHbwmRQ6k6aksj3',
-                  perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } });
+                  JSON.parse(process.env.LOGINFLOWSUCCESS)
+                });
 
-tape('test the login user flow for a successful api response from IPC for correct login details', (t) => {
+test('test the login user flow for a successful api response from IPC for correct login details', (t) => {
   t.plan(6);
   server.inject({
     method: 'POST',

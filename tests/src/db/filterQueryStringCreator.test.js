@@ -1,9 +1,14 @@
 'use strict';
-const tape = require('tape');
+const test = require('../../wrapping-tape-setup.js').databaseTest;
 const QSCreator = require('../../../src/db/filterQueryStringCreator.js');
-const pg = require('pg');
-const postgresURL = process.env.POSTGRES_URL_TEST;
-const queryString = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = ($1) and p.contact_id = ($2) left join tags_calls t on c.call_id = t.call_id where ';
+const queryString = `SELECT calls.*,
+   participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
+   participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
+   array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name
+FROM calls
+    LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
+    LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
+WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 `;
 
 const toObj = {
   to: 100,
@@ -39,80 +44,58 @@ const dateObj = {
   date: '05-05-2016'
 };
 
-const untaggedObj = {
+const userObj = {
   to: '',
   from: '',
   min: '',
   max: '',
   date: '',
-  tags: ''
-
+  tags: [],
+  untagged: false,
+  firstIndex: 0,
+  maxRows: 20
 };
 
-const userObj = {
-  to: 8,
-  from: '',
-  min: '',
-  max: '',
-  date: '',
-  tags: ''
-};
-
-tape('test QSCreator functions', (t) => {
-  t.plan(10);
-  QSCreator.toAndFromQueryStringCreator(toObj, (res) => {
+test('test QSCreator functions', (t) => {
+  t.plan(8);
+  QSCreator.toAndFromQueryStringCreator(toObj, [], (res) => {
     const actual = res;
-    const expected = 'participant_role = (\'callee\') and number = (\'100\') ';
+    const expected = [100];
     t.deepEqual(actual, expected, 'filtering on "to" returns the expected string');
   });
-  QSCreator.toAndFromQueryStringCreator(fromObj, (res) => {
+  QSCreator.toAndFromQueryStringCreator(fromObj, [], (res) => {
     const actual = res;
-    const expected = 'participant_role = (\'caller\') and number = (\'101\') ';
+    const expected = [101];
     t.deepEqual(actual, expected, 'filtering on "form" returns the expected string');
   });
-  QSCreator.toAndFromQueryStringCreator(toAndFromObj, (res) => {
+  QSCreator.toAndFromQueryStringCreator(toAndFromObj, [], (res) => {
     const actual = res;
-    const expected = 'participant_role in (\'callee\', \'caller\') and number in (\'100\', \'101\')';
+    const expected = [100, 101];
     t.deepEqual(actual, expected, 'filtering on "to" and "from" returns the expected string');
   });
-  QSCreator.minAndMaxQueryStringCreator(minObj, (res) => {
+  QSCreator.minAndMaxQueryStringCreator(minObj, [], (res) => {
     const actual = res;
-    const expected = 'duration >= (\'8\') ';
+    const expected = [8];
     t.deepEqual(actual, expected, 'filtering on "min" returns the expected string');
   });
-  QSCreator.minAndMaxQueryStringCreator(maxObj, (res) => {
+  QSCreator.minAndMaxQueryStringCreator(maxObj, [], (res) => {
     const actual = res;
-    const expected = 'duration <= (\'9\') ';
+    const expected = [9];
     t.deepEqual(actual, expected, 'filtering on "max" returns the expected string');
   });
-  QSCreator.minAndMaxQueryStringCreator(minAndMaxObj, (res) => {
+  QSCreator.minAndMaxQueryStringCreator(minAndMaxObj, [], (res) => {
     const actual = res;
-    const expected = 'duration in (\'8\', \'9\')';
+    const expected = [8, 9];
     t.deepEqual(actual, expected, 'filtering on "min" and "max" returns the expected string');
   });
-  QSCreator.dateQueryStringCreator(dateObj, (res) => {
+  QSCreator.dateQueryStringCreator(dateObj, [], (res) => {
     const actual = res;
-    const expected = 'date > (\'05-05-2016\') and date < (select timestamp with time zone \'epoch\' + 1462489200 * interval \'1\' second)';
+    const expected = ['05-05-2016'];
     t.deepEqual(actual, expected, 'filtering on "date" returns the expected string');
   });
-  QSCreator.untaggedCallsStringCreator(untaggedObj, (res) => {
-    const actual = res;
-    const expected = 'tag_id is NULL';
-    t.deepEqual(actual, expected, 'filtering with no filters set returns the expected string to render all untagged calls');
-  });
-  QSCreator.createQueryString(queryString, userObj, (res) => {
-    const actual = res;
-    const expected = 'select date, file_id, contact_id, participant_role, number, internal, duration, tag_id from participants p inner join calls c on p.call_id = c.call_id and p.company_id = ($1) and p.contact_id = ($2) left join tags_calls t on c.call_id = t.call_id where participant_role = (\'callee\') and number = (\'8\') ';
+  QSCreator.createQueryString(queryString, ['value1', 'value2'], userObj, (createdQueryString) => {
+    const actual = createdQueryString.indexOf('LIMIT $3') > -1;
+    const expected = true;
     t.deepEqual(actual, expected, 'complete query string is as expected');
-  });
-  pg.connect(postgresURL, (error, dbClient) => {
-    if (error) throw error;
-    QSCreator.createQueryString(queryString, userObj, (qString) => {
-      dbClient.query(qString, [100, 4387735], (err, res) => {
-        const actual = res.rowCount;
-        const expected = 1;
-        t.deepEqual(actual, expected, 'tests that correct data is returned from the joining of the tables');
-      });
-    });
   });
 });
