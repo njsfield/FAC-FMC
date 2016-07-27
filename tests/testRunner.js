@@ -6,6 +6,7 @@ const connectionString = 'postgres://postgres:postgrespassword@localhost/fmctest
 const sql = fs.readFileSync(`${__dirname}/../schema.txt`).toString();
 schema.getSchema(connectionString, sql);
 
+<<<<<<< HEAD
     // // require in files
     // require('./src/db/filterQueryStringCreator.test.js');
     // require('./src/db/getTagNamesArr.test.js');
