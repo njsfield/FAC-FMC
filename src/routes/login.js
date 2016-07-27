@@ -35,7 +35,7 @@ module.exports = {
               contact_id: user.user.id,
               company_id: res
             };
-            checkUsersTable(dbClient, userObj, () => {});
+            checkUsersTable(dbClient, userObj, done, () => {});
             const token = JWT.sign({
               company_id: userObj.company_id,
               contact_id: user.user.id,
