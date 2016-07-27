@@ -12,8 +12,12 @@ require('./polling/db/insertData.test.js'); //all tested and pass
 // require('./polling/db/getIds.test.js'); //All functions tested and pass
 // require('./polling/api/pollingCalls.test.js');
 // require('./polling/api/calculatePollTimes.test.js');
-
 // require('./polling/db/updateData.test.js'); //all tested and
+
+//pollerflow tests
+
+// require('./polling/helpers/updatePollTable.test.js');
+require('./polling/helpers/processCalls.test.js');
 
     // // require in files
 // require('./src/db/filterQueryStringCreator.test.js'); //all functions tested and working
