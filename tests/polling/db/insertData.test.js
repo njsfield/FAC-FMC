@@ -1,8 +1,36 @@
 const pg = require('pg');
-const tape = require('tape');
+const {databaseTest} = require('../../wrapping-tape-setup.js');
 const postgresURL = process.env.POSTGRES_URL_TEST;
-const {insertIntoCallsTable, insertIntoParticipantsTable, insertIntoFilesTable} = require('../../../polling/db/insertData.js');
+const {insertIntoCallsTable, insertIntoCompaniesTable, insertIntoParticipantsTable, insertIntoFilesTable} = require('../../../polling/db/insertData.js');
 
+const expected = 'INSERT';
+
+databaseTest('test the insertData functions', (t) => {
+  t.plan(4);
+  pg.connect(postgresURL, (err, dbClient, done) => {
+    if (err) throw err;
+    insertIntoFilesTable(dbClient, obj.addToFilesTable, done, (file_id, command) => {
+      const actual = command;
+      t.deepEqual(actual, expected, 'added to files table');
+      done();
+    });
+    insertIntoCallsTable(dbClient, obj.addToCallsTable, done, (res1) => {
+      const actual1 = res1.command;
+      t.deepEqual(actual1, expected, 'added to calls table');
+      done();
+    });
+    insertIntoParticipantsTable(dbClient, obj.addToParticipantsTable, done, (res) => {
+      const actual = res.command;
+      t.deepEqual(actual, expected, 'added to participants table');
+      done();
+    });
+    insertIntoCompaniesTable(dbClient, obj.addToCompaniesTable, done, (res) => {
+      const actual = res;
+      t.deepEqual(actual, expected, 'added to companies table');
+      done();
+    });
+  });
+});
 const obj = {
   addToCompaniesTable: {
     company_name: 'new_company'
@@ -27,64 +55,5 @@ const obj = {
     internal: false,
     participant_role: 'caller',
     contact_id: 12345
-  },
-  addToTagsTable: {
-    company_id: 100,
-    tag_name: 'urgent'
-  },
-  addToTagsCallsTable: {
-    call_id: 101,
-    tag_id: 100
-  },
-  addToFiltersTable: {
-    filter_name: 'newest-test-filter',
-    contact_id: 238,
-    filter_spec: {
-      to: 100,
-      from: '',
-      min: '',
-      max: '',
-      date: '',
-      tags: ''
-    }
   }
-  // editTagsTable: {
-  //   tag_id: 100,
-  //   tag_name: 'important'
-  // }
 };
-const expected = 'INSERT';
-
-tape('test the insertData functions', (t) => {
-  t.plan(8);
-  pg.connect(postgresURL, (err, dbClient, done) => {
-    if (err) throw err;
-    insertIntoCallsTable(dbClient, obj.addToCallsTable, done, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to calls table');
-      done();
-    });
-    insertIntoParticipantsTable(dbClient, obj.addToParticipantsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to participants table');
-      done();
-    });
-    insertData.addToCompaniesTable(dbClient, obj.addToCompaniesTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to companies table');
-      done();
-    });
-    insertData.addToFilesTable(dbClient, obj.addToFilesTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to files table');
-      done();
-    });
-    
-    // insertData.editTagsTable(dbClient, obj.editTagsTable, (res) => {
-    //   const actual = res.command;
-    //   const expected2 = 'UPDATE';
-    //   t.deepEqual(actual, expected2, 'added to tagsCalls table');
-    //   done();
-    // });
-  });
-});
