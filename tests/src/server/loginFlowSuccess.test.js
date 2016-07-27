@@ -2,7 +2,7 @@
 require('env2')('config.env');
 const server = require('../../../src/server/server.js');
 const nock = require('nock');
-const test = require('../../wrapping-tape-setup.js').test;
+const test = require('../../wrapping-tape-setup.js').databaseTest;
 const JWT = require('jsonwebtoken');
 const pbxUrl = process.env.PBX_URL;
 
