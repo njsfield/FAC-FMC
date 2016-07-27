@@ -19,7 +19,7 @@ nock(pbxUrl)
                expires: 1467111677.992,
                result: 'success',
                user:
-                  JSON.parse(process.env.LOGINFLOWSUCCESS)
+                  JSON.parse(process.env.LOGIN_FLOW_SUCCESS)
                 });
 
 test('test the login user flow for a successful api response from IPC for correct login details', (t) => {
