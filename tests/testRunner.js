@@ -8,7 +8,7 @@ schema.getSchema(connectionString, sql);
 
 // require('./polling/db/checkTablesExists.test.js'); //all bar checkTags tested and pass
 require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
-// require('./polling/db/insertData.test.js'); //all tested and pass
+require('./polling/db/insertData.test.js'); //all tested and pass
 // require('./polling/db/getIds.test.js'); //All functions tested and pass
 // require('./polling/api/pollingCalls.test.js');
 // require('./polling/api/calculatePollTimes.test.js');

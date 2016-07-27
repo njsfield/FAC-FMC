@@ -11,13 +11,14 @@ const getFile_id = require('./getIds.js').getFile_id;
 
 const insertIntoCompaniesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.company_name];
-  dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error) => {
+  dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error, res) => {
     if (error) throw error;
-    callback();
+    callback(res.command);
   });
   done();
 };
-
+// insert into Files table returns file_id of the file and the command so that we know
+// in the poller flow whether to retrieve the file from the wav table
 const insertIntoFilesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.file_name];
   dbClient.query('INSERT INTO files (file_name) VALUES ($1)', queryArray, (error, res) => {
