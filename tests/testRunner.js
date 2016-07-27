@@ -17,9 +17,9 @@ require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
 
     // // require in files
 require('./src/db/filterQueryStringCreator.test.js'); //all functions tested and working
-// require('./src/db/getTagNamesArr.test.js');
-    // require('./src/db/deleteTag.test.js');
-    // require('./src/db/getTagIdForDeletion.test.js');
+require('./src/db/getTagNamesArr.test.js'); //the one function is tested and working
+require('./src/db/deleteTag.test.js'); //the one function is tested and working
+require('./src/db/getTagIdForDeletion.test.js');
     // require('./src/server/loginFlowSuccess.test.js');
     // require('./src/server/loginFlowFail.test.js');
     // require('./src/db/getFilterNameAndSpec.test.js'); //All functions tested and pass
