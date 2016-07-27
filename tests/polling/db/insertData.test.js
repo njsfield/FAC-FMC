@@ -1,7 +1,7 @@
 const pg = require('pg');
 const tape = require('tape');
 const postgresURL = process.env.POSTGRES_URL_TEST;
-const insertData = require('../../../polling/db/insertData.js');
+const {insertIntoCallsTable, insertIntoParticipantsTable, insertIntoFilesTable} = require('../../../polling/db/insertData.js');
 
 const obj = {
   addToCompaniesTable: {
@@ -57,49 +57,30 @@ const expected = 'INSERT';
 
 tape('test the insertData functions', (t) => {
   t.plan(8);
-  pg.connect(postgresURL, (err, client, done) => {
+  pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
-    insertData.addToCallsTable(client, obj.addToCallsTable, (res) => {
+    insertIntoCallsTable(dbClient, obj.addToCallsTable, done, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to calls table');
       done();
     });
-    insertData.addToParticipantsTable(client, obj.addToParticipantsTable, (res) => {
+    insertIntoParticipantsTable(dbClient, obj.addToParticipantsTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to participants table');
       done();
     });
-    insertData.addToCompaniesTable(client, obj.addToCompaniesTable, (res) => {
+    insertData.addToCompaniesTable(dbClient, obj.addToCompaniesTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to companies table');
       done();
     });
-    insertData.addToFilesTable(client, obj.addToFilesTable, (res) => {
+    insertData.addToFilesTable(dbClient, obj.addToFilesTable, (res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to files table');
       done();
     });
-    insertData.addToUsersTable(client, obj.addToUsersTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to users table');
-      done();
-    });
-    insertData.addToTagsTable(client, obj.addToTagsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to tags table');
-      done();
-    });
-    insertData.addToTagsCallsTable(client, obj.addToTagsCallsTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to tagsCalls table');
-      done();
-    });
-    insertData.addToFiltersTable(client, obj.addToFiltersTable, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected, 'added to filters table');
-      done();
-    });
-    // insertData.editTagsTable(client, obj.editTagsTable, (res) => {
+    
+    // insertData.editTagsTable(dbClient, obj.editTagsTable, (res) => {
     //   const actual = res.command;
     //   const expected2 = 'UPDATE';
     //   t.deepEqual(actual, expected2, 'added to tagsCalls table');
