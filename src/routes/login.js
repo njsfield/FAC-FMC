@@ -6,8 +6,7 @@ const JWT = require('jsonwebtoken');
 const loginApi = require('../../polling/api/checkCallerIdentification.js');
 const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
-const checkTables = require('../../polling/db/checkTables.js');
-const getIds = require('../../polling/db/getIds.js');
+const {checkCompaniesTable, checkUsersTable} = require('../../polling/db/checkTables.js');
 
 module.exports = {
   method: 'POST',
@@ -26,17 +25,17 @@ module.exports = {
           userRole = 'admin';
         }
 
-        pg.connect(postgresURL, (err, dbClient) => {
+        pg.connect(postgresURL, (err, dbClient, done) => {
           if (err) throw err;
           const compObj = {
             company_name: user.user.company
           };
-          getIds.getCompany_id(dbClient, compObj, (res) => {
+          checkCompaniesTable(dbClient, compObj, done, (res) => {
             const userObj = {
               contact_id: user.user.id,
               company_id: res
             };
-            checkTables.checkUsersTable(dbClient, userObj, () => {});
+            checkUsersTable(dbClient, userObj, () => {});
             const token = JWT.sign({
               company_id: userObj.company_id,
               contact_id: user.user.id,

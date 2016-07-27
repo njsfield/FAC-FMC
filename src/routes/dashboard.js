@@ -34,7 +34,7 @@ module.exports = {
       tags: [],
       untagged: false,
       firstIndex: 0,
-      maxRows: 2
+      maxRows: 20
     };
     if (request.query!=null) {
       if (request.query.to!=null)
