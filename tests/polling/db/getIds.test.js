@@ -3,7 +3,7 @@ const tape = require('tape');
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
 const getIds = require('../../../polling/db/getIds.js');
 const obj = {
-  company_name: 'test_comp_A',
+  company_name: 'default',
   file_name: 'recording_1',
   company_id: 100,
   file_id: 100,
