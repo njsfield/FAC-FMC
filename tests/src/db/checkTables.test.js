@@ -53,7 +53,7 @@
 const dataObj = {
   companiesT: [
     {
-      company_name: 'test_comp_A',
+      company_name: 'default',
     },
     {
       company_name: 'test_comp_B',

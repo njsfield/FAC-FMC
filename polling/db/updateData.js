@@ -22,11 +22,12 @@ const updateLastPollTable = (dbClient, object, done, callback) => {
       dbClient.query('UPDATE last_polls SET last_poll = (TO_TIMESTAMP($1) at time zone \'UTC\') where company_id=$2', queryArray, (error, response) => {
         if (error) throw error;
         done();
-        callback();
+        console.log(response);
+        callback(response);
       });
     } else {
-      insertIntoLastPollTable(dbClient, object, done, ()=>{
-        callback();
+      insertIntoLastPollTable(dbClient, object, done, (response)=>{
+        callback(response);
 
       });
     }
