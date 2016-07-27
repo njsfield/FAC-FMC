@@ -14,7 +14,7 @@ const processPollTimes = (error, dbClient, done, company_name, companiesObj, pol
 
     function(arrOfCalls, callback){
       if (arrOfCalls.result !== 'fail') {
-        processCalls(error, dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, callback);
+        processCalls( dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, callback);
       } else {
         console.log(company_name, 'error:', arrOfCalls.message);
         callback(null, arrOfCalls.message);

@@ -58,54 +58,54 @@ test('checking the checkTables functions', (t) => {
 //   done();
 // });
 /////////////////////////// end /////////////////////////////
-//
-// const dataObj = {
-//   companiesT: [
-//     {
-//       company_name: 'test_comp_A',
-//     },
-//     {
-//       company_name: 'test_comp_B',
-//     }
-//   ],
-//   filesT: [
-//     {
-//       file_name: 'recording_1'
-//     },
-//     {
-//       file_name: 'recording_2'
-//     }
-//   ],
-//   callsT: {
-//     callee: '123',
-//     caller: '1234',
-//     duration: '3',
-//     company_id: '100',
-//     file_id: '100'
-//   },
-//   usersT: [
-//     {
-//       contact_id: 238,
-//       company_id: 100
-//     }, {
-//       contact_id: 239,
-//       company_id: 100
-//     }
-//   ],
-//   participantsT: {
-//     company_id: 100,
-//     call_id: 100,
-//     contact_id: 3222,
-//     internal: true,
-//     number: 100,
-//     participant_role: 'callee'
-//   },
-//   tagsT: {
-//     tag_name: 'important',
-//     company_id: 100
-//   },
-//   filtersT: {
-//     filter_name: 'test-filter',
-//     contact_id: 238
-//   }
-// };
+
+const dataObj = {
+  companiesT: [
+    {
+      company_name: 'default',
+    },
+    {
+      company_name: 'test_comp_B',
+    }
+  ],
+  filesT: [
+    {
+      file_name: 'recording_1'
+    },
+    {
+      file_name: 'recording_2'
+    }
+  ],
+  callsT: {
+    callee: '123',
+    caller: '1234',
+    duration: '3',
+    company_id: '100',
+    file_id: '100'
+  },
+  usersT: [
+    {
+      contact_id: 238,
+      company_id: 100
+    }, {
+      contact_id: 239,
+      company_id: 100
+    }
+  ],
+  participantsT: {
+    company_id: 100,
+    call_id: 100,
+    contact_id: 3222,
+    internal: true,
+    number: 100,
+    participant_role: 'callee'
+  },
+  tagsT: {
+    tag_name: 'important',
+    company_id: 100
+  },
+  filtersT: {
+    filter_name: 'test-filter',
+    contact_id: 238
+  }
+};
