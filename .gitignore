@@ -3,3 +3,13 @@ config.env
 dump.rdb
 npm-debug.log
 .DS_Store
+
+lib-cov
+.DS_Store
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
