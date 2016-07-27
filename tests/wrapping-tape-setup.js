@@ -16,7 +16,6 @@ const test = tape({
     t.end();
   },
   teardown: function(t) {
-    pg.end();
     t.end();
   }
 });
