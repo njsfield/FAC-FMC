@@ -36,5 +36,8 @@
     "request": "^2.72.0",
     "tape": "^4.5.1",
     "vision": "^4.1.0"
+  },
+  "devDependencies": {
+    "wrapping-tape": "0.0.3"
   }
 }
