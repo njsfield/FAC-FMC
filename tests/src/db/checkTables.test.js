@@ -1,11 +1,20 @@
-//
-// checkTables.checkUsersTable(dbClient, existingDataObj.usersT[1], done, (res) => {
-//   const expected = 'INSERT';
-//   const actual = res.command;
-//   console.log(actual, 2);
-//   t.deepEqual(actual, expected, 'user_name exists in users table');
-//   done();
-//
+const pg = require('pg');
+const test = require('../../wrapping-tape-setup.js').databaseTest;
+const {checkUsersTable} = require('../../../src/db/checkTables.js');
+
+test('checking the checkTables functions', (t) => {
+  t.plan(1);
+  pg.connect(process.env.POSTGRES_URL_TEST, (err, dbClient, done) => {
+    if (err) throw err;
+    checkUsersTable(dbClient, {tag_name: 'tagName', company_id: '100'}, done, (res) => {
+      const expected = 'INSERT';
+      const actual = res.command;
+      console.log(actual, 2);
+      t.deepEqual(actual, expected, 'user_name exists in users table');
+    });
+  });
+});
+
 //   checkTables.checkUsersTable(dbClient, existingDataObj.usersT[1], done, (res1) => {
 //     const expected1 = 'SELECT';
 //     const actual1 = res1.command;
@@ -49,54 +58,54 @@
 //   done();
 // });
 /////////////////////////// end /////////////////////////////
-
-const dataObj = {
-  companiesT: [
-    {
-      company_name: 'test_comp_A',
-    },
-    {
-      company_name: 'test_comp_B',
-    }
-  ],
-  filesT: [
-    {
-      file_name: 'recording_1'
-    },
-    {
-      file_name: 'recording_2'
-    }
-  ],
-  callsT: {
-    callee: '123',
-    caller: '1234',
-    duration: '3',
-    company_id: '100',
-    file_id: '100'
-  },
-  usersT: [
-    {
-      contact_id: 238,
-      company_id: 100
-    }, {
-      contact_id: 239,
-      company_id: 100
-    }
-  ],
-  participantsT: {
-    company_id: 100,
-    call_id: 100,
-    contact_id: 3222,
-    internal: true,
-    number: 100,
-    participant_role: 'callee'
-  },
-  tagsT: {
-    tag_name: 'important',
-    company_id: 100
-  },
-  filtersT: {
-    filter_name: 'test-filter',
-    contact_id: 238
-  }
-};
+//
+// const dataObj = {
+//   companiesT: [
+//     {
+//       company_name: 'test_comp_A',
+//     },
+//     {
+//       company_name: 'test_comp_B',
+//     }
+//   ],
+//   filesT: [
+//     {
+//       file_name: 'recording_1'
+//     },
+//     {
+//       file_name: 'recording_2'
+//     }
+//   ],
+//   callsT: {
+//     callee: '123',
+//     caller: '1234',
+//     duration: '3',
+//     company_id: '100',
+//     file_id: '100'
+//   },
+//   usersT: [
+//     {
+//       contact_id: 238,
+//       company_id: 100
+//     }, {
+//       contact_id: 239,
+//       company_id: 100
+//     }
+//   ],
+//   participantsT: {
+//     company_id: 100,
+//     call_id: 100,
+//     contact_id: 3222,
+//     internal: true,
+//     number: 100,
+//     participant_role: 'callee'
+//   },
+//   tagsT: {
+//     tag_name: 'important',
+//     company_id: 100
+//   },
+//   filtersT: {
+//     filter_name: 'test-filter',
+//     contact_id: 238
+//   }
+// };
