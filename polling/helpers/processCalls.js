@@ -38,7 +38,7 @@ const processCalls = (error, dbClient, done, company_name, companiesObj, arrOfCa
     function(callback) {
       const callerQueryObj = createCallParticipantObj(thisCall, 'caller');
       checkParticipantsTable(dbClient, callerQueryObj, done, (result) => {
-        if(result ) checkParticipantsArray(result, participantsArray);
+        if(result) checkParticipantsArray(result, participantsArray);
         callback(null);
       });
 

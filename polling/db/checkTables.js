@@ -24,6 +24,8 @@ const checkCompaniesTable = (dbClient, obj, done, cb) => {
   });
 };
 
+// this function checks the file table and returns a file_id if it exists. If it doesn't then it
+// adds the file and then returns the file_id
 const checkFilesTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.file_name];
   dbClient.query('SELECT * FROM files WHERE file_name=($1)', queryArray, (err, res) => {
@@ -36,6 +38,8 @@ const checkFilesTable = (dbClient, obj, done, cb) => {
   });
 };
 
+// this function checks the calls table and returns a call_id if it exists. If it doesn't then it
+// adds the call and then returns the call_id
 const checkCallsTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id, obj.file_id];
   dbClient.query('SELECT * FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
@@ -50,12 +54,13 @@ const checkCallsTable = (dbClient, obj, done, cb) => {
   });
 };
 
+// this function checks to see if the user exists and returns the response object
 const checkUsersTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.contact_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM users WHERE contact_id=($1))', queryArray, (err, res) => {
+  dbClient.query('SELECT * FROM users WHERE contact_id=($1)', queryArray, (err, res) => {
     if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    if (res.rows[0][boolKey] === false) {
+    console.log(res.rowCount, 'called');
+    if (res.rowCount === 0) {
       insertIntoUsersTable(dbClient, obj, done, cb);
     } else {
       cb(res);
@@ -63,6 +68,8 @@ const checkUsersTable = (dbClient, obj, done, cb) => {
   });
 };
 
+// if participants exist in the participants table it returns null
+// if participants dont, it returns the number
 const checkParticipantsTable = (dbClient, obj, done, cb) => {
 
   const queryArray = [obj.call_id, obj.company_id, obj.contact_id];
@@ -74,35 +81,6 @@ const checkParticipantsTable = (dbClient, obj, done, cb) => {
       cb(obj.number);
     } else {
       cb(null);
-    }
-  });
-};
-
-const checkTagsTable = (dbClient, obj, done, cb) => {
-  const queryArray = [obj.tag_name, obj.company_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM tags WHERE tag_name=($1) AND company_id=($2))', queryArray, (err, res) => {
-    if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    if (res.rows[0][boolKey] === false) {
-      insertIntoTagsTable(dbClient, obj, done, cb);
-    } else {
-      cb(res);
-    }
-  });
-};
-
-const checkFiltersTable = (dbClient, obj, done, cb) => {
-  const queryArray = [obj.filter_name, obj.contact_id];
-  dbClient.query('SELECT EXISTS (SELECT * FROM filters WHERE filter_name=($1) AND contact_id=($2))', queryArray, (err, res) => {
-    if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    if (res.rows[0][boolKey] === false) {
-      insertIntoFiltersTable(dbClient, obj, done, cb);
-    } else {
-      cb({
-        success: false,
-        message: 'filter name already exists'
-      });
     }
   });
 };
@@ -125,7 +103,5 @@ module.exports = {
   checkCallsTable,
   checkUsersTable,
   checkParticipantsTable,
-  checkTagsTable,
-  checkFiltersTable,
   checkLastPollTable
 };
