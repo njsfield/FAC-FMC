@@ -2,7 +2,7 @@
 require('env2')('config.env');
 const server = require('../../../src/server/server.js');
 const nock = require('nock');
-const test = require('../../wrapping-tape-setup.js').test;
+const test = require('../../wrapping-tape-setup.js').databaseTest;
 const JWT = require('jsonwebtoken');
 const pbxUrl = process.env.PBX_URL;
 
@@ -19,7 +19,7 @@ nock(pbxUrl)
                expires: 1467111677.992,
                result: 'success',
                user:
-                  JSON.parse(process.env.LOGINFLOWSUCCESS)
+                  JSON.parse(process.env.LOGIN_FLOW_SUCCESS)
                 });
 
 test('test the login user flow for a successful api response from IPC for correct login details', (t) => {
