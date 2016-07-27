@@ -1,7 +1,7 @@
 require('env2')('config.env');
 const request = require('request');
 
-const pollingCompanies = (callback) => {
+module.exports = (callback) => {
   const options = {
     method: 'POST',
     url: process.env.PBX_URL + '/rest/auth',
@@ -21,8 +21,4 @@ const pollingCompanies = (callback) => {
     if (error) throw (error);
     callback(companies);
   });
-};
-
-module.exports = {
-  pollingCompanies
 };

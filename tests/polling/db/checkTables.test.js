@@ -89,90 +89,88 @@ const newDataObj = {
 tape('test the checkTables functions', (t) => {
   t.plan(16);
   pg.connect(postgresURL, (err, client, done) => {
-    const expected1 = true;
-    const expected2 = 'INSERT';
+
     if (err) throw err;
     ////////////////// checks data is in tables //////////////////
-    existingDataObj.companiesT.map((el) => {
-      checkTables.checkCompaniesTable(client, el, (res) => {
-        const boolKey = Object.keys(res.rows[0])[0];
-        const actual = res.rows[0][boolKey];
-        t.deepEqual(actual, expected1, 'company_name test_comp_A and test_comp_B are in companies table');
-        done();
-      });
-    });
-    existingDataObj.filesT.map((el) => {
-      checkTables.checkFilesTable(client, el, (res) => {
-        const boolKey = Object.keys(res.rows[0])[0];
-        const actual = res.rows[0][boolKey];
-        t.deepEqual(actual, expected1, 'file_names recording_1 and recording_2 are in files table');
-        done();
-      });
-    });
-    checkTables.checkCallsTable(client, existingDataObj.callsT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0];
-      const actual = res.rows[0][boolKey];
-      t.deepEqual(actual, expected1, 'call exists in calls table');
-      done();
-    });
-    checkTables.checkUsersTable(client, existingDataObj.usersT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0];
-      const actual = res.rows[0][boolKey];
-      t.deepEqual(actual, expected1, 'user_name exists in users table');
-      done();
-    });
-    checkTables.checkParticipantsTable(client, existingDataObj.participantsT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0];
-      const actual = res.rows[0][boolKey];
-      t.deepEqual(actual, expected1, 'data exists in participants table');
-      done();
-    });
-    checkTables.checkTagsTable(client, existingDataObj.tagsT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0];
-      const actual = res.rows[0][boolKey];
-      t.deepEqual(actual, expected1, 'tag exists in tags table');
-    });
-    checkTables.checkFiltersTable(client, existingDataObj.filtersT, (res) => {
-      const boolKey = Object.keys(res.rows[0])[0];
-      const actual = res.rows[0][boolKey];
-      t.deepEqual(actual, expected1, 'filter exists in filters table');
-    });
 
-    ///////////////////////// end /////////////////////
-
-    /////////////// adds data to tables ///////////////
-    newDataObj.companiesT.map((el) => {
-      checkTables.checkCompaniesTable(client, el, (res) => {
-        const actual = res.command;
-        t.deepEqual(actual, expected2, 'company_name comp_A and comp_B have been added to companies table');
-        done();
-      });
-    });
-    checkTables.checkFilesTable(client, newDataObj.filesT, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected2, 'fake_recording_44 added to files table');
+    checkTables.checkCompaniesTable(client, {company_name: 'test_comp_A'}, done, (res) => {
+      const expected = '100';
+      const actual = res;
+      t.deepEqual(actual, expected, 'company_name test_comp_A are in companies table');
       done();
     });
-    checkTables.checkUsersTable(client, newDataObj.usersT, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected2, 'guillaume added to users table');
-      done();
-    });
-    checkTables.checkParticipantsTable(client, newDataObj.participantsT, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected2, 'new data added to participants table');
-      done();
-    });
-    checkTables.checkTagsTable(client, newDataObj.tagsT, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected2, 'new data added to tags table');
-      done();
-    });
-    checkTables.checkFiltersTable(client, newDataObj.filtersT, (res) => {
-      const actual = res.command;
-      t.deepEqual(actual, expected2, 'new filter added to filters table');
-      done();
-    });
+    // existingDataObj.filesT.map((el) => {
+    //   checkTables.checkFilesTable(client, el, (res) => {
+    //     const boolKey = Object.keys(res.rows[0])[0];
+    //     const actual = res.rows[0][boolKey];
+    //     t.deepEqual(actual, expected1, 'file_names recording_1 and recording_2 are in files table');
+    //     done();
+    //   });
+    // });
+    // checkTables.checkCallsTable(client, existingDataObj.callsT, (res) => {
+    //   const boolKey = Object.keys(res.rows[0])[0];
+    //   const actual = res.rows[0][boolKey];
+    //   t.deepEqual(actual, expected1, 'call exists in calls table');
+    //   done();
+    // });
+    // checkTables.checkUsersTable(client, existingDataObj.usersT, (res) => {
+    //   const boolKey = Object.keys(res.rows[0])[0];
+    //   const actual = res.rows[0][boolKey];
+    //   t.deepEqual(actual, expected1, 'user_name exists in users table');
+    //   done();
+    // });
+    // checkTables.checkParticipantsTable(client, existingDataObj.participantsT, (res) => {
+    //   const boolKey = Object.keys(res.rows[0])[0];
+    //   const actual = res.rows[0][boolKey];
+    //   t.deepEqual(actual, expected1, 'data exists in participants table');
+    //   done();
+    // });
+    // checkTables.checkTagsTable(client, existingDataObj.tagsT, (res) => {
+    //   const boolKey = Object.keys(res.rows[0])[0];
+    //   const actual = res.rows[0][boolKey];
+    //   t.deepEqual(actual, expected1, 'tag exists in tags table');
+    // });
+    // checkTables.checkFiltersTable(client, existingDataObj.filtersT, (res) => {
+    //   const boolKey = Object.keys(res.rows[0])[0];
+    //   const actual = res.rows[0][boolKey];
+    //   t.deepEqual(actual, expected1, 'filter exists in filters table');
+    // });
+    //
+    // ///////////////////////// end /////////////////////
+    //
+    // /////////////// adds data to tables ///////////////
+    // newDataObj.companiesT.map((el) => {
+    //   checkTables.checkCompaniesTable(client, el, (res) => {
+    //     const actual = res.command;
+    //     t.deepEqual(actual, expected2, 'company_name comp_A and comp_B have been added to companies table');
+    //     done();
+    //   });
+    // });
+    // checkTables.checkFilesTable(client, newDataObj.filesT, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected2, 'fake_recording_44 added to files table');
+    //   done();
+    // });
+    // checkTables.checkUsersTable(client, newDataObj.usersT, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected2, 'guillaume added to users table');
+    //   done();
+    // });
+    // checkTables.checkParticipantsTable(client, newDataObj.participantsT, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected2, 'new data added to participants table');
+    //   done();
+    // });
+    // checkTables.checkTagsTable(client, newDataObj.tagsT, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected2, 'new data added to tags table');
+    //   done();
+    // });
+    // checkTables.checkFiltersTable(client, newDataObj.filtersT, (res) => {
+    //   const actual = res.command;
+    //   t.deepEqual(actual, expected2, 'new filter added to filters table');
+    //   done();
+    // });
     /////////////////////////// end /////////////////////////////
   });
 });

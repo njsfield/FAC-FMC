@@ -18,5 +18,7 @@ schema.getSchema(connectionString, sql);
 // require('./polling/db/getIds.test.js'); //All functions tested and pass
 // require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
 // require('./polling/api/pollingCalls.test.js');
+require('./polling/api/calculatePollTimes.test.js');
+
 // require('./src/db/filterQueryStringCreator.test.js');
-require('./polling/db/updateData.test.js'); //all tested and pass
+// require('./polling/db/updateData.test.js'); //all tested and pass
