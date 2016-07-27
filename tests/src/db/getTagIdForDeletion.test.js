@@ -1,5 +1,5 @@
 const pg = require('pg');
-const tape = require('tape');
+const test = require('../../wrapping-tape-setup.js').databaseTest;
 const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
 const getTagId = require('../../../src/db/getTagIdForDeletion.js');
 
@@ -8,15 +8,14 @@ const getTagIdObj = {
   tag_name: 'important'
 };
 
-tape('test the getTagIdForDeletion function', (t) => {
+test('test the getTagIdForDeletion function', (t) => {
   t.plan(1);
   pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
-    getTagId.getTagIdForDeletion(dbClient, getTagIdObj, (res) => {
-      const actual = res.rows;
-      const expected = [ { tag_id: '100' } ];
-      t.deepEqual(actual, expected, 'getTagIdForDeletion returned the correct tag_id');
-      done();
+    getTagId.getTagIdForDeletion(dbClient, getTagIdObj, done, (res) => {
+      const actual = res;
+      const expected = 'doesn\'t exist';
+      t.deepEqual(actual, expected, 'getTagIdForDeletion returned doesn\'t exist as tag is not there');
     });
   });
 });

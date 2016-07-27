@@ -16,10 +16,10 @@ require('./polling/db/insertData.test.js'); //all tested and pass
 // require('./polling/db/updateData.test.js'); //all tested and
 
     // // require in files
-// require('./src/db/filterQueryStringCreator.test.js'); //all functions tested and working
-// require('./src/db/getTagNamesArr.test.js');
-    // require('./src/db/deleteTag.test.js');
-    // require('./src/db/getTagIdForDeletion.test.js');
+require('./src/db/filterQueryStringCreator.test.js'); //all functions tested and working
+require('./src/db/getTagNamesArr.test.js'); //the one function is tested and working
+require('./src/db/deleteTag.test.js'); //the one function is tested and working
+require('./src/db/getTagIdForDeletion.test.js');
     // require('./src/server/loginFlowSuccess.test.js');
     // require('./src/server/loginFlowFail.test.js');
     // require('./src/db/getFilterNameAndSpec.test.js'); //All functions tested and pass
