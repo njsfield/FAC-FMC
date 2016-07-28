@@ -2,7 +2,7 @@ const {processCalls} = require('../../../polling/helpers/processCalls.js');
 const {databaseTest} = require('../../wrapping-tape-setup.js');
 const {checkFilesTable, checkCallsTable, checkParticipantsTable} = require('../../../polling/db/checkTables.js');
 const pg = require('pg');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 
 const arrOfCalls = [
   {
