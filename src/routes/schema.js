@@ -1,8 +1,8 @@
 const fs = require('fs');
-const schema = require('../db/getSchema.js');
+const schema = require('../../schema/getSchema.js');
 
 const connectionString = process.env.POSTGRES_URL;
-const sql = fs.readFileSync(`${__dirname}/../../schema.txt`).toString();
+const sql = fs.readFileSync(`${__dirname}/../../schema/schema.txt`).toString();
 
 module.exports = {
   method: 'GET',
