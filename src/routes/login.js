@@ -16,7 +16,7 @@ module.exports = {
   handler: (request, reply) => {
     const password = request.payload.password;
     const username = request.payload.username;
-    loginApi.checkLoginDeets(username, password, 'default', (user) => {
+    loginApi.checkLoginDetails(username, password, 'default', (user) => {
 
       if (user.result === 'success') {
         let userRole;
