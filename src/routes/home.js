@@ -8,7 +8,7 @@ module.exports = {
   path: '/',
   config: {auth: false},
   handler: (request, reply) => {
-    if (!request.state.token) {
+    if (!request.state.FMC) {
       return reply.view('login');
     }
     else {

@@ -27,7 +27,7 @@ tape('test the login user flow for a successful api response from IPC for incorr
     }
   }, (response) => {
 
-    let actual = JSON.stringify(response.headers).indexOf('token');
+    let actual = JSON.stringify(response.headers).indexOf('FMC');
     let expected = -1;
     t.deepEqual(actual, expected, 'token is not present in the response headers');
 
