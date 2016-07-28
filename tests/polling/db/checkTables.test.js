@@ -1,6 +1,6 @@
 const pg = require('pg');
 const {databaseTest} = require('../../wrapping-tape-setup.js');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 const checkTables = require('../../../polling/db/checkTables.js');
 
 databaseTest('test the checkTables functions', (t) => {
