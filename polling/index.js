@@ -10,9 +10,9 @@ const {processCompany} = require('./helpers/processCompany.js');
 const processParticipantsArray = require('./helpers/processParticipantsArray.js');
 const {updatePollTable} = require('./helpers/updatePollTable.js');
 
-//things we use in function
-let companiesObj = {};
-let participantsArray = [];
+//variables we use in function
+let companiesObj = {}; // holds all the company anmes
+let participantsArray = [];// a list of participants to later send off to the pollPABX
 
 const pollPABX = () => {
   const startPollTime = Date.now();
@@ -25,33 +25,37 @@ const pollPABX = () => {
           console.log(companyNamesPoll.message);
         } else {
           pg.connect(postgresURL, (err, dbClient, done) => {
-            if (err) throw err;
-            const companyNames = companyNamesPoll.user.companies;
-            callback(null, err, dbClient, done, companyNames);
+            if (err) {
+              callback(err);
+            } else {
+              const companyNames = companyNamesPoll.user.companies;
+              callback(null, dbClient, done, companyNames);
+            }
           });
         }
       });
     },
     // for each company poll for calls and store the details in calls, files and participants tables and adds to the partcipantsArray
-    function (err, dbClient, done, companyNames, callback) {
-      processCompany(err, dbClient, done, companyNames, companiesObj, startPollTime, participantsArray, callback);
+    function ( dbClient, done, companyNames, callback) {
+      processCompany( dbClient, done, companyNames, companiesObj, startPollTime, participantsArray, callback);
     },
     // check caller details from participants array to update participants table
     function(dbClient, done, callback) {
-      processParticipantsArray(dbClient, done, companiesObj, startPollTime, participantsArray, callback);
+      if (participantsArray.length > 0) {
+        processParticipantsArray(dbClient, done, companiesObj, startPollTime, participantsArray, callback);
+      } else {
+        callback(null, dbClient, done);
+      }
     },
 
     function(dbClient, done, callback) {
       updatePollTable(dbClient, done, Object.keys(companiesObj), companiesObj, startPollTime, callback);
-    },
-
-    function() {
-      pg.end();
     }
-
   ],
 
-  function (err, result) {
+  function (err) {
+    if(err) console.log( err);
+    pg.end();
   });
 };
 
