@@ -17,3 +17,8 @@ const getFilter_id = (dbClient, obj, done, cb) => {
     cb(filter_id);
   });
 };
+
+module.exports = {
+  getTag_id,
+  getFilter_id
+};
