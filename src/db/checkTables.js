@@ -9,6 +9,7 @@ const checkTagsTable = (dbClient, obj, done, cb) => {
       insertIntoTagsTable(dbClient, obj, done, cb);
     } else {
       cb(res);
+      done();
     }
   });
 };
@@ -25,6 +26,7 @@ const checkFiltersTable = (dbClient, obj, done, cb) => {
         success: false,
         message: 'filter name already exists'
       });
+      done();
     }
   });
 };
@@ -39,6 +41,7 @@ const checkUsersTable = (dbClient, obj, done, cb) => {
       insertIntoUsersTable(dbClient, obj, done, cb);
     } else {
       cb(res);
+      done();
     }
   });
 };
