@@ -12,13 +12,15 @@ const {insertIntoParticipantsTable, insertIntoCompaniesTable, insertIntoFilesTab
 const checkCompaniesTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_name];
   dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
-    if (err) throw err;
-    if (res.rowCount === 0) {
+    if (err) {
+      cb(err);
+      done(err);
+    } else if (res.rowCount === 0) {
       insertIntoCompaniesTable(dbClient, obj, done, () => {
         checkCompaniesTable(dbClient, obj, done, cb);
       });
     } else {
-      cb(res.rows[0].company_id);
+      cb(null, res.rows[0].company_id);
     }
     done();
   });
@@ -29,11 +31,14 @@ const checkCompaniesTable = (dbClient, obj, done, cb) => {
 const checkFilesTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.file_name];
   dbClient.query('SELECT * FROM files WHERE file_name=($1)', queryArray, (err, res) => {
-    if (err) throw err;
-    if (res.rowCount === 0) {
+    if (err) {
+      cb(err);
+      done();
+    } else if (res.rowCount === 0) {
       insertIntoFilesTable(dbClient, obj, done, cb);
     } else {
-      cb(res.rows[0].file_id, res.command);
+      cb(null, res.rows[0].file_id, res.command);
+      done();
     }
   });
 };
@@ -43,13 +48,21 @@ const checkFilesTable = (dbClient, obj, done, cb) => {
 const checkCallsTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id, obj.file_id];
   dbClient.query('SELECT * FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
-    if (err) throw err;
-    if (res.rowCount === 0) {
-      insertIntoCallsTable(dbClient, obj, done, () => {
-        checkCallsTable(dbClient, obj, done, cb);
+    if (err) {
+      cb(err);
+      done();
+    } else if (res.rowCount === 0) {
+      insertIntoCallsTable(dbClient, obj, done, (err1) => {
+        if (err1) {
+          cb(err1);
+          done();
+        } else {
+          checkCallsTable(dbClient, obj, done, cb);
+        }
       });
     } else {
-      cb(res.rows[0].call_id);
+      cb(null, res.rows[0].call_id);
+      done();
     }
   });
 };
@@ -60,11 +73,12 @@ const checkParticipantsTable = (dbClient, obj, done, cb) => {
 
   const queryArray = [obj.call_id, obj.company_id, obj.number];
   dbClient.query('SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND number=($3)', queryArray, (err, res) => {
-    if (err) throw err;
-    if (res.rowCount === 0) {
+    if (err) {
+      cb(err);
+    } else if (res.rowCount === 0) {
       insertIntoParticipantsTable(dbClient, obj, done, () => {
       }) ;
-      cb(obj.number);
+      cb(null, obj.number);
     } else {
       cb(null);
     }
@@ -75,12 +89,14 @@ const checkParticipantsTable = (dbClient, obj, done, cb) => {
 const checkLastPollTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id];
   dbClient.query('select extract (epoch FROM last_poll) from last_polls WHERE company_id=($1)', queryArray, (err, res) => {
-    if (err) throw err;
-    if (res.rowCount === 0) {
+    if (err) {
+      cb(err);
+    } else if (res.rowCount === 0) {
       cb(null);
     } else {
-      cb(res.rows[0].date_part * 1000);
+      cb(null, res.rows[0].date_part * 1000);
     }
+    done();
   });
 };
 
