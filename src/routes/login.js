@@ -6,7 +6,8 @@ const JWT = require('jsonwebtoken');
 const loginApi = require('../../polling/api/checkCallerIdentification.js');
 const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
-const {checkCompaniesTable, checkUsersTable} = require('../../polling/db/checkTables.js');
+const {checkCompaniesTable} = require('../../polling/db/checkTables.js');
+const {checkUsersTable} = require('../db/checkTables.js');
 
 module.exports = {
   method: 'POST',

@@ -1,4 +1,4 @@
-const {insertIntoTagsTable, insertIntoFiltersTable } = require('./insertData.js');
+const {insertIntoTagsTable, insertIntoFiltersTable, insertIntoUsersTable} = require('./insertData.js');
 
 const checkTagsTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.tag_name, obj.company_id];
@@ -29,7 +29,22 @@ const checkFiltersTable = (dbClient, obj, done, cb) => {
   });
 };
 
+// this function checks to see if the user exists and returns the response object
+const checkUsersTable = (dbClient, obj, done, cb) => {
+  const queryArray = [obj.contact_id];
+  dbClient.query('SELECT * FROM users WHERE contact_id=($1)', queryArray, (err, res) => {
+    if (err) throw err;
+    console.log(res.rowCount, 'called');
+    if (res.rowCount === 0) {
+      insertIntoUsersTable(dbClient, obj, done, cb);
+    } else {
+      cb(res);
+    }
+  });
+};
+
 module.exports = {
   checkFiltersTable,
-  checkTagsTable
+  checkTagsTable,
+  checkUsersTable
 };

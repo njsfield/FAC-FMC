@@ -54,20 +54,6 @@ const checkCallsTable = (dbClient, obj, done, cb) => {
   });
 };
 
-// this function checks to see if the user exists and returns the response object
-const checkUsersTable = (dbClient, obj, done, cb) => {
-  const queryArray = [obj.contact_id];
-  dbClient.query('SELECT * FROM users WHERE contact_id=($1)', queryArray, (err, res) => {
-    if (err) throw err;
-    console.log(res.rowCount, 'called');
-    if (res.rowCount === 0) {
-      insertIntoUsersTable(dbClient, obj, done, cb);
-    } else {
-      cb(res);
-    }
-  });
-};
-
 // if participants exist in the participants table it returns null
 // if participants dont, it returns the number
 const checkParticipantsTable = (dbClient, obj, done, cb) => {
@@ -102,7 +88,6 @@ module.exports = {
   checkFilesTable,
   checkCompaniesTable,
   checkCallsTable,
-  checkUsersTable,
   checkParticipantsTable,
   checkLastPollTable
 };

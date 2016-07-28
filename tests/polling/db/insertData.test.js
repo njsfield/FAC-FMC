@@ -44,10 +44,6 @@ const obj = {
     date: 1466339061,
     duration: 999
   },
-  addToUsersTable: {
-    contact_id: 239,
-    company_id: 100
-  },
   addToParticipantsTable: {
     call_id: 100,
     company_id: 100,
