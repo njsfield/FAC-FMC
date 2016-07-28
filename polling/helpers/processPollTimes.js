@@ -3,12 +3,16 @@ const waterfall = require('async-waterfall');
 const retrieveCompanyCalls = require('../api/retrieveCompanyCalls.js');
 const {processCalls} = require('./processCalls.js');
 
-const processPollTimes = (error, dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, cb) => {
+const processPollTimes = (dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, cb) => {
   const thisPoll = pollTimesQueue.shift();
   waterfall([
     function(callback) {
-      retrieveCompanyCalls(company_name, thisPoll, (arrOfCalls) => {
-        callback(null, arrOfCalls);
+      retrieveCompanyCalls(company_name, thisPoll, (err, arrOfCalls) => {
+        if (err) {
+          callback(err);
+        } else {
+          callback(null, arrOfCalls);
+        }
       });
     },
 
@@ -21,9 +25,11 @@ const processPollTimes = (error, dbClient, done, company_name, companiesObj, pol
       }
     }
   ],
-function(err, result) {
-  if(pollTimesQueue.length > 0) {
-    processPollTimes(error, dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, cb);
+function(err) {
+  if (err) {
+    cb(true);
+  } else if (pollTimesQueue.length > 0) {
+    processPollTimes(dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, cb);
   } else {
     cb(null);
   }
