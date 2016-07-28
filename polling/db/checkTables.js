@@ -1,4 +1,4 @@
-const {insertIntoParticipantsTable, insertIntoCompaniesTable, insertIntoFilesTable, insertIntoCallsTable, insertIntoUsersTable, insertIntoTagsTable, insertIntoFiltersTable } = require('./insertData.js');
+const {insertIntoParticipantsTable, insertIntoCompaniesTable, insertIntoFilesTable, insertIntoCallsTable } = require('./insertData.js');
 
 /**
  * Each function checks a table for specific data. What is checked for in each function
