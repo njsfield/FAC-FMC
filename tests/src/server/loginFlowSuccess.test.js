@@ -32,7 +32,7 @@ test('test the login user flow for a successful api response from IPC for correc
       password: 'testpassword'
     }
   }, (response) => {
-    let actual = response.headers['set-cookie'][0].indexOf('token');
+    let actual = response.headers['set-cookie'][0].indexOf('FMC');
     let expected = 0;
     t.deepEqual(actual, expected, 'FMC is present in the response headers');
 

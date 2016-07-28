@@ -11,7 +11,7 @@ test('test the getFilterTagNamesArr function', (t) => {
   t.plan(1);
   pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
-    getTagNames.getFilterTagNamesArr(dbClient, tagNameObjOne, done, (tagsArray) => {
+    getTagNames(dbClient, tagNameObjOne, done, (tagsArray) => {
       const actual = tagsArray;
       const expected = 'no tags';
       t.deepEqual(actual, expected, 'getFilterTagNamesArr returned no tags as expected');
