@@ -2,8 +2,9 @@
 require('env2')('config.env');
 const fs = require('fs');
 const schema = require('../schema/getSchema.js');
-const connectionString = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const connectionString = process.env.POSTGRES_URL_TEST;
 const sql = fs.readFileSync(`${__dirname}/../schema/schema.txt`).toString();
+
 schema.getSchema(connectionString, sql);
 
 // polling db tests

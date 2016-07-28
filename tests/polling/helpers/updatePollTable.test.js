@@ -2,7 +2,7 @@ const {updatePollTable} = require('../../../polling/helpers/updatePollTable.js')
 const {databaseTest} = require('../../wrapping-tape-setup.js');
 const {checkLastPollTable} = require('../../../polling/db/checkTables.js');
 const pg = require('pg');
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 
 databaseTest('testing whether the last-poll is updated', (t) => {
   t.plan(3);

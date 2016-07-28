@@ -1,6 +1,6 @@
 const pg = require('pg');
 const test = require('../../wrapping-tape-setup.js').databaseTest;
-const postgresURL = 'postgres://postgres:postgrespassword@localhost/fmctest';
+const postgresURL = process.env.POSTGRES_URL_TEST;
 const getFilterNameAndSpec = require('../../../src/db/getFilterNameAndSpec.js');
 
 const filter_nameObj1 = {
