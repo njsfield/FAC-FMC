@@ -1,0 +1,211 @@
+BEGIN;
+DROP TABLE IF EXISTS companies CASCADE;
+DROP TABLE IF EXISTS files CASCADE;
+DROP TABLE IF EXISTS calls CASCADE;
+DROP TABLE IF EXISTS participants CASCADE;
+DROP TABLE IF EXISTS tags CASCADE;
+DROP TABLE IF EXISTS tags_calls CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS filters CASCADE;
+DROP TABLE IF EXISTS last_polls;
+
+DROP SEQUENCE IF EXISTS companies_seq;
+DROP SEQUENCE IF EXISTS calls_seq;
+DROP SEQUENCE IF EXISTS participants_seq;
+DROP SEQUENCE IF EXISTS files_seq;
+DROP SEQUENCE IF EXISTS tags_seq;
+DROP SEQUENCE IF EXISTS tags_calls_seq;
+DROP SEQUENCE IF EXISTS users_seq;
+DROP SEQUENCE IF EXISTS filters_seq;
+
+
+/****** 1. COMPANIES TABLE ******/
+CREATE SEQUENCE companies_seq start 100 increment 1 cache 50;
+CREATE TABLE companies (
+    company_id   BIGINT DEFAULT nextval('companies_seq'::text),
+    company_name VARCHAR,
+    CONSTRAINT companies_pk PRIMARY KEY(company_id)
+)
+WITHOUT OIDS;
+
+/****** 2. FILES TABLE ******/
+CREATE SEQUENCE files_seq start 100 increment 1 cache 50;
+CREATE TABLE files (
+    file_id      BIGINT DEFAULT nextval('files_seq'::text),
+    file_name    VARCHAR NOT NULL,
+    CONSTRAINT files_pk PRIMARY KEY(file_id)
+)
+WITHOUT OIDS;
+
+/****** 3. CALLS TABLE
+ ****** Each file can be referenced by a number of calls, each for a different company
+ ******/
+CREATE SEQUENCE calls_seq start 100 increment 1 cache 50;
+CREATE TABLE calls (
+    call_id      BIGINT DEFAULT nextval('calls_seq'::text),
+    company_id   BIGINT NOT NULL,
+    file_id      BIGINT NOT NULL,
+    date         TIMESTAMP,
+    duration     BIGINT NOT NULL,
+    CONSTRAINT calls_pk PRIMARY KEY(call_id)
+)
+WITHOUT OIDS;
+
+/****** 4. PARTICIPANTS TABLE
+ ****** Each call is referenced by one or more participants. Initially this will be 2 but
+ ****** in future CDR processing may increase the number. Each participant is EITHER
+ ****** INTERNAL to this company or EXTERNAL. Internal participants identifies extensions
+ ****** and optionally PEOPLE (contacts) resident in this companies PABX instance.
+ ******/
+CREATE SEQUENCE participants_seq start 100 increment 1 cache 50;
+CREATE TABLE participants (
+    company_id   BIGINT  NOT NULL,
+    participant_id     BIGINT  DEFAULT nextval('participants_seq'::text),
+    call_id      BIGINT  NOT NULL,
+    internal     BOOLEAN DEFAULT FALSE NOT NULL,
+    participant_role   VARCHAR,
+    number       VARCHAR NOT NULL,
+    contact_id   BIGINT,
+    CONSTRAINT participants_pk PRIMARY KEY(company_id, participant_id)
+)
+WITHOUT OIDS;
+
+/****** The following tables are involved in tagging calls. ******/
+
+/****** 5. TAGS TABLE ******/
+CREATE SEQUENCE tags_seq START 100 INCREMENT 1 CACHE 50;
+CREATE TABLE tags (
+    /* Tags are owned by companies */
+    company_id BIGINT NOT NULL,
+    tag_name   VARCHAR NOT NULL,
+    tag_id     BIGINT  DEFAULT nextval('tags_seq'::text),
+
+    -- Make tags unique within a company
+    CONSTRAINT tags_pk PRIMARY KEY(tag_id)
+)
+WITHOUT OIDS;
+
+/**
+-- Make the company_id/tag_id unique
+CREATE UNIQUE INDEX tag_id_key ON tags (
+	company_id,
+	tag_id
+);
+**/
+
+/***** AND TAGS ARE ASSIGNED TO CALLS WITHIN A COMPANY *****/
+
+/****** 6. TAGS_CALLS TABLE ******/
+CREATE TABLE tags_calls (
+    tag_id      BIGINT NOT NULL,
+    call_id     BIGINT NOT NULL,
+
+    CONSTRAINT tags_calls_pk PRIMARY KEY(tag_id, call_id)
+)
+WITHOUT OIDS;
+
+/****** 7. FILTERS TABLE ******/
+CREATE SEQUENCE filters_seq START 100 INCREMENT 1 CACHE 50;
+CREATE TABLE filters (
+    filter_id   BIGINT DEFAULT nextval('filters_seq'::text),
+    filter_name TEXT NOT NULL,
+    contact_id  BIGINT NOT NULL,
+    filter_spec TEXT NOT NULL,
+
+    CONSTRAINT filters_pk PRIMARY KEY(filter_name, contact_id)
+)
+WITHOUT OIDS;
+
+/****** 8. USERS TABLE ******/
+CREATE TABLE users (
+    contact_id BIGINT NOT NULL,
+    company_id BIGINT NOT NULL,
+
+    CONSTRAINT users_pk PRIMARY KEY(contact_id)
+)
+WITHOUT OIDS;
+
+/****** 9. LAST_POLL TABLE ******/
+CREATE TABLE last_polls (
+    company_id BIGINT NOT NULL,
+    last_poll TIMESTAMP
+)
+WITHOUT OIDS;
+
+
+
+/****** TABLE REFERENCES ******/
+
+
+
+/****** Calls reference files and companies ******/
+
+/****** 1. calls TABLE FOREIGN KEYS: ******/
+/* Do we want to keep the call record if the file is deleted */
+ALTER TABLE calls ADD CONSTRAINT calls_files_fk
+      FOREIGN KEY (file_id)
+      REFERENCES files (file_id)
+      ON DELETE CASCADE;
+
+ALTER TABLE calls ADD CONSTRAINT calls_companies_fk
+      FOREIGN KEY (company_id)
+      REFERENCES companies (company_id)
+      ON DELETE CASCADE;
+
+/****** 2. participants TABLE FOREIGN KEYS: ******/
+/****** The participants table references the company table and call table. If the
+ ****** company or the call is deleted then we want to delete the associated participants.
+ ******/
+ALTER TABLE participants ADD CONSTRAINT participants_calls_fk
+      FOREIGN KEY (call_id)
+      REFERENCES calls(call_id)
+      ON DELETE CASCADE;
+
+/****** 3. tags_calls TABLE FOREIGN KEYS: ******/
+/****** What is entered next to REFERENCES will affect what is entered next to ALTER TABLE ******/
+/*** Link the tags entry to the tags table and to the calls table. ***/
+
+ALTER TABLE tags_calls ADD CONSTRAINT tags_calls_to_tags_fk
+      FOREIGN KEY (tag_id)
+      REFERENCES tags (tag_id)
+      ON DELETE CASCADE;
+
+ALTER TABLE tags_calls ADD CONSTRAINT tags_calls_to_calls_fk
+      FOREIGN KEY (call_id)
+      REFERENCES calls (call_id)
+      ON DELETE CASCADE;
+
+
+/****** 4. users TABLE FOREIGN KEYS: ******/
+
+ALTER TABLE users ADD CONSTRAINT users_companies_fk
+      FOREIGN KEY (company_id)
+      REFERENCES companies(company_id)
+      ON DELETE CASCADE;
+
+/****** 5. filters TABLE FOREIGN KEYS: ******/
+
+ALTER TABLE filters ADD CONSTRAINT filters_users_fk
+      FOREIGN KEY (contact_id)
+      REFERENCES users(contact_id)
+      ON DELETE CASCADE;
+
+/****** 6. files TABLE FOREIGN KEYS: ******/
+/* this constraint is causing problems as the foreign key is not
+the primary key as the file_id is not unique in the calls table. How can
+we resolve? What is the syntax for deleting the file only when all calls references  to the file are deleted */
+
+/* ALTER TABLE files ADD CONSTRAINT files_calls_fk
+      FOREIGN KEY (file_id)
+      REFERENCES calls(file_id)
+      ON DELETE RESTRICT;
+*/
+
+/****** 8. tags TABLE FOREIGN KEYS: ******/
+
+ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
+      FOREIGN KEY (company_id)
+      REFERENCES companies(company_id)
+      ON DELETE CASCADE;
+
+COMMIT;
