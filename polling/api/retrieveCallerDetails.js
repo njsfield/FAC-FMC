@@ -42,7 +42,10 @@ module.exports = (extension_list, callback) => {
     json: true
   };
   request(options, function (error, response, body) {
-    if (error) throw error;
-    callback(body);
+    if (error) {
+      callback(error);
+    } else {
+      callback(null, body);
+    }
   });
 };

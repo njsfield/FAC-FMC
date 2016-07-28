@@ -19,7 +19,7 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
       checkFilesTable(dbClient, thisCall, done, (file_id, command) => {
         thisCall.file_id = file_id;
         if ( command === 'INSERT') {
-          retrieveWav(thisCall.file_name, (data) => {
+          retrieveWav(thisCall.file_name, (err, data) => {
             fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${file_id}.wav`, data);
             callback(null);
           });
