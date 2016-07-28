@@ -13,3 +13,5 @@ lib-cov
 *.out
 *.pid
 *.gz
+
+tests/coverage
