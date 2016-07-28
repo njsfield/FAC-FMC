@@ -15,7 +15,7 @@ function teardown () {
 nock(pbxUrl)
           .persist()
           .post('/rest/auth')
-          .reply(200, { token: 'a very long string of random characters',
+          .reply(200, { FMC: 'a very long string of random characters',
                expires: 1467111677.992,
                result: 'success',
                user:
@@ -34,7 +34,7 @@ test('test the login user flow for a successful api response from IPC for correc
   }, (response) => {
     let actual = response.headers['set-cookie'][0].indexOf('token');
     let expected = 0;
-    t.deepEqual(actual, expected, 'token is present in the response headers');
+    t.deepEqual(actual, expected, 'FMC is present in the response headers');
 
     const decoded = JWT.decode(response.headers['set-cookie'][0].split('=')[1]);
     actual = decoded.contact_id;

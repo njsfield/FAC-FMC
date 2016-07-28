@@ -43,7 +43,7 @@ module.exports = {
               username,
               userRole
             }, process.env.JWT_KEY);
-            return reply.redirect('/dashboard').state('token', token);
+            return reply.redirect('/dashboard').state('FMC', token);
           });
         });
       }

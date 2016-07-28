@@ -7,36 +7,41 @@ const postgresURL = process.env.POSTGRES_URL;
 module.exports = {
   method: 'POST',
   path: '/save-filter',
+  config: {auth: false},
   handler: (request, reply) => {
-    const decoded = JWT.decode(request.state.token);
+    if (request.state.FMC) {
+      const decoded = JWT.decode(request.state.FMC);
 
-    const parsePayload = JSON.parse(request.payload);
-    const filterObj = {
-      filter_name: parsePayload.filter_name,
-      contact_id: decoded.contact_id,
-      filter_spec: {
-        to: parsePayload.to,
-        from: parsePayload.from,
-        min: parsePayload.duration_min,
-        max: parsePayload.duration_max,
-        date: parsePayload.date,
-        tags: parsePayload.tags,
-        untagged: parsePayload.untagged
-      }
-    };
-    validate(decoded, request, (error, isValid) => {
-      if (error || !isValid) {
-        return reply.redirect('/').unstate('token');
-      }
-      else {
-        pg.connect(postgresURL, (err, dbClient) => {
-          if (err) throw err;
-          checkTables.checkFiltersTable(dbClient, filterObj, (res) => {
+      const parsePayload = JSON.parse(request.payload);
+      const filterObj = {
+        filter_name: parsePayload.filter_name,
+        contact_id: decoded.contact_id,
+        filter_spec: {
+          to: parsePayload.to,
+          from: parsePayload.from,
+          min: parsePayload.duration_min,
+          max: parsePayload.duration_max,
+          date: parsePayload.date,
+          tags: parsePayload.tags,
+          untagged: parsePayload.untagged
+        }
+      };
+      validate(decoded, request, (error, isValid) => {
+        if (error || !isValid) {
+          return reply.redirect('/').unstate('FMC');
+        }
+        else {
+          pg.connect(postgresURL, (err, dbClient) => {
+            if (err) throw err;
+            checkTables.checkFiltersTable(dbClient, filterObj, (res) => {
             // reply.redirect('/dashboard');
-            reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
+              reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      return reply.redirect('/');
+    }
   }
 };

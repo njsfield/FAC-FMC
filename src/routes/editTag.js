@@ -1,7 +1,12 @@
 module.exports = {
   method: 'post',
   path: '/edit-tag',
+  config: {auth: false},
   handler: (request, reply) => {
-    reply.redirect('/dashboard');
+    if (request.state.FMC) {
+      reply.redirect('/dashboard');
+    } else {
+      return reply.redirect('/');
+    }
   }
 };
