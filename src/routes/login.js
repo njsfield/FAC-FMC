@@ -8,6 +8,7 @@ const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
 const {checkCompaniesTable} = require('../../polling/db/checkTables.js');
 const {checkUsersTable} = require('../db/checkTables.js');
+const cookieOptions = require('../auth/cookieOptions.js');
 
 module.exports = {
   method: 'POST',
@@ -43,7 +44,7 @@ module.exports = {
               username,
               userRole
             }, process.env.JWT_KEY);
-            return reply.redirect('/dashboard').state('FMC', token);
+            return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
           });
         });
       }

@@ -5,6 +5,7 @@ const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
 const postgresURL = process.env.POSTGRES_URL;
+const cookieOptions = require('../auth/cookieOptions.js');
 
 const queryString = `SELECT calls.*,
    participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
@@ -100,7 +101,7 @@ module.exports = {
                     if (userObj.firstIndex > 0) {
                       userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
                     }
-                    reply.view('dashboard', userCalls);
+                    reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
                     done();
                   });
                 });

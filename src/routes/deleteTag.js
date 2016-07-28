@@ -4,6 +4,7 @@ const JWT = require('jsonwebtoken');
 const validate = require('../auth/validate.js');
 const deleteTag = require('../db/deleteTag.js');
 const getTagId = require('../db/getTagIdForDeletion.js');
+const cookieOptions = require('../auth/cookieOptions.js');
 
 module.exports = {
   method: 'post',
@@ -30,7 +31,7 @@ module.exports = {
             getTagId.getTagIdForDeletion(dbClient, deleteTagObj, (tag_id) => {
               deleteTagObj.tag_id = tag_id;
               deleteTag.deleteTag(dbClient, deleteTagObj, () => {
-                reply.redirect('/dashboard');
+                reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
               });
             });
           });
