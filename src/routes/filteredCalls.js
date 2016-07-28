@@ -4,7 +4,9 @@ const getTagNames = require('../../src/db/getTagNamesArr.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
+const cookieOptions = require('../auth/cookieOptions.js');
 const postgresURL = process.env.POSTGRES_URL;
+
 const queryString = `SELECT calls.*,
    participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
    participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
@@ -53,7 +55,7 @@ module.exports = {
                       savedTags
                     };
                     console.log(userCalls.calls, '<------ calls');
-                    reply.view('dashboard', userCalls);
+                    reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
                     done();
                   });
                 });

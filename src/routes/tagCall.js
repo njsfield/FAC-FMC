@@ -5,6 +5,7 @@ const {checkTagsTable} = require('../db/checkTables.js');
 const {getTag_id} = require('../db/getIds.js');
 const {insertIntoTagsCallsTable} = require('../db/insertData.js');
 const validate = require('../auth/validate.js');
+const cookieOptions = require('../auth/cookieOptions.js');
 
 module.exports = {
   method: 'post',
@@ -36,7 +37,7 @@ module.exports = {
                   call_id: request.payload.call_id
                 };
                 insertIntoTagsCallsTable(dbClient, tagsCalls, done, () => {
-                  reply.redirect('/dashboard');
+                  reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                   done();
                 });
               });
