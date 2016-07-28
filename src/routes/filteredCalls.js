@@ -32,8 +32,8 @@ module.exports = {
           filterQueryStringCreator.createQueryString(queryString, queryArray, filterSpec, (qString, qa) => {
             console.log(qString, '<-----qstring');
             dbClient.query(qString, qa, (err2, res) => {
-              getFilterNameAndSpec.getFilterNameAndFilterSpec(dbClient, decoded, (filters) => {
-                getTagNames.getFilterTagNamesArr(dbClient, decoded, (savedTags) => {
+              getFilterNameAndSpec(dbClient, decoded, done, (filters) => {
+                getTagNames(dbClient, decoded, done, (savedTags) => {
                   res.rows.forEach( (call) => {
                     console.log(call, '<---- call');
                     const date = call.date.toString().substr(4, 7);

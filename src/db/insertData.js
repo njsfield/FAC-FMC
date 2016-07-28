@@ -13,6 +13,7 @@ const insertIntoTagsTable = (dbClient, object, done, callback) => {
     if (error) throw error;
     callback(response);
   });
+  done();
 };
 
 const insertIntoTagsCallsTable = (dbClient, object, done, callback) => {

@@ -1,9 +1,9 @@
 const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
 const JWT = require('jsonwebtoken');
-const checkTables = require('../../polling/db/checkTables.js');
-const getIds = require('../../polling/db/getIds.js');
-const insert = require('../../polling/db/insertData.js');
+const {checkTagsTable} = require('../db/checkTables.js');
+const {getTag_id} = require('../db/getIds.js');
+const {insertIntoTagsCallsTable} = require('../db/insertData.js');
 const validate = require('../auth/validate.js');
 
 module.exports = {
@@ -26,14 +26,14 @@ module.exports = {
             tag_name: request.payload.tag,
             company_id: decoded.company_id
           };
-          checkTables.checkTagsTable(dbClient, tag, () => {
+          checkTagsTable(dbClient, tag, done, () => {
 
-            getIds.getTag_id(dbClient, tag, (tag_id) => {
+            getTag_id(dbClient, tag, done, (tag_id) => {
               const tagsCalls = {
                 tag_id: tag_id,
                 call_id: request.payload.call_id
               };
-              insert.addToTagsCallsTable(dbClient, tagsCalls, () => {
+              insertIntoTagsCallsTable(dbClient, tagsCalls, done, () => {
                 reply.redirect('/dashboard');
                 done();
               });
