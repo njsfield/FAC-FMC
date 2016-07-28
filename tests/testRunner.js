@@ -7,7 +7,13 @@ const sql = fs.readFileSync(`${__dirname}/../schema/schema.txt`).toString();
 
 schema.getSchema(connectionString, sql);
 
-// polling db tests
+//require in files
+
+//test server flow
+require('./src/server/loginFlowSuccess.test.js'); //all functions tested and working
+require('./src/server/loginFlowFail.test.js'); //all functions tested and working
+
+//polling db tests
 require('./polling/db/checkTablesExists.test.js'); //all bar checkTags tested and pass
 require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
 require('./polling/db/insertData.test.js'); //all tested and pass
@@ -23,15 +29,12 @@ require('./polling/api/retrieveWavFiles.js');
 // require('./polling/api/retrieveCompanyNames.js'); EMPTY
 
 //pollerflow tests
-
 // require('./polling/helpers/updatePollTable.test.js');
 // require('./polling/helpers/processCalls.test.js');
-//
-//     // require in files
-// require('./src/db/filterQueryStringCreator.test.js'); //all functions tested and working
-// require('./src/db/getTagNamesArr.test.js'); //the one function is tested and working
-// require('./src/db/deleteTag.test.js'); //the one function is tested and working
-// require('./src/db/getTagIdForDeletion.test.js'); //the one function is tested and working
-// require('./src/db/getFilterNameAndSpec.test.js'); //the one function is tested and working
-// require('./src/server/loginFlowSuccess.test.js'); //all functions tested and working
-// require('./src/server/loginFlowFail.test.js'); //all functions tested and working
+
+//src db tests
+require('./src/db/filterQueryStringCreator.test.js'); //all functions tested and working
+require('./src/db/getTagNamesArr.test.js'); //the one function is tested and working
+require('./src/db/deleteTag.test.js'); //the one function is tested and working
+require('./src/db/getTagIdForDeletion.test.js'); //the one function is tested and working
+require('./src/db/getFilterNameAndSpec.test.js'); //the one function is tested and working

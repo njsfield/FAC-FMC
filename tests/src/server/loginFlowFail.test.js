@@ -1,9 +1,8 @@
 'use strict';
 require('env2')('config.env');
-const pg = require('pg');
 const server = require('../../../src/server/server.js');
 const nock = require('nock');
-const tape = require('tape');
+const test = require('../../wrapping-tape-setup.js').databaseTest;
 const pbxUrl = process.env.PBX_URL;
 
 /** Removes mocks completely when called */
@@ -16,7 +15,7 @@ nock(pbxUrl)
           .post('/rest/auth')
           .reply(200, { result: 'fail', message: 'Login incorrect.' });
 
-tape('test the login user flow for a successful api response from IPC for incorrect login details', (t) => {
+test('test the login user flow for a successful api response from IPC for incorrect login details', (t) => {
   t.plan(3);
   server.inject({
     method: 'POST',
