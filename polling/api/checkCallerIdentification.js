@@ -19,7 +19,7 @@ const request = require('request');
          perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } }
  */
 
-const checkLoginDeets = (username, password, company_name, callback) => {
+const checkLoginDetails = (username, password, company_name, callback) => {
   const options = {
     method: 'POST',
     url: process.env.PBX_URL + '/rest/auth',
@@ -44,5 +44,5 @@ const checkLoginDeets = (username, password, company_name, callback) => {
 };
 
 module.exports = {
-  checkLoginDeets
+  checkLoginDetails
 };
