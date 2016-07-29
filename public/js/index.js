@@ -30,7 +30,6 @@ const saveFilter = (e) => {
 
   const error = document.getElementById('error-message');
   error.innerHTML = '';
-  document.getElementById('filter_name').value = ''; //--------<<<<<<<<<<<<<<<<
 
   e.stopPropagation();
   e.preventDefault();
@@ -38,10 +37,11 @@ const saveFilter = (e) => {
   const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
   const savedTagsArr = [];
   for(var i=0; i<scrollbarCheckboxes.length; i++) {
-    if(scrollbarCheckboxes[i].checked) {
+    if(scrollbarCheckboxes[i].checked && scrollbarCheckboxes[i].disabled === false) {
       savedTagsArr.push(scrollbarCheckboxes[i].value);
     }
   }
+
   /** split content on tags input to store each tag in a new array */
   const tags = document.getElementById('tags').value;
   var arrTags = [];
@@ -63,7 +63,6 @@ const saveFilter = (e) => {
     untagged: document.getElementById('untagged').value,
     filter_name: document.getElementById('filter_name').value
   };
-
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       console.log('success');
@@ -74,6 +73,7 @@ const saveFilter = (e) => {
           '<option id="dropdown-option" value="'+ESCAPE(response.description)+'">'+ESCAPE(filterObj.filter_name)+'</option>'
         );
         jQuery('#myModal').modal('hide');
+        document.getElementById('filter_name').value = '';
       }
       else {
         error.innerHTML = 'You are already using this name for another saved filter.';
