@@ -31,10 +31,10 @@ module.exports = (company_name, timeObj, callback) => {
     json: true };
 
   request(options, (error, response, body) => {
-    if (error) throw error;
-
-    if (body.result === 'fail') {
-      callback(body);
+    if (error) {
+      callback(error);
+    } else if (body.result === 'fail') {
+      callback(null, body);
     }
     else {
       const files = body.values.map((el) => {
@@ -46,7 +46,7 @@ module.exports = (company_name, timeObj, callback) => {
         delete el.file;
         return el;
       });
-      callback(files);
+      callback(null, files);
     }
   });
 };

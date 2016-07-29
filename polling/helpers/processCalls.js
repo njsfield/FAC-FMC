@@ -1,6 +1,7 @@
+// node modules
 const waterfall = require('async-waterfall');
 const fs = require('fs');
-
+// function modules
 const {checkFilesTable, checkCallsTable, checkParticipantsTable} = require('../db/checkTables.js');
 const retrieveWav = require('../api/retrieveWavFiles.js');
 
@@ -8,20 +9,28 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
   const thisCall = arrOfCalls.shift();
   waterfall([
     function (callback) {
-      dbClient.query('begin', (err, res) => {
-        if (err) throw err;
-        done();
-        callback(null);
+      dbClient.query('begin', (err) => {
+        if (err) {
+          callback(err);
+          done(err);
+        } else {
+          callback(null);
+          done();
+        }
       });
     },
     function(callback) {
       thisCall.company_id = companiesObj[company_name].company_id;
-      checkFilesTable(dbClient, thisCall, done, (file_id, command) => {
+      checkFilesTable(dbClient, thisCall, done, (err, file_id, command) => {
         thisCall.file_id = file_id;
         if ( command === 'INSERT') {
-          retrieveWav(thisCall.file_name, (data) => {
-            fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${file_id}.wav`, data);
-            callback(null);
+          retrieveWav(thisCall.file_name, (err1, data) => {
+            if (err1) {
+              callback(err1);
+            } else {
+              fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${file_id}.wav`, data);
+              callback(null);
+            }
           });
         } else {
           callback(null);
@@ -29,41 +38,55 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
       });
     },
     function(callback){
-      checkCallsTable(dbClient, thisCall, done, (call_id) => {
-        thisCall.call_id = call_id;
-        callback(null);
-
+      checkCallsTable(dbClient, thisCall, done, (err, call_id) => {
+        if (err) {
+          callback(err);
+        } else {
+          thisCall.call_id = call_id;
+          callback(null);
+        }
       });
     },
     function(callback) {
       const callerQueryObj = createCallParticipantObj(thisCall, 'caller');
-      checkParticipantsTable(dbClient, callerQueryObj, done, (result) => {
-        if(result) checkParticipantsArray(result, participantsArray);
-        callback(null);
+      checkParticipantsTable(dbClient, callerQueryObj, done, (err, result) => {
+        if (err) {
+          callback(err);
+        } else {
+          if(result) checkParticipantsArray(result, participantsArray);
+          callback(null);
+        }
       });
-
     },
     function (callback) {
       const calleeQueryObj= createCallParticipantObj(thisCall, 'callee');
-      checkParticipantsTable(dbClient, calleeQueryObj, done, (result) => {
-        if(result ) checkParticipantsArray(result, participantsArray);
-        callback(null);
+      checkParticipantsTable(dbClient, calleeQueryObj, done, (err, result) => {
+        if (err) {
+          callback(err);
+        } else {
+          if(result ) checkParticipantsArray(result, participantsArray);
+          callback(null);
+        }
       });
     },
-
     function (callback) {
-      dbClient.query('commit', (err, res) => {
+      dbClient.query('commit', (err) => {
         if (err) {
-
+          callback(err);
+          done();
+        } else {
+          callback(null);
+          done();
         }
-        done();
-        callback(null);
       });
     }
   ],
 function(err) {
-  if (err) throw err;
-  if (arrOfCalls.length > 0) {
+  if (err) {
+    dbClient.query('rollback', (err1) => {
+      done(err1);
+    });
+  } else if (arrOfCalls.length > 0) {
     processCalls(dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, cb);
   } else {
     cb(null, 'success');

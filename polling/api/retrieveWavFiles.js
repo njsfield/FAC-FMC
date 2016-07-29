@@ -17,14 +17,18 @@ module.exports = (file_name, callback) => {
   body:
   { type: 'recording',
   scope:
-  { company: 'default',
-  file: file_name },
+  {
+    file: file_name
+  },
   auth: { type: 'auth', key: apiKey } },
   json: true };
 
   request(options, function (error, response, wav_file) {
-    if (error) throw (error);
+    if (error) {
+      callback(error);
+    } else {
+      callback(null, wav_file);
+    };
 
-    callback(wav_file);
   });
 };
