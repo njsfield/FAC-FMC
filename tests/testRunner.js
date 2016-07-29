@@ -25,7 +25,6 @@ require('./polling/api/calculatePollTimes.test.js');
 require('./polling/api/retrieveCallerDetails.js');
 require('./polling/api/retrieveCompanyCalls.js');
 require('./polling/api/retrieveWavFiles.js');
-// require('./polling/api/checkCallerIdentification.test.js'); EMPTY
 // require('./polling/api/retrieveCompanyNames.js'); EMPTY
 
 //pollerflow tests
@@ -38,3 +37,4 @@ require('./src/db/getTagNamesArr.test.js'); //the one function is tested and wor
 require('./src/db/deleteTag.test.js'); //the one function is tested and working
 require('./src/db/getTagIdForDeletion.test.js'); //the one function is tested and working
 require('./src/db/getFilterNameAndSpec.test.js'); //the one function is tested and working
+// require('./src/auth/checkCallerIdentification.test.js'); EMPTY

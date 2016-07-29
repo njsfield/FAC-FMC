@@ -6,7 +6,7 @@ test('checking the checkTables functions', (t) => {
   t.plan(1);
   pg.connect(process.env.POSTGRES_URL_TEST, (err, dbClient, done) => {
     if (err) throw err;
-    checkUsersTable(dbClient, {tag_name: 'tagName', company_id: '100'}, done, (res) => {
+    checkUsersTable(dbClient, {tag_name: 'tagName', company_id: '100'}, done, (err, res) => {
       const expected = 'INSERT';
       const actual = res.command;
       console.log(actual, 2);
