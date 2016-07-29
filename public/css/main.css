@@ -172,9 +172,10 @@ audio {
   background-color: #FF9531;
 }
 
-.delete-button {
+em {
   margin-left: 15px;
   margin-right: 5px;
+  cursor: pointer;
 }
 .tag-cards {
   padding-top: 1em;
