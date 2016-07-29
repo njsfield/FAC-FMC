@@ -24,7 +24,7 @@ module.exports = {
           pg.connect(postgresURL, (err, dbClient, done) => {
             if (err){
               console.log(err);
-              reply.redirect('/error/' + encodeURIComponent(err.error));
+              reply.redirect('/error/' + encodeURIComponent('error connecting to the database'));
             } else {
               const queryArray = [decoded.contact_id, decoded.company_id];
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
