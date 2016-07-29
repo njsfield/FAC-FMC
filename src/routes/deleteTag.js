@@ -28,11 +28,21 @@ module.exports = {
         else {
           pg.connect(postgresURL, (err, dbClient) => {
             if (err) throw err;
-            getTagId.getTagIdForDeletion(dbClient, deleteTagObj, (tag_id) => {
-              deleteTagObj.tag_id = tag_id;
-              deleteTag.deleteTag(dbClient, deleteTagObj, () => {
-                reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
-              });
+            getTagId.getTagIdForDeletion(dbClient, deleteTagObj, (err1, tag_id) => {
+              if (err1) {
+                console.log(err1);
+                return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
+              } else {
+                deleteTagObj.tag_id = tag_id;
+                deleteTag.deleteTag(dbClient, deleteTagObj, (err2) => {
+                  if (err2) {
+                    console.log(err2);
+                    return reply.redirect('/error/' + encodeURIComponent('unable to delete tag'));
+                  } else {
+                    reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
+                  }
+                });
+              }
             });
           });
         }
