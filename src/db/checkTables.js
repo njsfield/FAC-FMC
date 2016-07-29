@@ -35,11 +35,12 @@ const checkFiltersTable = (dbClient, obj, done, cb) => {
 const checkUsersTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.contact_id];
   dbClient.query('SELECT * FROM users WHERE contact_id=($1)', queryArray, (err, res) => {
-    if (err) throw err;
-    if (res.rowCount === 0) {
+    if (err) {
+      cb(err);
+    } else if (res.rowCount === 0) {
       insertIntoUsersTable(dbClient, obj, done, cb);
     } else {
-      cb(res);
+      cb(null);
       done();
     }
   });

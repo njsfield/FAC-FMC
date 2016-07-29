@@ -3,7 +3,6 @@ const request = require('request');
 
 /**
  * Sends username and password from client side server to IPC API for authentication.
- * @param {string} company_name
  * @param {function} callback - Returns the user object:
  *  { token: 'a very long string of random characters',
       expires: 1467111677.992,
@@ -19,7 +18,7 @@ const request = require('request');
          perms: { user: 'yes', ocm: 'yes', persq_panel: 'yes' } } }
  */
 
-const checkLoginDetails = (username, password, company_name, callback) => {
+const checkLoginDetails = (username, password, callback) => {
   const options = {
     method: 'POST',
     url: process.env.PBX_URL + '/rest/auth',
@@ -38,8 +37,11 @@ const checkLoginDetails = (username, password, company_name, callback) => {
   };
 
   request(options, function (error, response, user) {
-    if (error) throw (error);
-    callback(user);
+    if (error) {
+      callback(error);
+    } else {
+      callback(null, user);
+    }
   });
 };
 
