@@ -22,7 +22,8 @@ const routes = [
   require('../routes/tagCall.js'),
   require('../routes/publicDirectory.js'),
   require('../routes/saveFilter.js'),
-  require('../routes/deleteTag.js')
+  require('../routes/deleteTag.js'),
+  require('../routes/error.js')
 ];
 
 Server.connection({port});
