@@ -1,11 +1,36 @@
 const xhr = new XMLHttpRequest();
 
+/** untagged checkbox event handler to disable the other tag checkboxes and tags field */
+const untagged = document.getElementById('untagged');
+
+const disableTags = () => {
+  const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
+  const tags = document.getElementById('tags');
+  if (untagged.checked) {
+    for(var i=0; i<scrollbarCheckboxes.length; i++) {
+      if(scrollbarCheckboxes[i].checked) {
+        scrollbarCheckboxes[i].disabled = true;
+        tags.disabled = true;
+      }
+    }
+  } else if(!untagged.checked) {
+    for(var i=0; i<scrollbarCheckboxes.length; i++) {
+      if(scrollbarCheckboxes[i].checked) {
+        scrollbarCheckboxes[i].disabled = false;
+        tags.disabled = false;
+      }
+    }
+  }
+};
+
+untagged.addEventListener('change', disableTags);
+
 /** AJAX to send saved filter spec and name to /save-filter route */
 const saveFilter = (e) => {
 
   const error = document.getElementById('error-message');
   error.innerHTML = '';
-  document.getElementById('filter_name').value = '';
+  document.getElementById('filter_name').value = ''; //--------<<<<<<<<<<<<<<<<
 
   e.stopPropagation();
   e.preventDefault();
@@ -63,48 +88,6 @@ const saveFilter = (e) => {
 const saveButton = document.getElementById('save_filter');
 saveButton.addEventListener('submit', saveFilter);
 
-/** AJAX to send filter spec and name to /filtered-calls route to filter user's calls*/
-// const searchFilter = () => {
-//
-//   const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
-//   const savedTagsArr = [];
-//   for(var i=0; i<scrollbarCheckboxes.length; i++) {
-//     if(scrollbarCheckboxes[i].checked) {
-//       savedTagsArr.push(scrollbarCheckboxes[i].value);
-//     }
-//   }
-//
-//   const tags = document.getElementById('tags').value;
-//   var regex = /^\s+$/ ;
-//   var arrTags = [];
-//   if (tags.match(regex) || tags === '') {
-//     return arrTags;
-//   } else {
-//     arrTags = tags.split(';');
-//   }
-//
-//   const filterObj = {
-//     to: document.getElementById('to').value,
-//     from: document.getElementById('from').value,
-//     min: document.getElementById('duration_min').value,
-//     max: document.getElementById('duration_max').value,
-//     date: document.getElementById('date').value,
-//     tags: arrTags.concat(savedTagsArr)
-//     // untagged: document.getElementById('untagged').value
-//   };
-//   xhr.onreadystatechange = function () {
-//     if(xhr.readyState === 4 && xhr.status === 200) {
-//       console.log('success');
-//       // window.location.href = '/filtered-calls';
-//     }
-//   };
-//   xhr.open('POST', '/filtered-calls');
-//   xhr.send(JSON.stringify(filterObj));
-// };
-
-// const searchButton = document.getElementById('filter_search');
-// searchButton.addEventListener('click', searchFilter);
-
 /** AJAX to send filter spec and name to /filtered-calls route to filter calls by saved filter_name*/
 const getFilterSpec = () => {
   const filterSpec = select.options[select.selectedIndex].value;
@@ -114,13 +97,6 @@ const getFilterSpec = () => {
     if (elem!=null)
       elem.value = spec[f];
   }
-  // xhr.onreadystatechange = function () {
-  //   if(xhr.readyState === 4 && xhr.status === 200) {
-  //     console.log('success');
-  //   }
-  // };
-  // xhr.open('GET', '/dashboard?filter_name=' + filterSpec);
-  // xhr.send(); //JSON.stringify(filterSpec));
 };
 
 const select = document.getElementById('dropdown');
