@@ -1,5 +1,15 @@
 'use strict';
 
+
+const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI:SS'), calls.duration, calls.call_id, calls.file_id, calls.company_id,
+   participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
+   participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
+   array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name
+FROM calls
+    LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
+    LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
+WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 `;
+
 const toString2 = 'participants2.number =';
 const fromString = 'participants1.number =';
 const minTimeString = 'duration >=';
@@ -120,7 +130,7 @@ const limitCallsCreator = (obj, queryArr) => {
  * and duration >= ('8')'
  */
 
-const createQueryString = (queryString, queryArr, obj, callback) => {
+const createQueryString = (queryArr, obj, callback) => {
   let stringArr = [queryString];
 
   toAndFromQueryStringCreator(obj, queryArr, (qa2, filters) => {
