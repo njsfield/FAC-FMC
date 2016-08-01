@@ -95,7 +95,16 @@ function(err) {
 };
 
 const checkParticipantsArray = (callParticipant, participantsArray) => {
-  if (participantsArray.indexOf(callParticipant) < 0 ) participantsArray.push(callParticipant);
+  // Extension numbers are at least 3 digits but can be longer.
+  if (callParticipant.match(/^[a-zA-Z0-9_]*$/)
+    && callParticipant.length >= 3
+    && callParticipant.length <= 7
+    && callParticipant[0] !== 0
+  ) {
+    if (participantsArray.indexOf(callParticipant) < 0 ) participantsArray.push(callParticipant);
+  }
+
+//If a number contains a non-digit then it must be an extension as '_' and alpha are not valid external digits. This covers private extensions nicely.
 };
 const createCallParticipantObj = (obj, type) => {
   return {
