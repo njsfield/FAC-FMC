@@ -14,21 +14,21 @@ schema.getSchema(connectionString, sql);
 // require('./src/server/loginFlowFail.test.js'); //all functions tested and working
 
 //polling db tests
-require('./polling/db/checkTablesExists.test.js'); //all bar checkTags tested and pass
-require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
-require('./polling/db/insertData.test.js'); //all tested and pass
-require('./polling/db/getIds.test.js'); //Complete
-require('./polling/db/updateData.test.js'); //INCOMPLETE
+require('./polling/db/checkTablesExists.test.js'); //
+require('./polling/db/checkTables.test.js'); //
+require('./polling/db/insertData.test.js'); //
+require('./polling/db/getIds.test.js'); //
+require('./polling/db/updateData.test.js'); //
 
 //polling api tests
-// require('./polling/api/calculatePollTimes.test.js');
-// require('./polling/api/retrieveCallerDetails.js');
-// require('./polling/api/retrieveCompanyCalls.js');
-// require('./polling/api/retrieveWavFiles.js');
+require('./polling/api/calculatePollTimes.test.js');
+require('./polling/api/retrieveCallerDetails.js');
+require('./polling/api/retrieveCompanyCalls.js');
+require('./polling/api/retrieveWavFiles.js');
 // require('./polling/api/retrieveCompanyNames.js'); EMPTY
 
 //pollerflow tests
-// require('./polling/helpers/updatePollTable.test.js');
+require('./polling/helpers/updatePollTable.test.js');
 // require('./polling/helpers/processCalls.test.js');
 
 //src db tests

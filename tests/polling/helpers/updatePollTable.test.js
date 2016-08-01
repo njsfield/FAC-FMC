@@ -12,12 +12,14 @@ databaseTest('testing whether the last-poll is updated', (t) => {
       const actual = 'INSERT';
       const expected = response.command;
       t.deepEqual(actual, expected, 'company last poll updated');
-      checkLastPollTable(dbClient, companiesObj['default'], done, (response2) => {
+      checkLastPollTable(dbClient, companiesObj['default'], done, (err2, response2) => {
+        if (err2) console.log(err2);
         const actual1 = new Date(response2).toString();
         const expected1 = startPollTime.toString();
         t.equal(actual1, expected1, 'default has the startPOllTimeStored');
       });
-      checkLastPollTable(dbClient, companiesObj['test_comp_B'], done, (response2) => {
+      checkLastPollTable(dbClient, companiesObj['test_comp_B'], done, (err2, response2) => {
+        if (err2) console.log(err2);
         const actual1 = new Date(response2).toString();
         const expected1 = startPollTime.toString();
         t.equal(actual1, expected1, 'test_comp_B has the startPollTime stored');
