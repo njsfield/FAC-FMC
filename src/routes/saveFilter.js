@@ -1,4 +1,4 @@
-const checkTables = require('../../polling/db/checkTables.js');
+const {checkFiltersTable} = require('../db/checkTables.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
@@ -31,9 +31,9 @@ module.exports = {
           return reply.redirect('/').unstate('FMC');
         }
         else {
-          pg.connect(postgresURL, (err, dbClient) => {
+          pg.connect(postgresURL, (err, dbClient, done) => {
             if (err) throw err;
-            checkTables.checkFiltersTable(dbClient, filterObj, (err1, res) => {
+            checkFiltersTable(dbClient, filterObj, done, (err1, res) => {
               if (err1) {
                 console.log(err1);
                 return reply.redirect('/error/' + encodeURIComponent('error checking filters table'));
