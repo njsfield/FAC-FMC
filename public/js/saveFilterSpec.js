@@ -3,10 +3,10 @@ const getFilterSpec = () => {
   const filterSpec = select.options[select.selectedIndex].value;
   var spec = JSON.parse(filterSpec);
   for (var f in spec) {
-    console.log(f);
     var elem = document.getElementById(f);
-    if (elem!=null)
-      elem.value = spec[f];
+    if (elem!=null) {
+      elem.value = f === 'duration_min' || f === 'duration_max' ? spec[f] / 60 : spec[f];
+    }
   }
 };
 
@@ -18,7 +18,6 @@ select.addEventListener('change', getFilterSpec);
 /** AJAX to send saved filter spec when SAVE button has been selected and name to /save-filter route */
 
 const saveFilter = (e) => {
-  console.log('filter hit');
   const xhr = new XMLHttpRequest();
   const error = document.getElementById('error-message');
   error.innerHTML = '';
@@ -48,8 +47,8 @@ const saveFilter = (e) => {
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
-    min: document.getElementById('duration_min').value * 60,
-    max: document.getElementById('duration_max').value * 60,
+    duration_min: document.getElementById('duration_min').value * 60,
+    duration_max: document.getElementById('duration_max').value * 60,
     date: document.getElementById('date').value,
     tags: arrTags.concat(savedTagsArr),
     untagged: document.getElementById('untagged').value,
