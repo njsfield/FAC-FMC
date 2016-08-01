@@ -1,14 +1,6 @@
 'use strict';
 const test = require('../../wrapping-tape-setup.js').databaseTest;
 const QSCreator = require('../../../src/db/filterQueryStringCreator.js');
-const queryString = `SELECT calls.*,
-   participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
-   participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
-   array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name
-FROM calls
-    LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
-    LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
-WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 `;
 
 const toObj = {
   to: 100,
@@ -93,7 +85,7 @@ test('test QSCreator functions', (t) => {
     const expected = ['05-05-2016'];
     t.deepEqual(actual, expected, 'filtering on "date" returns the expected string');
   });
-  QSCreator.createQueryString(queryString, ['value1', 'value2'], userObj, (createdQueryString) => {
+  QSCreator.createQueryString(['value1', 'value2'], userObj, (createdQueryString) => {
     const actual = createdQueryString.indexOf('LIMIT $3') > -1;
     const expected = true;
     t.deepEqual(actual, expected, 'complete query string is as expected');
