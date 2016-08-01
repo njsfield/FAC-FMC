@@ -10,11 +10,11 @@ const obj = {
 const pg = require('pg');
 test('check that we can delete a tag according to the call_id', (t) => {
   t.plan(1);
-  const expected = 'DELETE';
   pg.connect(postgresURL, (err, client, done) => {
     if (err) throw err;
-    deleteTag.deleteTag(client, obj, done, (result) => {
-      const actual = result.command;
+    deleteTag(client, obj, done, (err1, res) => {
+      const actual = res;
+      const expected = 'Does not exist in table';
       t.deepEqual(actual, expected, 'tag_id deleted from tags_calls table');
       done();
     });
