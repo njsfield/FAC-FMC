@@ -5,7 +5,7 @@
   <li class="list-group-item filter-list">
     <div class="row">
       <div class='col-xs-4'>
-        <p id='saved-filters'> Saved Filters: </p>
+        <p id='saved-filters'>Saved Filters:</p>
       </div>
       <div class='col-xs-8'>
         <select id="dropdown" name="saved-filters">
@@ -16,12 +16,24 @@
         </select>
       </div>
     </div>
-
-
   </li>
   <div id="filter">
     <div class="form-group">
       <form action="/dashboard" method="get">
+      {{#if userObj.isAdmin}}
+        <li class="list-group-item filter-list">
+          <div class='col-xs-4'>
+            <p>
+              <label style="font-weight:normal" for='companies'> Company: </label>
+            </p>
+          </div>
+          <select id="companies" name="admin_company">
+            {{#each userObj.adminCompanies}}
+              <option value={{name}} {{{./selected}}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </li>
+      {{/if}}
       <li class="list-group-item filter-list">
         <input type="text" id="to" name="to" class="form-control" placeholder="To:   e.g. 435" value="{{userObj.to}}">
       </li>

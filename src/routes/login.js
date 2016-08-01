@@ -19,8 +19,7 @@ module.exports = {
     const username = request.payload.username;
     loginApi.checkLoginDetails(username, password, (err, user) => {
       if (user.result === 'success') {
-        let userRole = user.user.perms.user === 'yes' ? 'user': 'admin';
-
+        let userRole = (user.user.perms.callrec_co != null && user.user.companies.length>0) ? 'admin': 'user';
         pg.connect(postgresURL, (err1, dbClient, done) => {
           if (err1) {
             console.log(err1);
@@ -43,15 +42,16 @@ module.exports = {
                     console.log(err3);
                     return reply.redirect('/error/' + encodeURIComponent(err3.error) );
                   } else {
-                    const token = JWT.sign(
-                      {
+                    var authData = {
                         company_id: userObj.company_id,
                         contact_id: user.user.id,
                         username,
                         userRole
-                      },
-                      process.env.JWT_KEY
-                    );
+                    };
+                    if (userRole==='admin')
+                      authData.adminCompanies = user.user.companies.map( name => ({name:name}));
+
+                    const token = JWT.sign(authData, process.env.JWT_KEY);
                     return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
                   }
                 });
