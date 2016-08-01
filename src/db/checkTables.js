@@ -19,7 +19,7 @@ const checkFiltersTable = (dbClient, obj, done, cb) => {
   dbClient.query('SELECT EXISTS (SELECT * FROM filters WHERE filter_name=($1) AND contact_id=($2))', queryArray, (err, res) => {
     if (err) {
       cb(err);
-    } else if (res.rowCount === 0) {
+    } else if (res.rows[0].exists === false) {
       insertIntoFiltersTable(dbClient, obj, done, cb);
     } else {
       cb(null, {
