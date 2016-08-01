@@ -4,7 +4,11 @@ module.exports = (dbClient, obj, done, cb) => {
     if (err) {
       cb(err);
     }
-    cb(null, res);
+    else if (res.rowCount === 0) {
+      cb(null, 'Does not exist in table');
+    } else {
+      cb(null, res);
+    }
   });
   done();
 };
