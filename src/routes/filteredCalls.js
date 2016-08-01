@@ -14,6 +14,7 @@ module.exports = {
   handler: (request, reply) => {
     if (request.state.FMC) {
       const filterSpec = JSON.parse(request.payload);
+      structureFilter(filterSpec);
       console.log(filterSpec, '<---- filterSpec');
       const decoded = JWT.decode(request.state.FMC);
       validate(decoded, request, (error, isValid) => {
@@ -60,5 +61,14 @@ module.exports = {
     } else {
       return reply.redirect('/');
     }
+  }
+};
+
+const structureFilter = (filterSpec) => {
+  if ( filterSpec.duration_max !== '' ) {
+    filterSpec.duration_max = filterSpec.duration_max * 60;
+  }
+  if ( filterSpec.duration_min !== '' ) {
+    filterSpec.duration_min = filterSpec.duration_min * 60;
   }
 };
