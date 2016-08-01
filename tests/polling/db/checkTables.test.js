@@ -9,45 +9,45 @@ databaseTest('test the checkTables functions', (t) => {
     if (err) throw err;
     ////////////////// checks data is in tables //////////////////
 
-    checkTables.checkCompaniesTable(dbClient, dataObj.companiesT[0], done, (res) => {
+    checkTables.checkCompaniesTable(dbClient, dataObj.companiesT[0], done, (err1, res) => {
       const expected = '100';
       const actual = res;
       t.deepEqual(actual, expected, 'company_id has been checked and found not to exist and added to the table');
       done();
     });
 
-    checkTables.checkCompaniesTable(dbClient, dataObj.companiesT[1], done, (res) => {
+    checkTables.checkCompaniesTable(dbClient, dataObj.companiesT[1], done, (err1, res) => {
       const expected = '101';
       const actual = res;
       t.deepEqual(actual, expected, 'test company -B has been checked and found not to exist and added to the table');
       done();
     });
 
-    checkTables.checkFilesTable(dbClient, dataObj.filesT[0], done, (res) => {
+    checkTables.checkFilesTable(dbClient, dataObj.filesT[0], done, (err1, res) => {
       const actual = res;
       const expected = '100';
       t.deepEqual(actual, expected, 'file_names recording_1 and recording_2 are in files table');
       done();
     });
-    checkTables.checkFilesTable(dbClient, dataObj.filesT[1], done, (res) => {
+    checkTables.checkFilesTable(dbClient, dataObj.filesT[1], done, (err1, res) => {
       const actual = res;
       const expected = '101';
       t.deepEqual(actual, expected, 'file_names recording_1 and recording_2 are in files table');
       done();
     });
-    checkTables.checkCallsTable(dbClient, dataObj.callsT, done, (res) => {
+    checkTables.checkCallsTable(dbClient, dataObj.callsT, done, (err1, res) => {
       const actual = res;
       const expected = '100';
       t.deepEqual(actual, expected, 'call exists in calls table');
       done();
     });
 
-    checkTables.checkParticipantsTable(dbClient, dataObj.participantsT, done, (res) => {
+    checkTables.checkParticipantsTable(dbClient, dataObj.participantsT, done, (err1, res) => {
       const actual = res;
       const expected = 100;
       t.deepEqual(actual, expected, 'data added in participants table');
       done();
-      checkTables.checkParticipantsTable(dbClient, dataObj.participantsT, done, (res1) => {
+      checkTables.checkParticipantsTable(dbClient, dataObj.participantsT, done, (err2, res1) => {
         const actual1 = res1;
         const expected1 = null;
         t.deepEqual(actual1, expected1, 'data exists in participants table');
