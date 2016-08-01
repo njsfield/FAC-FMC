@@ -16,9 +16,9 @@ schema.getSchema(connectionString, sql);
 //polling db tests
 require('./polling/db/checkTablesExists.test.js'); //all bar checkTags tested and pass
 require('./polling/db/checkTables.test.js'); //all bar checkTags tested and pass
-// require('./polling/db/insertData.test.js'); //all tested and pass
-// require('./polling/db/getIds.test.js'); //INCOMPLETE
-// require('./polling/db/updateData.test.js'); //INCOMPLETE
+require('./polling/db/insertData.test.js'); //all tested and pass
+require('./polling/db/getIds.test.js'); //Complete
+require('./polling/db/updateData.test.js'); //INCOMPLETE
 
 //polling api tests
 // require('./polling/api/calculatePollTimes.test.js');
