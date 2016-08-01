@@ -34,7 +34,7 @@ module.exports = {
                 return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
               } else {
                 deleteTagObj.tag_id = tag_id;
-                deleteTag.deleteTag(dbClient, deleteTagObj, (err2) => {
+                deleteTag(dbClient, deleteTagObj, (err2) => {
                   if (err2) {
                     console.log(err2);
                     return reply.redirect('/error/' + encodeURIComponent('unable to delete tag'));
