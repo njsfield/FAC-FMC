@@ -1,7 +1,7 @@
 'use strict';
 
 
-const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI:SS'), calls.duration, calls.call_id, calls.file_id, calls.company_id,
+const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI:SS') AS date, calls.duration, calls.call_id, calls.file_id, calls.company_id,
    participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
    participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
    array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name
@@ -150,8 +150,8 @@ const createQueryString = (queryArr, obj,  callback) => {
     // Invalid parameters - make sure the result set is empty.
     stringArr.push('false');
   }
-  
-           
+
+
   toAndFromQueryStringCreator(obj, queryArr, (qa2, filters) => {
     if (filters) stringArr.push(filters);
 
