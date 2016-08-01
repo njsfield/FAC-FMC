@@ -6,7 +6,7 @@ test('checking the checkTables functions', (t) => {
   t.plan(1);
   pg.connect(process.env.POSTGRES_URL_TEST, (err, dbClient, done) => {
     if (err) throw err;
-    checkUsersTable(dbClient, {tag_name: 'tagName', company_id: '100'}, done, (err, res) => {
+    checkUsersTable(dbClient, {tag_name: 'tagName', company_id: '100'}, done, (err1, res) => {
       const expected = 'INSERT';
       const actual = res.command;
       console.log(actual, 2);
@@ -25,7 +25,7 @@ test('checking the checkTables functions', (t) => {
 //   });
 // });
 
-// checkTables.checkUsersTable(dbClient, dataObj.usersT[0], done, (res) => {
+// checkTables.checkUsersTable(dbClient, dataObj.usersT[0], done, (err, res) => {
 //   console.log(res.command, '1');
 //   const expected = 'INSERT';
 //   const actual = res.command;
@@ -33,12 +33,12 @@ test('checking the checkTables functions', (t) => {
 //   done();
 // });
 
-// checkTables.checkTagsTable(client, existingDataObj.tagsT, (res) => {
+// checkTables.checkTagsTable(client, existingDataObj.tagsT, (err, res) => {
 //   const boolKey = Object.keys(res.rows[0])[0];
 //   const actual = res.rows[0][boolKey];
 //   t.deepEqual(actual, expected1, 'tag exists in tags table');
 // });
-// checkTables.checkFiltersTable(client, existingDataObj.filtersT, (res) => {
+// checkTables.checkFiltersTable(client, existingDataObj.filtersT, (err, res) => {
 //   const boolKey = Object.keys(res.rows[0])[0];
 //   const actual = res.rows[0][boolKey];
 //   t.deepEqual(actual, expected1, 'filter exists in filters table');
@@ -52,7 +52,7 @@ test('checking the checkTables functions', (t) => {
 //   t.deepEqual(actual, expected2, 'new data added to tags table');
 //   done();
 // });
-// checkTables.checkFiltersTable(client, newDataObj.filtersT, (res) => {
+// checkTables.checkFiltersTable(client, newDataObj.filtersT, (err, res) => {
 //   const actual = res.command;
 //   t.deepEqual(actual, expected2, 'new filter added to filters table');
 //   done();

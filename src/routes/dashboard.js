@@ -39,25 +39,30 @@ module.exports = {
                         return reply.redirect('/error/' + encodeURIComponent('error retrieving your calls'));
                       } else {
                         getTagNames(dbClient, decoded, done, (err4, savedTags) => {
-                          res.rows.forEach( (call) => {
-                            call.duration = formatCallDuration(call);
-                          });
-                          userObj.tags = userObj.tags.join(';');
-                          const userCalls = {
-                            calls: res.rows,
-                            filters,
-                            savedTags,
-                            userObj
-                          };
-                          if (res.rows.length > userObj.maxRows) {
-                            userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
-                            res.rows.length = userObj.maxRows;
+                          if (err4) {
+                            console.log(err4);
+                            return reply.redirect('/error/' + encodeURIComponent('unable to get Tag names'));
+                          } else {
+                            res.rows.forEach( (call) => {
+                              call.duration = formatCallDuration(call);
+                            });
+                            userObj.tags = userObj.tags.join(';');
+                            const userCalls = {
+                              calls: res.rows,
+                              filters,
+                              savedTags,
+                              userObj
+                            };
+                            if (res.rows.length > userObj.maxRows) {
+                              userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                              res.rows.length = userObj.maxRows;
+                            }
+                            if (userObj.firstIndex > 0) {
+                              userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                            }
+                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                            done();
                           }
-                          if (userObj.firstIndex > 0) {
-                            userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
-                          }
-                          reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
-                          done();
                         });
                       }
                     });
