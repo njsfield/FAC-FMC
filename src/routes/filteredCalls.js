@@ -14,7 +14,6 @@ module.exports = {
   handler: (request, reply) => {
     if (request.state.FMC) {
       const filterSpec = JSON.parse(request.payload);
-      console.log(filterSpec, '<---- filterSpec');
       const decoded = JWT.decode(request.state.FMC);
       validate(decoded, request, (error, isValid) => {
         if (error || !isValid) {
