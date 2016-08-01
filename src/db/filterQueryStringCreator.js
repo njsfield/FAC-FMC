@@ -44,15 +44,15 @@ const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
 
 const minAndMaxQueryStringCreator = (obj, queryArr, callback) => {
   if (obj.min !== '' && obj.max !== '') {
-    queryArr.push(obj.min, obj.max);
+    queryArr.push(obj.min * 60, obj.max * 60);
     callback(queryArr, `${minTimeString}$${queryArr.length -1} AND ${maxTimeString}$${queryArr.length}`);
   }
   else if (obj.min !== '') {
-    queryArr.push(obj.min);
+    queryArr.push(obj.min * 60);
     callback(queryArr, `${minTimeString}$${queryArr.length}`);
   }
   else if (obj.max !== '') {
-    queryArr.push(obj.max);
+    queryArr.push(obj.max * 60);
     callback(queryArr, `${maxTimeString}$${queryArr.length}`);
   }
   else {
