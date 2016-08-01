@@ -56,8 +56,8 @@ const saveFilter = (e) => {
   const filterObj = {
     to: document.getElementById('to').value,
     from: document.getElementById('from').value,
-    min: document.getElementById('duration_min').value,
-    max: document.getElementById('duration_max').value,
+    min: document.getElementById('duration_min').value * 60,
+    max: document.getElementById('duration_max').value * 60,
     date: document.getElementById('date').value,
     tags: arrTags.concat(savedTagsArr),
     untagged: document.getElementById('untagged').value,
