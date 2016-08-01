@@ -67,17 +67,17 @@ test('test QSCreator functions', (t) => {
   });
   QSCreator.minAndMaxQueryStringCreator(minObj, [], (res) => {
     const actual = res;
-    const expected = [8];
+    const expected = [480];
     t.deepEqual(actual, expected, 'filtering on "min" returns the expected string');
   });
   QSCreator.minAndMaxQueryStringCreator(maxObj, [], (res) => {
     const actual = res;
-    const expected = [9];
+    const expected = [540];
     t.deepEqual(actual, expected, 'filtering on "max" returns the expected string');
   });
   QSCreator.minAndMaxQueryStringCreator(minAndMaxObj, [], (res) => {
     const actual = res;
-    const expected = [8, 9];
+    const expected = [480, 540];
     t.deepEqual(actual, expected, 'filtering on "min" and "max" returns the expected string');
   });
   QSCreator.dateQueryStringCreator(dateObj, [], (res) => {
