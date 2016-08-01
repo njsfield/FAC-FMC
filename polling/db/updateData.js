@@ -21,14 +21,11 @@ const updateParticipantsTable = (dbClient, participantObj, companiesObj, done, c
 const updateLastPollTable = (dbClient, object, done, callback) => {
   checkLastPollTable(dbClient, object, done, (err, res) => {
     const queryArray = [object.last_poll/1000, object.company_id];
-    console.log('>>>>>> checklastpolltable');
     if (res) {
       dbClient.query('UPDATE last_polls SET last_poll = (TO_TIMESTAMP($1) at time zone \'UTC\') where company_id=$2', queryArray, (error, response) => {
         if (error) {
-          console.log('errorred');
           callback(error);
         } else {
-          console.log('got here');
           callback(null, response);
         }
         done();

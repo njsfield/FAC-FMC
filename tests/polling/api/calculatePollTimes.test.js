@@ -1,7 +1,7 @@
-const tape = require('tape');
+const {test} = require('../../wrapping-tape-setup.js');
 const calculatePollTimes = require('../../../polling/api/calculatePollTimes.js');
 
-tape (' returns an array of times', (t) => {
+test (' returns an array of times', (t) => {
   t.plan(4);
   const startPoll = new Date(2016, 6, 20, 1, 0);
   const lastPoll = new Date(startPoll - 3600000 * 3);
