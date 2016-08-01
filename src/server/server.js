@@ -14,7 +14,6 @@ const routes = [
   require('../routes/login.js'),
   require('../routes/dashboard.js'),
   require('../routes/fetchAudio.js'),
-  require('../routes/filteredCalls.js'),
   require('../routes/home.js'),
   require('../routes/logout.js'),
   require('../routes/schema.js'),
