@@ -27,8 +27,12 @@ const insertIntoFilesTable = (dbClient, object, done, callback) => {
     if (error) {
       callback(error);
     } else {
-      getFile_id(dbClient, object, done, (file_id) => {
-        callback(null, file_id, res.command);
+      getFile_id(dbClient, object, done, (err, file_id) => {
+        if (err) {
+          callback(err);
+        } else {
+          callback(null, file_id, res.command);
+        }
       });
     }
     done();

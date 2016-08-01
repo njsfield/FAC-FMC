@@ -49,7 +49,7 @@ databaseTest('test the checkTables functions', (t) => {
       done();
       checkTables.checkParticipantsTable(dbClient, dataObj.participantsT, done, (err2, res1) => {
         const actual1 = res1;
-        const expected1 = null;
+        const expected1 = undefined;
         t.deepEqual(actual1, expected1, 'data exists in participants table');
         done();
 

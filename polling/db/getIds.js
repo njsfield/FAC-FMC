@@ -8,14 +8,17 @@
 const getFile_id = (dbClient, obj, done, cb) => {
   const queryArray = [obj.file_name];
   dbClient.query('SELECT file_id FROM files WHERE file_name=($1)', queryArray, (err, res) => {
-    if (err) throw err;
-    const boolKey = Object.keys(res.rows[0])[0];
-    const file_id = res.rows[0][boolKey];
-    cb(file_id);
+    if (err) {
+      cb(err);
+    } else {
+      const file_id = res.rows[0].file_id;
+      cb(null, file_id);
+
+    }
+
   });
 };
 
 module.exports = {
   getFile_id,
-  // getCall_id,
 };
