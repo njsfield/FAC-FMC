@@ -9,22 +9,22 @@ databaseTest('test the insertData functions', (t) => {
   t.plan(4);
   pg.connect(postgresURL, (err, dbClient, done) => {
     if (err) throw err;
-    insertIntoFilesTable(dbClient, obj.addToFilesTable, done, (file_id, command) => {
+    insertIntoFilesTable(dbClient, obj.addToFilesTable, done, (err1, file_id, command) => {
       const actual = command;
       t.deepEqual(actual, expected, 'added to files table');
       done();
     });
-    insertIntoCallsTable(dbClient, obj.addToCallsTable, done, (res1) => {
+    insertIntoCallsTable(dbClient, obj.addToCallsTable, done, (err1, res1) => {
       const actual1 = res1.command;
       t.deepEqual(actual1, expected, 'added to calls table');
       done();
     });
-    insertIntoParticipantsTable(dbClient, obj.addToParticipantsTable, done, (res) => {
+    insertIntoParticipantsTable(dbClient, obj.addToParticipantsTable, done, (err1, res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to participants table');
       done();
     });
-    insertIntoCompaniesTable(dbClient, obj.addToCompaniesTable, done, (res) => {
+    insertIntoCompaniesTable(dbClient, obj.addToCompaniesTable, done, (err1, res) => {
       const actual = res;
       t.deepEqual(actual, expected, 'added to companies table');
       done();
