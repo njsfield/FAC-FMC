@@ -19,8 +19,8 @@ module.exports = {
         filter_spec: {
           to: parsePayload.to,
           from: parsePayload.from,
-          min: parsePayload.duration_min,
-          max: parsePayload.duration_max,
+          duration_min: parsePayload.duration_min,
+          duration_max: parsePayload.duration_max,
           date: parsePayload.date,
           tags: parsePayload.tags,
           untagged: parsePayload.untagged
@@ -38,6 +38,7 @@ module.exports = {
                 console.log(err1);
                 return reply.redirect('/error/' + encodeURIComponent('error checking filters table'));
               } else {
+                console.log(filterObj);
                 reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
               }
             });
