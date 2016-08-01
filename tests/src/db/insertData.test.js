@@ -7,35 +7,28 @@ test('checking the checkTables functions', (t) => {
   const expected = 'INSERT';
 
   pg.connect(process.env.POSTGRES_URL_TEST, (err, dbClient, done) => {
-    insertIntoUsersTable(dbClient, obj.insertIntoUsersTable, done, (res) => {
+    insertIntoUsersTable(dbClient, obj.insertIntoUsersTable, done, (err1, res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to users table');
     });
-    insertIntoTagsTable(dbClient, obj.insertIntoTagsTable, done, (res) => {
+    insertIntoTagsTable(dbClient, obj.insertIntoTagsTable, done, (err1, res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to tags table');
     });
-    insertIntoTagsCallsTable(dbClient, obj.insertIntoTagsCallsTable, done, (res) => {
+    insertIntoTagsCallsTable(dbClient, obj.insertIntoTagsCallsTable, done, (err1, res) => {
       const actual = res.command;
       t.deepEqual(actual, expected, 'added to tagsCalls table');
     });
-    // insertIntoFiltersTable(dbClient, obj.insertIntoFiltersTable, done, (res) => {
-    //   const actual = res.command;
-    //   t.deepEqual(actual, expected, 'added to filters table');
-    // });
+    insertIntoFiltersTable(dbClient, obj.insertIntoFiltersTable, done, (err1, res) => {
+      const actual = res.success;
+      t.deepEqual(actual, true, 'added to filters table');
+    });
   });
 });
 
-// insertData.editTagsTable(dbClient, obj.editTagsTable, (res) => {
-//   const actual = res.command;
-//   const expected2 = 'UPDATE';
-//   t.deepEqual(actual, expected2, 'added to tagsCalls table');
-//   done();
-// });
-
 const obj = {
   insertIntoUsersTable: {
-    contact_id: 239,
+    contact_id: 100,
     company_id: 100
   },
   insertIntoTagsTable: {
@@ -47,8 +40,8 @@ const obj = {
     tag_id: 100
   },
   insertIntoFiltersTable: {
-    filter_name: 'newest-test-filter',
-    contact_id: 238,
+    filter_name: 'test-filter',
+    contact_id: 100,
     filter_spec: {
       to: 100,
       from: '',

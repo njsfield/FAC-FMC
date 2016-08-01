@@ -3,7 +3,7 @@ const postgresURL = process.env.POSTGRES_URL;
 const JWT = require('jsonwebtoken');
 const validate = require('../auth/validate.js');
 const deleteTag = require('../db/deleteTag.js');
-const getTagId = require('../db/getTagIdForDeletion.js');
+const {getTag_id} = require('../db/getIds.js');
 const cookieOptions = require('../auth/cookieOptions.js');
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
         else {
           pg.connect(postgresURL, (err, dbClient) => {
             if (err) throw err;
-            getTagId.getTagIdForDeletion(dbClient, deleteTagObj, (err1, tag_id) => {
+            getTag_id(dbClient, deleteTagObj, (err1, tag_id) => {
               if (err1) {
                 console.log(err1);
                 return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
