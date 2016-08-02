@@ -33,7 +33,7 @@ module.exports = {
         else {
           pg.connect(postgresURL, (err, dbClient, done) => {
             if (err) throw err;
-            checkFiltersTable(dbClient, filterObj, done, (err1, res) => {
+            checkFiltersTable(dbClient, filterObj, (err1, res) => {
               if (err1) {
                 console.log(err1);
                 return reply.redirect('/error/' + encodeURIComponent('error checking filters table'));
@@ -41,6 +41,7 @@ module.exports = {
                 console.log(filterObj);
                 reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
               }
+              done();
             });
           });
         }

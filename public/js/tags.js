@@ -6,21 +6,9 @@ const untagged = document.getElementById('untagged');
 const disableTags = () => {
   const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
   const tags = document.getElementById('tags');
-  if (untagged.checked) {
-    for(var i=0; i<scrollbarCheckboxes.length; i++) {
-      if(scrollbarCheckboxes[i].checked) {
-        scrollbarCheckboxes[i].disabled = true;
-        tags.disabled = true;
-      }
-    }
-  } else if(!untagged.checked) {
-    for(var i=0; i<scrollbarCheckboxes.length; i++) {
-      if(scrollbarCheckboxes[i].checked) {
-        scrollbarCheckboxes[i].disabled = false;
-        tags.disabled = false;
-      }
-    }
-  }
+  for(var i=0; i<scrollbarCheckboxes.length; i++)
+    scrollbarCheckboxes[i].disabled = untagged.checked;
+  tags.disabled = untagged.checked;
 };
 
 untagged.addEventListener('change', disableTags);

@@ -29,21 +29,23 @@ module.exports = {
               tag_name: request.payload.tag,
               company_id: decoded.company_id
             };
-            checkTagsTable(dbClient, tag, done, (err1) => {
+            checkTagsTable(dbClient, tag, (err1) => {
               if (err1) {
                 console.log(err1);
+                done();
                 return reply.redirect('/error/' + encodeURIComponent('unable to retrieve tags'));
               } else {
-                getTag_id(dbClient, tag, done, (err2, tag_id) => {
+                getTag_id(dbClient, tag, (err2, tag_id) => {
                   if (err2) {
                     console.log(err2);
+                    done();
                     return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
                   } else {
                     const tagsCalls = {
                       tag_id: tag_id,
                       call_id: request.payload.call_id
                     };
-                    insertIntoTagsCallsTable(dbClient, tagsCalls, done, () => {
+                    insertIntoTagsCallsTable(dbClient, tagsCalls, () => {
                       reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                       done();
                     });
