@@ -16,9 +16,16 @@ module.exports = {
         }
         else {
           const fileId = request.params.file_id;
-          validateFetchFile(decoded, file_id);
-          const response = reply(fs.createReadStream(process.env.PLAY_AUDIO_PATH + `${fileId}.wav`));
-          response.type('audio/wav');
+          validateFetchFile(decoded, request.params.file_id, (err, isValid1)=> {
+            if (err) {
+              console.log(err);
+            } else if (isValid1) {
+              const response = reply(fs.createReadStream(process.env.PLAY_AUDIO_PATH + `${fileId}.wav`));
+              response.type('audio/wav');
+            } else {
+              const response = reply('you are not authorized to listen to this call');
+            }
+          });
         }
       });
     } else {
