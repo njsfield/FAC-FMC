@@ -35,6 +35,14 @@ const insertIntoTagsCallsTable = (dbClient, object, done, callback) => {
 
 const insertIntoFiltersTable = (dbClient, object, done, callback) => {
   const queryArray = [object.filter_name, object.contact_id, object.filter_spec];
+  if (object.filter_spec.duration_min === 0) {
+    object.filter_spec.duration_min = '';
+  }
+
+  if (object.filter_spec.duration_max === 0) {
+    object.filter_spec.duration_max = '';
+  }
+
   dbClient.query('INSERT INTO filters (filter_name, contact_id, filter_spec) VALUES ($1, $2, $3)', queryArray, (error) => {
     if (error) {
       callback(error);
