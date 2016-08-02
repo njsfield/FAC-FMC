@@ -89,15 +89,18 @@ const taggedCallsStringCreator = (obj, queryArr, callback) => {
 
 const limitCallsCreator = (obj, queryArr) => {
   var sequel = '';
-  if (obj.firstIndex > 0) {
-    queryArr.push(obj.firstIndex);
-    sequel += ' OFFSET $' + queryArr.length;
-  }
+
   if (obj.maxRows < 1 || obj.maxRows > 100)
     obj.maxRows = 20;
 
   queryArr.push(obj.maxRows + 1);
-  sequel += ' LIMIT $' + queryArr.length;
+
+  sequel += ' ORDER BY calls.date DESC LIMIT $' + queryArr.length;
+
+  if (obj.firstIndex > 0) {
+    queryArr.push(obj.firstIndex);
+    sequel += ' OFFSET $' + queryArr.length;
+  }
   return sequel;
 };
 
