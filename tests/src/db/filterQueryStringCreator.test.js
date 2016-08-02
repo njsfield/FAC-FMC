@@ -86,7 +86,7 @@ test('test QSCreator functions', (t) => {
     t.deepEqual(actual, expected, 'filtering on "date" returns the expected string');
   });
   QSCreator.createQueryString(['value1', 'value2'], userObj, (createdQueryString) => {
-    const actual = createdQueryString.indexOf('LIMIT $3') > -1;
+    const actual = createdQueryString.indexOf('LIMIT $') > -1;
     const expected = true;
     t.deepEqual(actual, expected, 'complete query string is as expected');
   });
