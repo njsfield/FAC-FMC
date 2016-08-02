@@ -37,12 +37,12 @@ module.exports = {
                     done();
                     return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                   } else {
-                    getFilterNameAndSpec(dbClient, decoded, done, (err3, filters) => {
+                    getFilterNameAndSpec(dbClient, decoded, (err3, filters) => {
                       if (err3) {
                         errorHandler(err3);
                         return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                       } else {
-                        getTagNames(dbClient, decoded, done, (err4, savedTags) => {
+                        getTagNames(dbClient, decoded, (err4, savedTags) => {
                           if (err4) {
                             errorHandler(err4);
                             return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);

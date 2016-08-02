@@ -23,17 +23,17 @@ module.exports = {
         pg.connect(postgresURL, (err1, dbClient, done) => {
           if (err1) {
             done();
-            console.log(err1);
-            reply.redirect('/error/' + encodeURIComponent('error connecting to the database'));
+            errorHandler(err1);
+            return reply.view('login' ,{ loginError: 'error connecting to the database'});
           } else {
             const compObj = {
               company_name: user.user.company
             };
             checkCompaniesTable(dbClient, compObj, (err2, res) => {
               if (err2) {
-                console.log(err2);
                 done();
-                return reply.redirect('/error/'+ encodeURIComponent('error connecting to the databse'));
+                errorHandler(err2);
+                return reply.view('login' , { loginError: 'incorrect username or password'});
               } else {
                 const userObj = {
                   contact_id: user.user.id,
@@ -41,7 +41,6 @@ module.exports = {
                 };
                 checkUsersTable(dbClient, userObj, (err3) => {
                   if (err3) {
-                    console.log(err3);
                     return reply.view('login' + {loginError: 'incorrect password or username'} );
                     done();
                   } else {
@@ -66,17 +65,21 @@ module.exports = {
                       dbClient.query( queryString, queryArray, (err4, response) => {
                         if (err4) {
                           errorHandler(err4);
+                          return reply.view('login' + {loginError: 'incorrect password or username'} );
+                          done();
                         } else {
                           authData.adminCompanies = response.rows;
                           const token = JWT.sign(authData, process.env.JWT_KEY);
                           return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
                         }
                         done();
+                        pg.end();
                       });
                     } else {
                       const token = JWT.sign(authData, process.env.JWT_KEY);
                       return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
                       done();
+                      pg.end();
                     }
 
                   }
@@ -88,6 +91,7 @@ module.exports = {
       }
       else {
         return reply.view('login', {loginError: 'incorrect username or password'});
+        pg.end();
       }
     });
   }
