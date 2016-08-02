@@ -2,6 +2,7 @@ const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
 const JWT = require('jsonwebtoken');
 const validate = require('../auth/validate.js');
+const errorHandler = require('../../errorHandler.js');
 const deleteTag = require('../db/deleteTag.js');
 const {getTag_id} = require('../db/getIds.js');
 const cookieOptions = require('../auth/cookieOptions.js');
@@ -33,15 +34,14 @@ module.exports = {
               console.log("TAG ID: ",tag_id);
               console.log("ERR1: ",err1);
               if (err1) {
-                console.log(err1);
+                errorHandler(err1);
                 reply(JSON.stringify({success: 'fail', tag:deleteTagObj})).type('application/json');
               } else {
                 deleteTagObj.tag_id = tag_id;
                 deleteTag(dbClient, deleteTagObj, (err2) => {
                   if (err2) {
-                    console.log(err2);
+                    errorHandler(err2);
                     reply(JSON.stringify({success: 'fail', tag:deleteTagObj})).type('application/json');
-                    // return reply.redirect('/error/' + encodeURIComponent('unable to delete tag'));
                   } else {
                     reply(JSON.stringify({success: 'success', tag:deleteTagObj})).type('application/json');
                     // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);

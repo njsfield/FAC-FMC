@@ -2,12 +2,10 @@ const {test} = require('../../wrapping-tape-setup.js');
 const retrieveCompanyCalls = require('../../../polling/api/retrieveCompanyCalls.js');
 const calculatePollTimes = require('../../../polling/api/calculatePollTimes.js');
 const timeObj = calculatePollTimes(new Date(), new Date() - 36000000);
-console.log(timeObj);
 test('test the PABX to see if we can retrieveCompanyCalls', (t) => {
   t.plan(2);
   // these tests will expire
   retrieveCompanyCalls('default', timeObj[0], (err, file_objs) => {
-    console.log(file_objs);
     if (err) console.log(err);
     const actual = typeof file_objs;
     const expected = 'object';
