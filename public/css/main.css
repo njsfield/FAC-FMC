@@ -137,11 +137,21 @@ width: 100%
   width: 100%;
 }
 
+.drop-options {
+  background-image: none;
+background-color: white;
+border: none;
+color: black;
+padding: 7px;
+border-radius: 6px;
+width: 100%
+}
+
 option {
   padding: 7px;
 }
 
-#saved-filters {
+.saved-filters {
   font-size: 14px;
   margin-top: 6px;
 }
