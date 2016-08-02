@@ -130,7 +130,7 @@ const limitCallsCreator = (obj, queryArr) => {
  * and duration >= ('8')'
  */
 
-const createQueryString = (queryArr, obj,  callback) => {
+const createQueryString = (queryArr, obj, callback) => {
   let stringArr = [];
 
   // Must scope all requests to a company. For a normal user that will be the company to which they belong. For
@@ -143,14 +143,13 @@ const createQueryString = (queryArr, obj,  callback) => {
     stringArr.push(`( participants1.contact_id=$${queryArr.length} OR participants2.contact_id=$${queryArr.length})`);
   }
   else if (obj.adminCompany!=null && obj.adminCompany.search(/\S/)>=0) {
-      queryArr.push(obj.adminCompany);
-      stringArr.push(`calls.company_id = (SELECT company_id FROM companies WHERE company_name=$${queryArr.length})`);
+    queryArr.push(obj.adminCompany);
+    stringArr.push(`calls.company_id = (SELECT company_id FROM companies WHERE company_name=$${queryArr.length})`);
   }
   else {
     // Invalid parameters - make sure the result set is empty.
     stringArr.push('false');
   }
-
 
   toAndFromQueryStringCreator(obj, queryArr, (qa2, filters) => {
     if (filters) stringArr.push(filters);
