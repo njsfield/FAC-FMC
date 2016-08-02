@@ -5,7 +5,6 @@ module.exports = (decoded, file_id, callback) => {
   let queryString = '';
   let queryArray = [];
   queryArray.push(file_id);
-  console.log(decoded, file_id);
   if (decoded.userRole !== 'admin') {
     queryString = 'select 1 from calls where company_id = $1 and file_id = $2 and call_id in (select call_id from participants where contact_id = $3);';
     queryArray.push(decoded.company_id);
