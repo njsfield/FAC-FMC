@@ -28,7 +28,6 @@ module.exports = {
               reply.redirect('/error/' + encodeURIComponent('error connecting to the database'));
             } else {
               const queryArray = [];
-              console.log("SQL DATA SET: ",userObj);
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
@@ -97,8 +96,8 @@ const formatUserObj = (request, user)=> {
     untagged: false,
     firstIndex: 0,
     maxRows: 5,
-    isAdmin:isAdmin,
-    contactID:user.contact_id
+    isAdmin: isAdmin,
+    contactID: user.contact_id
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
