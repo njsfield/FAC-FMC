@@ -5,7 +5,7 @@ const getFilterSpec = () => {
   for (var f in spec) {
     var elem = document.getElementById(f);
     if (elem!=null) {
-      elem.value = f === 'duration_min' || f === 'duration_max' ? spec[f] / 60 : spec[f];
+      elem.value = f === 'duration_min' && typeof spec[f] === 'number' || f === 'duration_max' && typeof spec[f] === 'number' ? spec[f] / 60 : spec[f];
     }
   }
 };
