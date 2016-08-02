@@ -1,6 +1,7 @@
 const filterQueryStringCreator = require('../db/filterQueryStringCreator.js');
 const getFilterNameAndSpec = require('../../src/db/getFilterNameAndSpec.js');
 const getTagNames = require('../../src/db/getTagNamesArr.js');
+const errorHandler = require('../../errorHandler.js');
 const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
@@ -24,23 +25,27 @@ module.exports = {
         else {
           pg.connect(postgresURL, (err, dbClient, done) => {
             if (err){
-              console.log(err);
-              reply.redirect('/error/' + encodeURIComponent('error connecting to the database'));
+              errorHandler(err);
+              reply.view('login', {loginErr: 'Apologies we cannot log you on at the moment, try again later'});
             } else {
               const queryArray = [];
-              console.log("SQL DATA SET: ",userObj);
+              console.log('SQL DATA SET: ',userObj);
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
-                    console.log(err2);
-                    return reply.redirect('/error/' + encodeURIComponent('error retrieveing your calls'));
+                    errorHandler(err2);
+                    return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                   } else {
                     getFilterNameAndSpec(dbClient, decoded, done, (err3, filters) => {
-                      if (err) {
-                        console.log(err);
-                        return reply.redirect('/error/' + encodeURIComponent('error retrieving your calls'));
+                      if (err3) {
+                        errorHandler(err3);
+                        return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                       } else {
                         getTagNames(dbClient, decoded, done, (err4, savedTags) => {
+                          if (err4) {
+                            errorHandler(err4);
+                            return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
+                          }
                           res.rows.forEach( (call) => {
                             call.duration = formatCallDuration(call);
                           });
@@ -97,12 +102,12 @@ const formatUserObj = (request, user)=> {
     untagged: false,
     firstIndex: 0,
     maxRows: 5,
-    isAdmin:isAdmin,
-    contactID:user.contact_id
+    isAdmin: isAdmin,
+    contactID: user.contact_id
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
-    userObj.adminCompany = user.adminCompanies[0].name;
+    userObj.adminCompany = user.adminCompanies[0].name; // if for some reason no company is slected this will automatically
   }
   if (request.query!=null) {
     if (isAdmin && request.query.admin_company!=null) {
