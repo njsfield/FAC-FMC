@@ -51,25 +51,25 @@ databaseTest('run processCalls for 1 call and check whether the tables have been
       const expected = 'success';
       t.equals(actual, expected, 'calls have been processed');
     });
-    checkFilesTable(dbClient, arrOfCalls2[0], done, (res) => {
+    checkFilesTable(dbClient, arrOfCalls2[0], done, (err1, res) => {
       const actual = res;
       const file_id = '200';
       t.deepEqual(actual, file_id, 'file has been put in the file table');
       done();
     });
-    checkCallsTable(dbClient, arrOfCalls2[0], done, (res) => {
+    checkCallsTable(dbClient, arrOfCalls2[0], done, (err1, res) => {
       const actual = res;
       const call_id = '200';
       t.deepEqual(actual, call_id, 'call has been put in calls table');
       done();
     });
-    checkParticipantsTable(dbClient, participantsObj, done, (res) => {
+    checkParticipantsTable(dbClient, participantsObj, done, (err1, res) => {
       const actual = res;
       const expected = 223;
       t.deepEqual(actual, expected, 'participants added in participants table');
       done();
     });
-    checkParticipantsTable(dbClient, participantsObj1, done, (res) => {
+    checkParticipantsTable(dbClient, participantsObj1, done, (err1, res) => {
       const actual = res;
       const expected = 317;
       t.deepEqual(actual, expected, 'participants added in participants table');
