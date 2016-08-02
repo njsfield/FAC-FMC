@@ -42,12 +42,8 @@ module.exports = {
                 checkUsersTable(dbClient, userObj, (err3) => {
                   if (err3) {
                     console.log(err3);
-<<<<<<< HEAD
-                    return reply.redirect('/error/' + encodeURIComponent(err3) );
-=======
+                    return reply.view('login' + {loginError: 'incorrect password or username'} );
                     done();
-                    return reply.redirect('/error/' + encodeURIComponent(err3.error) );
->>>>>>> master
                   } else {
                     var authData = {
                       company_id: userObj.company_id,
