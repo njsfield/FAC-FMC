@@ -51,14 +51,18 @@ module.exports = {
                             call.duration = formatCallDuration(call);
                           });
                           userObj.tags = userObj.tags.join(';');
-
                           const userCalls = {
                             calls: res.rows,
                             filters,
                             savedTags,
                             userObj
                           };
-
+                          userCalls.calls.forEach(c => {
+                            if (c.tag_name.length>0) {
+                              c.tag_label = [];
+                              c.tag_name.forEach(t => c.tag_label.push({name:t,id:t+'^'+c.call_id}));
+                            }
+                          });
                           if (res.rows.length > userObj.maxRows) {
                             userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
                             res.rows.length = userObj.maxRows;

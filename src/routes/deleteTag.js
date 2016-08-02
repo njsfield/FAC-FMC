@@ -30,17 +30,21 @@ module.exports = {
           pg.connect(postgresURL, (err, dbClient) => {
             if (err) throw err;
             getTag_id(dbClient, deleteTagObj, (err1, tag_id) => {
+              console.log("DELETE OBJ: ",deleteTagObj);
+              console.log("TAG ID: ",tag_id);
+              console.log("ERR1: ",err1);
               if (err1) {
                 errorHandler(err1);
-                return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
+                reply(JSON.stringify({success: 'fail', tag:deleteTagObj})).type('application/json');
               } else {
                 deleteTagObj.tag_id = tag_id;
                 deleteTag(dbClient, deleteTagObj, (err2) => {
                   if (err2) {
                     errorHandler(err2);
-                    return reply.redirect('/error/' + encodeURIComponent('unable to delete tag'));
+                    reply(JSON.stringify({success: 'fail', tag:deleteTagObj})).type('application/json');
                   } else {
-                    reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
+                    reply(JSON.stringify({success: 'success', tag:deleteTagObj})).type('application/json');
+                    // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                   }
                 });
               }

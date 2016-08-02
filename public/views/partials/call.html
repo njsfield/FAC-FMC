@@ -32,22 +32,21 @@
           </div>
         </div>
         <div class="row tag-cards">
-          <form action="/tag-call" method="POST">
+          <div>
             <div class="col-xs-3">
               <div class="form-group">
-                <input id="tag_call" name="tag" class="form-control" type="text" placeholder="Tag Name">
-                <input id="call_id" type="hidden" name="call_id" value="{{ call_id }}">
+                <input name="tag" id="addtag_name_{{ call_id }}" class="tagname form-control" type="text" placeholder="Tag Name">
               </div>
             </div>
             <div class="col-xs-2 tag-bar">
-              <button id="tag_button" type="submit" class="btn btn-success">Tag Call</button>
+              <button type="button" id="addtag_{{ call_id }}" class="btn_addtag btn btn-success">Tag Call</button>
             </div>
-          </form>
+          </div>
           <div class='col-xs-7'>
-            {{#each tag_name}}
+            {{#each tag_label}}
             <div class='tag-card'>
-              <span class="tag-name">{{this}}</span>
-              <em id={{this}} class={{../call_id}}>X</em>
+              <span class="tag-name">{{name}}</span>
+              <em id="{{id}}" xclass={{../call_id}}>X</em>
             </div>
             {{/each}}
           </div>
