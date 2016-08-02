@@ -24,23 +24,25 @@ module.exports = {
         else {
           pg.connect(postgresURL, (err, dbClient, done) => {
             if (err){
+              done();
               console.log(err);
               reply.redirect('/error/' + encodeURIComponent('error connecting to the database'));
             } else {
               const queryArray = [];
-              console.log("SQL DATA SET: ",userObj);
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
+                    done();
                     console.log(err2);
                     return reply.redirect('/error/' + encodeURIComponent('error retrieveing your calls'));
                   } else {
-                    getFilterNameAndSpec(dbClient, decoded, done, (err3, filters) => {
+                    getFilterNameAndSpec(dbClient, decoded, (err3, filters) => {
                       if (err) {
+                        done();
                         console.log(err);
                         return reply.redirect('/error/' + encodeURIComponent('error retrieving your calls'));
                       } else {
-                        getTagNames(dbClient, decoded, done, (err4, savedTags) => {
+                        getTagNames(dbClient, decoded, (err4, savedTags) => {
                           res.rows.forEach( (call) => {
                             call.duration = formatCallDuration(call);
                           });
@@ -96,7 +98,7 @@ const formatUserObj = (request, user)=> {
     tags: [],
     untagged: false,
     firstIndex: 0,
-    maxRows: 5,
+    maxRows: 20,
     isAdmin:isAdmin,
     contactID:user.contact_id
   };
