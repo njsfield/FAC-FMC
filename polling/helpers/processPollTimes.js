@@ -17,11 +17,12 @@ const processPollTimes = (dbClient, done, company_name, companiesObj, pollTimesQ
     },
 
     function(arrOfCalls, callback){
-      if (arrOfCalls.result !== 'fail') {
+      if (arrOfCalls.result !== 'fail' && arrOfCalls.length > 0) {
         processCalls( dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, callback);
       } else {
-        console.log(company_name, 'error:', arrOfCalls.message);
-        callback(null, arrOfCalls.message);
+        const message = arrOfCalls.message ? arrOfCalls.message : 'no calls available';
+        console.log('fetching calls for ', company_name, 'has errored:', message);
+        callback(null);
       }
     }
   ],
