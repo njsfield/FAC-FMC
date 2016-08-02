@@ -37,17 +37,4 @@ module.exports = (decoded, file_id, callback) => {
     );}
     });
   }
-
-  // pg.connect(postgresURL, (err, dbClient, done)=> {
-  //   if (admin) {
-  //     companies
-  //     queryString
-  //   }
-  //   const queryString = 'select 1 from calls where company_id = 100 and file_id = 125 and call_id in (select call_id from participants where contact_id = 472); ';
-  //
-  //
-  //   dbClient.query(queryString, queryArray, (err, response) => {
-  //
-  //   })
-
 };
