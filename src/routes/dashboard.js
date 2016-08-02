@@ -29,7 +29,6 @@ module.exports = {
               reply.view('login', {loginErr: 'Apologies we cannot log you on at the moment, try again later'});
             } else {
               const queryArray = [];
-              console.log('SQL DATA SET: ',userObj);
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
