@@ -1,3 +1,6 @@
+{{#if callError}}
+<h3 class='error'> {{callError}} </h3>
+{{/if}}
 <div class="panel-group" id="accordion">
   {{#each calls}}
   <div class="panel panel-default">

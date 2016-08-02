@@ -4,6 +4,8 @@ const clearFilterForm = () => {
     var elem = document.getElementById(id);
     elem.value = '';
   });
+  const options = document.getElementById('dropdown');
+
 };
 
 const clearForm = document.getElementById('clear-form');
