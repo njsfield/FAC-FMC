@@ -71,18 +71,14 @@ module.exports = {
                           const token = JWT.sign(authData, process.env.JWT_KEY);
                           return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
                         }
+                        done();
                       });
                     } else {
                       const token = JWT.sign(authData, process.env.JWT_KEY);
                       return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
+                      done();
                     }
 
-<<<<<<< HEAD
-=======
-                    const token = JWT.sign(authData, process.env.JWT_KEY);
-                    done();
-                    return reply.redirect('/dashboard').state('FMC', token, cookieOptions);
->>>>>>> master
                   }
                 });
               }
