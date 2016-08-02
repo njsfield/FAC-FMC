@@ -27,12 +27,14 @@ module.exports = {
             if (err){
               errorHandler(err);
               reply.view('login', {loginErr: 'Apologies we cannot log you on at the moment, try again later'});
+              done();
             } else {
               const queryArray = [];
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
                     errorHandler(err2);
+                    done();
                     return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                   } else {
                     getFilterNameAndSpec(dbClient, decoded, done, (err3, filters) => {
@@ -100,7 +102,7 @@ const formatUserObj = (request, user)=> {
     tags: [],
     untagged: false,
     firstIndex: 0,
-    maxRows: 5,
+    maxRows: 20,
     isAdmin: isAdmin,
     contactID: user.contact_id
   };

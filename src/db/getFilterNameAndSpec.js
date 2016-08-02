@@ -1,4 +1,4 @@
-module.exports = (dbClient, obj, done, cb) => {
+module.exports = (dbClient, obj, cb) => {
   const queryArray = [obj.contact_id];
   dbClient.query('SELECT filter_name, filter_spec FROM filters WHERE contact_id=($1)', queryArray, (err, res) => {
     if (err) {
@@ -10,5 +10,4 @@ module.exports = (dbClient, obj, done, cb) => {
       cb(null, arrFilter);
     }
   });
-  done();
 };
