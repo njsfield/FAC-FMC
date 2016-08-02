@@ -15,7 +15,8 @@ module.exports = {
     let baseUrl = createURL(request.url.search);
     if (request.state.FMC) {
       const decoded = JWT.decode(request.state.FMC);
-      let userObj = formatUserObj(request);
+      let userObj = formatUserObj(request, decoded);
+
       validate(decoded, request, (error, isValid) => {
         if (error || !isValid) {
           return reply.redirect('/').unstate('FMC');
@@ -26,7 +27,8 @@ module.exports = {
               console.log(err);
               reply.redirect('/error/' + encodeURIComponent('error connecting to the database'));
             } else {
-              const queryArray = [decoded.contact_id, decoded.company_id];
+              const queryArray = [];
+              console.log("SQL DATA SET: ",userObj);
               filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
@@ -39,30 +41,27 @@ module.exports = {
                         return reply.redirect('/error/' + encodeURIComponent('error retrieving your calls'));
                       } else {
                         getTagNames(dbClient, decoded, done, (err4, savedTags) => {
-                          if (err4) {
-                            console.log(err4);
-                            return reply.redirect('/error/' + encodeURIComponent('unable to get Tag names'));
-                          } else {
-                            res.rows.forEach( (call) => {
-                              call.duration = formatCallDuration(call);
-                            });
-                            userObj.tags = userObj.tags.join(';');
-                            const userCalls = {
-                              calls: res.rows,
-                              filters,
-                              savedTags,
-                              userObj
-                            };
-                            if (res.rows.length > userObj.maxRows) {
-                              userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
-                              res.rows.length = userObj.maxRows;
-                            }
-                            if (userObj.firstIndex > 0) {
-                              userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
-                            }
-                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
-                            done();
+                          res.rows.forEach( (call) => {
+                            call.duration = formatCallDuration(call);
+                          });
+                          userObj.tags = userObj.tags.join(';');
+
+                          const userCalls = {
+                            calls: res.rows,
+                            filters,
+                            savedTags,
+                            userObj
+                          };
+
+                          if (res.rows.length > userObj.maxRows) {
+                            userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                            res.rows.length = userObj.maxRows;
                           }
+                          if (userObj.firstIndex > 0) {
+                            userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                          }
+                          reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                          done();
                         });
                       }
                     });
@@ -85,8 +84,10 @@ const createURL = (requestSearch) => {
   return baseUrl;
 };
 
-const formatUserObj = (request)=> {
+const formatUserObj = (request, user)=> {
+  let isAdmin = (user.userRole==='admin');
   let userObj = {
+    company_id: user.company_id,
     to: '',
     from: '',
     min: '',
@@ -95,9 +96,28 @@ const formatUserObj = (request)=> {
     tags: [],
     untagged: false,
     firstIndex: 0,
-    maxRows: 20
+    maxRows: 5,
+    isAdmin:isAdmin,
+    contactID:user.contact_id
   };
+  if (isAdmin) {
+    userObj.adminCompanies = user.adminCompanies;
+    userObj.adminCompany = user.adminCompanies[0].name;
+  }
   if (request.query!=null) {
+    if (isAdmin && request.query.admin_company!=null) {
+      userObj.adminCompanies.forEach((c) => {if (c.name==request.query.admin_company) c.selected='selected';});
+
+      // The admin_company *must* be in the set of companies the current user can see.
+      if (user.adminCompanies!=null && user.adminCompanies.some(c => c.name == request.query.admin_company)) {
+        // OK - allowed to see calls for this company_id
+        userObj.adminCompany = request.query.admin_company;
+      }
+      // If there's not selected admin country then default to the first company in the admins list
+      if (userObj.adminCompany==null && user.adminCompanies.length>0) {
+        userObj.adminCompany = user.adminCompanies[0].name;
+      }
+    }
     if (request.query.to!=null)
       userObj.to = request.query.to;
     if (request.query.from!=null)

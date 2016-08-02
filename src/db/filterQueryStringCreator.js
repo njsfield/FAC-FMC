@@ -1,14 +1,14 @@
 'use strict';
 
 
-const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI:SS'), calls.duration, calls.call_id, calls.file_id, calls.company_id,
+const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI:SS') AS date, calls.duration, calls.call_id, calls.file_id, calls.company_id,
    participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
    participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
    array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name
 FROM calls
     LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
     LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
-WHERE (participants1.contact_id=$1 OR participants2.contact_id=$1) AND calls.company_id=$2 `;
+WHERE `;
 
 const toString2 = 'participants2.number =';
 const fromString = 'participants1.number =';
@@ -44,15 +44,15 @@ const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
 
 const minAndMaxQueryStringCreator = (obj, queryArr, callback) => {
   if (obj.min !== '' && obj.max !== '') {
-    queryArr.push(obj.min * 60, obj.max * 60);
+    queryArr.push(obj.min, obj.max);
     callback(queryArr, `${minTimeString}$${queryArr.length -1} AND ${maxTimeString}$${queryArr.length}`);
   }
   else if (obj.min !== '') {
-    queryArr.push(obj.min * 60);
+    queryArr.push(obj.min);
     callback(queryArr, `${minTimeString}$${queryArr.length}`);
   }
   else if (obj.max !== '') {
-    queryArr.push(obj.max * 60);
+    queryArr.push(obj.max);
     callback(queryArr, `${maxTimeString}$${queryArr.length}`);
   }
   else {
@@ -130,8 +130,27 @@ const limitCallsCreator = (obj, queryArr) => {
  * and duration >= ('8')'
  */
 
-const createQueryString = (queryArr, obj, callback) => {
-  let stringArr = [queryString];
+const createQueryString = (queryArr, obj,  callback) => {
+  let stringArr = [];
+
+  // Must scope all requests to a company. For a normal user that will be the company to which they belong. For
+  // an administrator is will the the 'adminCompany', if present. Otherwise it will again drop back to company_id.
+
+  if (obj.isAdmin!==true) {
+    queryArr.push(obj.company_id);
+    stringArr.push(`calls.company_id = $${queryArr.length}`);
+    queryArr.push(obj.contactID);
+    stringArr.push(`( participants1.contact_id=$${queryArr.length} OR participants2.contact_id=$${queryArr.length})`);
+  }
+  else if (obj.adminCompany!=null && obj.adminCompany.search(/\S/)>=0) {
+      queryArr.push(obj.adminCompany);
+      stringArr.push(`calls.company_id = (SELECT company_id FROM companies WHERE company_name=$${queryArr.length})`);
+  }
+  else {
+    // Invalid parameters - make sure the result set is empty.
+    stringArr.push('false');
+  }
+
 
   toAndFromQueryStringCreator(obj, queryArr, (qa2, filters) => {
     if (filters) stringArr.push(filters);
@@ -145,7 +164,7 @@ const createQueryString = (queryArr, obj, callback) => {
         taggedCallsStringCreator(obj, qa4, (qa5, filters4) => {
           if (filters4) stringArr.push(filters4);
 
-          var fullQueryString = stringArr.join(' and ');
+          var fullQueryString = queryString + ' '+stringArr.join(' AND ');
           fullQueryString += limitCallsCreator(obj, qa5);
           callback(fullQueryString, qa5);
         });
