@@ -132,17 +132,17 @@ const formatUserObj = (request, user)=> {
       userObj.to = request.query.to;
     if (request.query.from!=null)
       userObj.from = request.query.from;
-    if (request.query.min!=null)
-      userObj.min = request.query.min;
-    if (request.query.max!=null)
-      userObj.max = request.query.max;
+    if (request.query.min!=null && !isNaN(request.query.min) && request.query.min>0)
+      userObj.min = parseFloat(request.query.min);
+    if (request.query.max!=null && !isNaN(request.query.max) && request.query.max>0)
+      userObj.max = parseFloat(request.query.max);
     if (request.query.date!=null)
       userObj.date = request.query.date;
     if (request.query.untagged!=null)
       userObj.untagged = true;
     else {
       if (request.query.tags!=null && request.query.tags.search(/\S/)>=0)
-        userObj.tags = request.query.tags.split(';');
+        userObj.tags = request.query.tags.replace(/[^\w\s\d\;\,]+|^\s+|\s+$/g,'').split(/\s*[\,\;]\s*/g).filter(w => w.search(/\S/)>=0);
       if(request.query.company_tag!=null)
         userObj.tags = userObj.tags.concat(request.query.company_tag);
     }
