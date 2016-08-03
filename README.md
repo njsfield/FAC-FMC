@@ -14,6 +14,19 @@ FAC Find My Calls
 ```
 $ npm i
 ```
+
+* Create a config.env file in the root with 
+```
+API_KEY=abcd
+JWT_KEY=abcd
+PBX_URL=https://hostname.ipcortex.net
+POSTGRES_URL=postgressurl
+POSTGRES_URL_TEST=postgrestesturl
+NODE_TLS_REJECT_UNAUTHORIZED=0
+SAVE_AUDIO_PATH=../
+```
+
+``
 * Start your Postgres server by entering the following or a similar command into your terminal:
 
 ```
