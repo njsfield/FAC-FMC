@@ -16,7 +16,9 @@ const routes = [
   require('../routes/fetchAudio.js'),
   require('../routes/home.js'),
   require('../routes/logout.js'),
-  require('../routes/schema.js'),
+  /** the following line will enable you to go to the route /schema which will run the schema.txt file and recreate database.
+  Comment back in if needed. */
+  // require('../routes/schema.js'), /** this route */
   require('../routes/tagCall.js'),
   require('../routes/publicDirectory.js'),
   require('../routes/saveFilter.js'),
