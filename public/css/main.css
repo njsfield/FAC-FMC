@@ -214,3 +214,8 @@ em {
 .error {
   color: white;
 }
+
+.pages {
+  color: white;
+  font-size: 15px;
+}
