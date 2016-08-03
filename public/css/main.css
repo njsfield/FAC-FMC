@@ -223,7 +223,7 @@ em {
 #error-box {
 width: 25%;
 font-size: 15px;
-background-color: rgba(255,149,49, 0.95);
+background-color: rgba(255,149,49, 0.90);
 float: right;
 z-index: 1000;
 display: block;
