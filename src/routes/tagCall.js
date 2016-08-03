@@ -47,11 +47,15 @@ module.exports = {
                       tag_id: tag_id,
                       call_id: request.params.call_id
                     };
-                    insertIntoTagsCallsTable(dbClient, tagsCalls, () => {
-                      tag.tag_id = tag_id;
-                      reply(JSON.stringify({success: 'success', tag: tag})).type('application/json');
-                      // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
-                      done();
+                    insertIntoTagsCallsTable(dbClient, tagsCalls, (err3, res) => {
+                      if (res) {
+                        tag.tag_id = tag_id;
+                        reply(JSON.stringify({success: 'success', tag: tag})).type('application/json');
+                        // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
+                        done();
+                      } else {
+                        reply(JSON.stringify({success: 'success', tag: 'already exists'})).type('application/json');
+                      }
                     });
                   }
                 });
