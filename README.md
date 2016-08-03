@@ -5,9 +5,9 @@ FAC Find My Calls
 
 [![Build Status](https://travis-ci.org/ipcortex/FAC-FMC.svg?branch=master)](https://travis-ci.org/ipcortex/FAC-FMC)
 
-## Getting Started
+## INSTALLATION
 
-* Make sure you have PostgreSQL installed.
+* Make sure you have PostgreSQL installed and Node 6 onwards. 
 
 * Install the npm modules:
 
@@ -15,44 +15,39 @@ FAC Find My Calls
 $ npm i
 ```
 
+## SETUP
+
 * Create a config.env file in the root with 
 ```
 API_KEY=abcd
 JWT_KEY=abcd
 PBX_URL=https://hostname.ipcortex.net
-POSTGRES_URL=postgressurl
-POSTGRES_URL_TEST=postgrestesturl
+POSTGRES_URL=postgres://postgresusername:postgrespassword@hostname/databasename
+POSTGRES_URL_TEST=postgres://postgresusername:postgrespassword@hostname/databasename
 NODE_TLS_REJECT_UNAUTHORIZED=0
 SAVE_AUDIO_PATH=../
 ```
 
-``
-* Start your Postgres server by entering the following or a similar command into your terminal:
+* The API_KEY is to be obtained from IPCortex as your access token.
+* JWT_KEY is a your auth strategy. See these [docs](https://github.com/dwyl/hapi-auth-jwt2) for details.
+* PBX_URL is your IP cortex host name address
+* POSTGRES_URL is needed to run queries to the database
+* POSTGRES_URL_TEST is the url of your test database
+* NODE_TLS_REJECT_UNAUTHORIZED=0 Turns off SSL authentication for development purposes.
 
-```
-$ pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 
-```
-* Login to psql as the Postgres user:
+## RUNNING
 
-```
-$ psql template1 postgres
-```
+* Start your Postgres server 
 
-* Create the database fmc:
+* Create a database called 'fmc'
 
-```
-$ create database fmc;
-```
-* Connect to fmc:
+* Connect to your fmc database
 
-```
-$ \c fmc;
-```
 * Run the schema:
 
 ```
-$ \i src/db/db_schema.txt
+$ \i schema/schema.txt
 ```
 
 * Then, in a separate tab, run either:
@@ -60,10 +55,10 @@ $ \i src/db/db_schema.txt
 ```
 $ npm start
 ```
-or
+or if you have nodemon installed
 
 ```
-$ npm run startmon
+$ npm run startmon 
 ```
 
 * To run the tests, run the following in a separate terminal tab:
@@ -71,29 +66,3 @@ $ npm run startmon
 npm t
 ```
 
-You'll need to configure the environment variables. Create a config.env file in the root folder and enter the following keys.
-
-```
-API_KEY= (string e.g. gdeh6e3bkewjd983hje8h9)
-```
-To be obtained from IPCortex.
-```
-JWT_KEY= (string e.g. hdeu998hjewhw97hfwefkjwf)
-```
-To be created in the src/server/server.js in the auth strategy object. See these [docs](https://github.com/dwyl/hapi-auth-jwt2) for details.
-```
-PBX_URL= (url e.g. https:// ...  .net)
-```
-To be obtained from IPCortex.
-```
-POSTGRES_URL= (url e.g. postgres://postgresusername:postgrespassword@hostname/databasename )
-```
-Needed to run any queries to the database.
-```
-POSTGRES_URL_TEST= (url e.g. postgres://postgresusername:postgrespassword@hostname/databasename )
-```
-Needed to run any queries to the database in the tests.
-```
-NODE_TLS_REJECT_UNAUTHORIZED=0
-```
-Turns off SSL authentication for development purposes.
