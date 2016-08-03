@@ -42,7 +42,7 @@ const addTag = (e) => {
   if (tagName.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
     // showUserError("Tag name contains invalid characters");
-    errorHandler('tag name contains invalid characters');
+    errorHandler('tag name contains invalid characters'); // eslint-disable-line
     return;
   }
 
@@ -59,6 +59,7 @@ const addTag = (e) => {
         document.getElementById(emId).addEventListener('click', deleteTag);
       } else {
         errorHandler('unable to save your tag');
+        errorHandler('unable to save your tag'); // eslint-disable-line
       }
     }
   };

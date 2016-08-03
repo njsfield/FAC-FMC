@@ -39,8 +39,8 @@ const saveFilter = (e) => {
   if (tags!=null && tags.search(/\S/)>=0)
     arrTags = tags.split(';');
 
-  ESCAPE = function(s) {
-    return s.replace(/\"|\<|\>/g,function(s){
+  ESCAPE = function(s) { // eslint-disable-line
+    return s.replace(/\"|\<|\>/g,function(s){ // eslint-disable-line
       return ({'"': '&quot;', '<': '&lt;','>': '&gt;'})[s];
     });
   };
@@ -60,10 +60,10 @@ const saveFilter = (e) => {
 
       var response = JSON.parse(xhr.response.toString());
       if (response.success) {
-        jQuery('#dropdown').append(
-          '<option id="dropdown-option" value="'+ESCAPE(response.description)+'">'+ESCAPE(filterObj.filter_name)+'</option>'
+        jQuery('#dropdown').append( // eslint-disable-line
+          '<option id="dropdown-option" value="'+ESCAPE(response.description)+'">'+ESCAPE(filterObj.filter_name)+'</option>' // eslint-disable-line
         );
-        jQuery('#myModal').modal('hide');
+        jQuery('#myModal').modal('hide'); // eslint-disable-line
         document.getElementById('filter_name').value = '';
       }
       else {
