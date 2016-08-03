@@ -19,8 +19,6 @@ module.exports = (decoded, file_id, callback) => {
         queryString += ' OR ';
       }
     });
-    console.log(queryString);
-    console.log(queryArray);
     pg.connect(postgresURL, (error, dbClient, done) => {
       if (error) {
         callback(error);

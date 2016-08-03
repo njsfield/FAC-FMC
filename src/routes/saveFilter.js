@@ -37,9 +37,8 @@ module.exports = {
             checkFiltersTable(dbClient, filterObj, (err1, res) => {
               if (err1) {
                 errorHandler(err1);
-                reply(JSON.stringify({success: 'fail', message: 'unable to checkFiltersTable' })).type('application/json');
+                reply({success: res.success, message: 'check filters table errored'});
               } else {
-                console.log(filterObj);
                 reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
               }
               done();
