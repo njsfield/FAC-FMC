@@ -57,8 +57,11 @@ const addTag = (e) => {
         div.innerHTML = '<span class="tag-name">'+ tagName +'</span> <em id="' + emId + '">X</em> ';
         document.getElementById('calltags_'+ callId).appendChild(div);
         document.getElementById(emId).addEventListener('click', deleteTag);
+
+        const otherDiv = document.createElement('div');
+        otherDiv.innerHTML = '<label><input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '"> ' + tagName + '</label> <br>';
+        document.getElementsByClassName('scrollbar-tags')[0].appendChild(otherDiv);
       } else {
-        errorHandler('unable to save your tag');
         errorHandler('unable to save your tag'); // eslint-disable-line
       }
     }
