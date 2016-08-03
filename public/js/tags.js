@@ -42,6 +42,7 @@ const addTag = (e) => {
   if (tagName.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
     // showUserError("Tag name contains invalid characters");
+    errorHandler('tag name contains invalid characters');
     return;
   }
 
@@ -56,6 +57,8 @@ const addTag = (e) => {
         div.innerHTML = '<span class="tag-name">'+ tagName +'</span> <em id="' + emId + '">X</em> ';
         document.getElementById('calltags_'+ callId).appendChild(div);
         document.getElementById(emId).addEventListener('click', deleteTag);
+      } else {
+        errorHandler('unable to save your tag');
       }
     }
   };

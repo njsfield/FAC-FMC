@@ -219,3 +219,23 @@ em {
   color: white;
   font-size: 15px;
 }
+
+#error-box {
+width: 25%;
+font-size: 15px;
+background-color: rgba(255,149,49, 0.95);
+float: right;
+z-index: 1000;
+display: block;
+margin-left: 70%;
+border-radius: 10px;
+margin-top: 2em;
+color: white;
+padding: 1.5em;
+position: fixed;
+text-align: center;
+}
+
+.hidden {
+  display: none;
+}
