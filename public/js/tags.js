@@ -42,6 +42,7 @@ const addTag = (e) => {
   if (tagName.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
     // showUserError("Tag name contains invalid characters");
+    errorHandler('tag name contains invalid characters');
     return;
   }
 

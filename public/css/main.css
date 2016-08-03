@@ -221,19 +221,19 @@ em {
 }
 
 #error-box {
-  height: 11em;
-width: 27%;
+width: 25%;
 font-size: 15px;
-background-color: rgba(255,149,49, 0.9);
+background-color: rgba(255,149,49, 0.95);
 float: right;
 z-index: 1000;
 display: block;
 margin-left: 70%;
 border-radius: 10px;
-margin-top: 29px;
+margin-top: 2em;
 color: white;
-padding: 2em;
-display: none;
+padding: 1.5em;
+position: fixed;
+text-align: center;
 }
 
 .hidden {
