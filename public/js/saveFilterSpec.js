@@ -19,7 +19,7 @@ select.addEventListener('change', getFilterSpec);
 
 const saveFilter = (e) => {
   const xhr = new XMLHttpRequest();
-  const error = document.getElementById('error-message');
+  const error = document.getElementById('filter-error-message');
   error.innerHTML = '';
 
   e.stopPropagation();
