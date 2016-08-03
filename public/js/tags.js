@@ -50,6 +50,8 @@ const addTag = (e) => {
         div.innerHTML = '<span class="tag-name">'+ tagName +'</span> <em id="' + emId + '">X</em> ';
         document.getElementById('calltags_'+ callId).appendChild(div);
         document.getElementById(emId).addEventListener('click', deleteTag);
+      } else {
+        errorHandler('unable to save your tag');
       }
     }
   };
