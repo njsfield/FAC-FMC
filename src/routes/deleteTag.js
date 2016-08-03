@@ -5,7 +5,6 @@ const validate = require('../auth/validate.js');
 const errorHandler = require('../../errorHandler.js');
 const deleteTag = require('../db/deleteTag.js');
 const {getTag_id} = require('../db/getIds.js');
-const cookieOptions = require('../auth/cookieOptions.js');
 
 module.exports = {
   method: 'post',
@@ -30,20 +29,17 @@ module.exports = {
           pg.connect(postgresURL, (err, dbClient) => {
             if (err) throw err;
             getTag_id(dbClient, deleteTagObj, (err1, tag_id) => {
-              console.log("DELETE OBJ: ",deleteTagObj);
-              console.log("TAG ID: ",tag_id);
-              console.log("ERR1: ",err1);
               if (err1) {
                 errorHandler(err1);
-                reply(JSON.stringify({success: 'fail', tag:deleteTagObj})).type('application/json');
+                reply(JSON.stringify({success: 'fail', tag: deleteTagObj})).type('application/json');
               } else {
                 deleteTagObj.tag_id = tag_id;
                 deleteTag(dbClient, deleteTagObj, (err2) => {
                   if (err2) {
                     errorHandler(err2);
-                    reply(JSON.stringify({success: 'fail', tag:deleteTagObj})).type('application/json');
+                    reply(JSON.stringify({success: 'fail', tag: deleteTagObj})).type('application/json');
                   } else {
-                    reply(JSON.stringify({success: 'success', tag:deleteTagObj})).type('application/json');
+                    reply(JSON.stringify({success: 'success', tag: deleteTagObj})).type('application/json');
                     // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                   }
                 });
