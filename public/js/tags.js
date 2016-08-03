@@ -48,7 +48,7 @@ const addTag = (e) => {
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       const response = JSON.parse(xhr.responseText);
-      if (response.success === 'success') {
+      if (response.success === 'success' && response.tag !== 'already exists') {
         /**** CODE HERE TO CREATE THE NEW TAG DOM ELEMENT IN THE CALLS DISPLAY ****/
         const div = document.createElement('div');
         const emId = 'delTag_' + tagName + '^' + callId;
