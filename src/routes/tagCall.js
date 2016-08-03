@@ -52,10 +52,10 @@ module.exports = {
                         tag.tag_id = tag_id;
                         reply(JSON.stringify({success: 'success', tag: tag})).type('application/json');
                         // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
-                        done();
                       } else {
                         reply(JSON.stringify({success: 'success', tag: 'already exists'})).type('application/json');
                       }
+                      done();
                     });
                   }
                 });
