@@ -35,13 +35,21 @@
         {{> filters}}
       </div>
       <div class="col-xs-8">
-        {{> call}}
-        {{#if nextPage}}
-          <a href='/dashboard{{nextPage}}'>next page</a><br>
-        {{/if}}
-        {{#if prevPage}}
-          <a href='/dashboard{{prevPage}}'>prev page</a><br>
-        {{/if}}
+        <div class='row'>
+          {{> call}}
+        </div>
+        <div class='row'>
+          <div class='col-xs-2 col-xs-offset4'>
+            {{#if prevPage}}
+              <a class='pages' href='/dashboard{{prevPage}}'>prev page</a><br>
+            {{/if}}
+          </div>
+          <div class='col-xs-2'>
+            <{{#if nextPage}}
+            <a class='pages' href='/dashboard{{nextPage}}'>next page</a><br>
+            {{/if}}
+          </div>
+        </div>
       </div>
     </div>
   </div>
