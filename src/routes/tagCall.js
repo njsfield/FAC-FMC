@@ -35,14 +35,12 @@ module.exports = {
                 console.log(err1);
                 done();
                 reply(JSON.stringify({success: 'fail', tag: tag})).type('application/json');
-                // return reply.redirect('/error/' + encodeURIComponent('unable to retrieve tags'));
               } else {
                 getTag_id(dbClient, tag, (err2, tag_id) => {
                   if (err2) {
                     console.log(err2);
                     done();
                     reply(JSON.stringify({success: 'fail', tag: tag})).type('application/json');
-                    // return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
                   } else {
                     const tagsCalls = {
                       tag_id: tag_id,
@@ -52,7 +50,6 @@ module.exports = {
                       if (res) {
                         tag.tag_id = tag_id;
                         reply(JSON.stringify({success: 'success', tag: tag})).type('application/json');
-                        // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                       } else {
                         reply(JSON.stringify({success: 'success', tag: 'already exists'})).type('application/json');
                       }
