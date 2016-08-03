@@ -3,6 +3,7 @@ const validate = require('../auth/validate.js');
 const pg = require('pg');
 const JWT = require('jsonwebtoken');
 const postgresURL = process.env.POSTGRES_URL;
+const errorHandler = require('../../errorHandler.js');
 
 module.exports = {
   method: 'POST',
@@ -35,8 +36,8 @@ module.exports = {
             if (err) throw err;
             checkFiltersTable(dbClient, filterObj, (err1, res) => {
               if (err1) {
-                console.log(err1);
-                return reply.redirect('/error/' + encodeURIComponent('error checking filters table'));
+                errorHandler(err1);
+                reply(JSON.stringify({success: 'fail', message: 'unable to checkFiltersTable' })).type('application/json');
               } else {
                 console.log(filterObj);
                 reply(JSON.stringify({success: res.success, message: res.message || '' , description: JSON.stringify(filterObj.filter_spec)})).type('application/json');
