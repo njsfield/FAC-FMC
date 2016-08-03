@@ -42,11 +42,11 @@
               <button type="button" id="addtag_{{ call_id }}" class="btn_addtag btn btn-success">Tag Call</button>
             </div>
           </div>
-          <div class='col-xs-7'>
+          <div class='col-xs-7' id="calltags_{{ call_id }}">
             {{#each tag_label}}
             <div class='tag-card'>
               <span class="tag-name">{{name}}</span>
-              <em id="{{id}}" xclass={{../call_id}}>X</em>
+              <em id="delTag_{{id}}" >X</em>
             </div>
             {{/each}}
           </div>

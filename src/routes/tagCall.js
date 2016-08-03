@@ -5,14 +5,12 @@ const {checkTagsTable} = require('../db/checkTables.js');
 const {getTag_id} = require('../db/getIds.js');
 const {insertIntoTagsCallsTable} = require('../db/insertData.js');
 const validate = require('../auth/validate.js');
-const cookieOptions = require('../auth/cookieOptions.js');
 
 module.exports = {
   method: 'post',
   path: '/tag-call/{tag_name}/{call_id}',
   config: {auth: false},
   handler: (request, reply) => {
-    console.log("HANDLING ADD TAG");
     if (request.state.FMC) {
       const decoded = JWT.decode(request.state.FMC);
       validate(decoded, request, (error, isValid) => {
@@ -20,7 +18,7 @@ module.exports = {
           return reply.redirect('/').unstate('FMC');
         }
         else if (request.params.tag_name.search(/\S/)<0) {
-          reply(JSON.stringify({success: 'fail', tag:{}, message:'invalid tag name'})).type('application/json');
+          reply(JSON.stringify({success: 'fail', tag: {}, message: 'invalid tag name'})).type('application/json');
           return reply.redirect('/dashboard');
         }
       else {
@@ -35,14 +33,14 @@ module.exports = {
               if (err1) {
                 console.log(err1);
                 done();
-                reply(JSON.stringify({success: 'fail', tag:tag})).type('application/json');
+                reply(JSON.stringify({success: 'fail', tag: tag})).type('application/json');
                 // return reply.redirect('/error/' + encodeURIComponent('unable to retrieve tags'));
               } else {
                 getTag_id(dbClient, tag, (err2, tag_id) => {
                   if (err2) {
                     console.log(err2);
                     done();
-                    reply(JSON.stringify({success: 'fail', tag:tag})).type('application/json');
+                    reply(JSON.stringify({success: 'fail', tag: tag})).type('application/json');
                     // return reply.redirect('/error/' + encodeURIComponent('unable to get Tag id '));
                   } else {
                     const tagsCalls = {
@@ -50,7 +48,8 @@ module.exports = {
                       call_id: request.params.call_id
                     };
                     insertIntoTagsCallsTable(dbClient, tagsCalls, () => {
-                      reply(JSON.stringify({success: 'success', tag:tag})).type('application/json');
+                      tag.tag_id = tag_id;
+                      reply(JSON.stringify({success: 'success', tag: tag})).type('application/json');
                       // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                       done();
                     });
