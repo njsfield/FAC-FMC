@@ -14,14 +14,15 @@ module.exports = {
     if (request.state.FMC) {
       const decoded = JWT.decode(request.state.FMC);
       validate(decoded, request, (error, isValid) => {
+        var tag_name = (request.params.tag_name || '').replace(/^\s+|\s+$/g,'');
         if (error || !isValid) {
           return reply.redirect('/').unstate('FMC');
         }
-        else if (request.params.tag_name.search(/\S/)<0) {
+        else if (tag_name.search(/[^\w\s\d]/)>=0) {
           reply(JSON.stringify({success: 'fail', tag: {}, message: 'invalid tag name'})).type('application/json');
-          return reply.redirect('/dashboard');
+          // return reply.redirect('/dashboard');
         }
-      else {
+        else {
           pg.connect(postgresURL, (err, dbClient, done) => {
             if (err) throw err;
             const tag = {

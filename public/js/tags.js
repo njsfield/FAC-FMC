@@ -35,10 +35,16 @@ for (var i=0; i < deleteButton.length; i++) {
 }
 
 const addTag = (e) => {
-
   const callId = e.target.id.replace(/^addtag_/,'');
   const nameElem = document.getElementById('addtag_name_'+callId);
-  const tagName = nameElem.value;
+  const tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
+  // Is the tag name valid?
+  if (tagName.search(/[^\w\s]/)>=0) {
+    // NOPE - invalid characters! SHOULD have a way to report errors here.
+    // showUserError("Tag name contains invalid characters");
+    return;
+  }
+
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       const response = JSON.parse(xhr.responseText);
