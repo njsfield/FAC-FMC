@@ -34,6 +34,7 @@ SAVE_AUDIO_PATH=../
 * POSTGRES_URL is needed to run queries to the database
 * POSTGRES_URL_TEST is the url of your test database
 * NODE_TLS_REJECT_UNAUTHORIZED=0 Turns off SSL authentication for development purposes.
+* SAVE_AUDIO_PATH needs a trailing slash and is the place where you store all the .wav files. 
 
 
 ## RUNNING
