@@ -11,7 +11,7 @@ module.exports = (decoded, file_id, callback) => {
     queryArray.push(file_id);
     queryArray.push(decoded.contact_id);
   } else {
-    queryString = 'select 1 from calls where file_id = $1 and ';
+    queryString = 'select 1 from calls where file_id = $1 and (';
     decoded.adminCompanies.forEach( (company, i) => {
       queryString += 'company_id = $' + (i + 2);
       queryArray.push( company.company_id);
@@ -19,6 +19,7 @@ module.exports = (decoded, file_id, callback) => {
         queryString += ' OR ';
       }
     });
+    queryString += ')';
     pg.connect(postgresURL, (error, dbClient, done) => {
       if (error) {
         callback(error);
