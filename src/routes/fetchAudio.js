@@ -20,7 +20,7 @@ module.exports = {
             if (err) {
               console.log(err);
             } else if (isValid1) {
-              const response = reply(fs.createReadStream(process.env.PLAY_AUDIO_PATH + `${fileId}.wav`));
+              const response = reply(fs.createReadStream(process.env.SAVE_AUDIO_PATH + `${fileId}.wav`));
               response.type('audio/wav');
             } else {
               const response = reply('you are not authorized to listen to this call');
