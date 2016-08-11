@@ -112,7 +112,7 @@ const formatUserObj = (request, user)=> {
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
-    userObj.adminCompany = user.adminCompanies[0].name; // if for some reason no company is slected this will automatically
+    userObj.adminCompany = user.adminCompanies.filter(e => e.company_id == user.company_id)[0].name; // Select 
   }
   if (request.query!=null) {
     if (isAdmin && request.query.admin_company!=null) {
@@ -123,10 +123,10 @@ const formatUserObj = (request, user)=> {
         // OK - allowed to see calls for this company_id
         userObj.adminCompany = request.query.admin_company;
       }
-      // If there's not selected admin country then default to the first company in the admins list
-      if (userObj.adminCompany==null && user.adminCompanies.length>0) {
-        userObj.adminCompany = user.adminCompanies[0].name;
-      }
+    }
+    else if (isAdmin) {
+        // If no company has been selected, default to the user's home company
+        userObj.adminCompanies.forEach((c) => {if (c.company_id==user.company_id) c.selected='selected';});
     }
     if (request.query.to!=null)
       userObj.to = request.query.to;

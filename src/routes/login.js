@@ -27,7 +27,7 @@ module.exports = {
             return reply.view('login' ,{ loginError: 'error connecting to the database'});
           } else {
             const compObj = {
-              company_name: user.user.company
+              company_name: user.user.home
             };
             checkCompaniesTable(dbClient, compObj, (err2, res) => {
               if (err2) {
