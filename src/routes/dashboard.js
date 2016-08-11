@@ -112,7 +112,7 @@ const formatUserObj = (request, user)=> {
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
-    userObj.adminCompany = user.adminCompanies.filter(e => e.company_id == user.company_id)[0].name; // Select 
+    userObj.adminCompany = user.adminCompanies.filter(e => e.company_id == user.company_id)[0].name; // Select the home company as the default
   }
   if (request.query!=null) {
     if (isAdmin && request.query.admin_company!=null) {
