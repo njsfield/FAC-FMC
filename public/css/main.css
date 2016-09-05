@@ -32,8 +32,13 @@ font-family: 'Lato', sans-serif;
 #login_button {
   width: 100%;
 }
+
+.login-info {
+  color: white;
+}
 .login-form {
   padding: 10%;
+  text-align: center
 }
 .form-container {
   background-color: #00416F;
@@ -212,7 +217,7 @@ em {
 }
 
 .error {
-  color: white;
+  color: #FF9531;
 }
 
 .pages {
