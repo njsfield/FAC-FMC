@@ -94,7 +94,6 @@ module.exports = {
         });
       }
       else {
-        pg.end();
         return reply.view('login', {loginError: 'incorrect username or password'});
       }
     });
