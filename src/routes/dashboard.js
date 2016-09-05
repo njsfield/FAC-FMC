@@ -60,7 +60,7 @@ module.exports = {
                           userCalls.calls.forEach(c => {
                             if (c.tag_name.length>0) {
                               c.tag_label = [];
-                              c.tag_name.forEach(t => c.tag_label.push({name:t,id:t+'^'+c.call_id}));
+                              c.tag_name.forEach(t => c.tag_label.push({name: t,id: t+'^'+c.call_id}));
                             }
                           });
                           if (res.rows.length > userObj.maxRows) {
@@ -125,8 +125,8 @@ const formatUserObj = (request, user)=> {
       }
     }
     else if (isAdmin) {
-        // If no company has been selected, default to the user's home company
-        userObj.adminCompanies.forEach((c) => {if (c.company_id==user.company_id) c.selected='selected';});
+      // If no company has been selected, default to the user's home company
+      userObj.adminCompanies.forEach((c) => {if (c.company_id==user.company_id) c.selected='selected';});
     }
     if (request.query.to!=null)
       userObj.to = request.query.to;
