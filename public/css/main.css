@@ -5,7 +5,7 @@ html {
 font-family: 'Lato', sans-serif;
 }
 
-/*login page*/
+/**************************login page***********************/
 
 #login-button-container {
   margin: auto;
@@ -33,6 +33,9 @@ font-family: 'Lato', sans-serif;
   width: 100%;
 }
 
+.error {
+  color: #FF9531;
+}
 .login-info {
   color: white;
 }
@@ -45,7 +48,7 @@ font-family: 'Lato', sans-serif;
   padding: 20px;
   border-radius: 10px;
 }
-/*dashboard layout*/
+/*******************************dashboard layout****************************/
 
 #call-container {
   background-color: #00416F;
@@ -90,7 +93,7 @@ body {
 }
 
 
-/************** filter form *************/
+/************************** filter form ***********************/
 
 input[type="checkbox"] {
   color: white;
@@ -216,9 +219,6 @@ em {
   margin-left: 10px;
 }
 
-.error {
-  color: #FF9531;
-}
 
 .pages {
   color: white;
