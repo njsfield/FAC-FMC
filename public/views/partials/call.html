@@ -1,13 +1,15 @@
 {{#if callError}}
-<h3 class='error'> {{callError}} </h3>
+<div class='col-xs-4 col-xs-offset-4 no-calls-box'>
+  <h3 class='no-calls'> {{callError}} </h3>
+</div>
 {{/if}}
 <div class="panel-group" id="accordion">
   {{#each calls}}
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}">
-          <div class='row'>
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}" aria-controls="collapse{{@index}}" aria-expanded="false">
+          <div class='row call-line'>
             <div class="col-xs-3">
               {{caller_number}}
             </div>
@@ -17,8 +19,11 @@
             <div class="col-xs-3">
               {{date}}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-2">
               {{duration}}
+            </div>
+            <div class="col-xs-1 arrow-box">
+              <img class='downward-arrow' src='/img/arrow-black.png'/>
             </div>
           </div>
         </a>

@@ -45,30 +45,37 @@ module.exports = {
                         getTagNames(dbClient, decoded, (err4, savedTags) => {
                           if (err4) {
                             errorHandler(err4);
-                            return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
+                            return reply.view('dashboard', {filters, callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                           }
                           res.rows.forEach( (call) => {
                             call.duration = formatCallDuration(call);
                           });
                           userObj.tags = userObj.tags.join(';');
                           const userCalls = {
-                            calls: res.rows,
                             filters,
                             savedTags,
                             userObj
                           };
-                          userCalls.calls.forEach(c => {
-                            if (c.tag_name.length>0) {
-                              c.tag_label = [];
-                              c.tag_name.forEach(t => c.tag_label.push({name: t,id: t+'^'+c.call_id}));
+                          if (res.rows.length === 0) {
+                            userCalls.callError = 'no calls for these parameters';
+                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                          } else {
+                            userCalls.calls = res.rows;
+                            userCalls.calls.forEach(c => {
+                              if (c.tag_name.length>0) {
+                                c.tag_label = [];
+                                c.tag_name.forEach(t => c.tag_label.push({name: t,id: t+'^'+c.call_id}));
+                              }
+                            });
+                            if (res.rows.length > userObj.maxRows) {
+                              userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                              res.rows.length = userObj.maxRows;
                             }
-                          });
-                          if (res.rows.length > userObj.maxRows) {
-                            userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
-                            res.rows.length = userObj.maxRows;
-                          }
-                          if (userObj.firstIndex > 0) {
-                            userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                            if (userObj.firstIndex > 0) {
+                              userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                            }
+                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                            done();
                           }
 
                           if (userObj.dateOrder === 'desc') {
