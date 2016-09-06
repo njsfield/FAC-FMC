@@ -1,14 +1,22 @@
-const clearFilterForm = () => {
-  const filterSpecProperties = ['duration_min', 'duration_max', 'to', 'from', 'tags', 'date'];
+var clearFilterForm = () => {
+  var filterSpecProperties = ['duration_min', 'duration_max', 'to', 'from', 'tags', 'date'];
   filterSpecProperties.forEach((id) => {
     var elem = document.getElementById(id);
     elem.value = '';
   });
-  const options = document.getElementById('dropdown');
+  var options = document.getElementById('dropdown');
   options.selectedIndex = 0;
 
 };
 
-const clearForm = document.getElementById('clear-form');
+var clearForm = document.getElementById('clear-form');
 
 clearForm.addEventListener('click', clearFilterForm);
+
+var showAll = document.getElementById('show-all');
+
+var showAllCalls = function() {
+  clearFilterForm();
+  document.getElementById('filter-form').submit();
+};
+showAll.addEventListener('click', showAllCalls);

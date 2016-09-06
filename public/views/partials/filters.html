@@ -17,12 +17,9 @@
       </div>
     </div>
   </li>
-  <li class='list-group-item filter-list'>
-    <button class='btn btn-primary' id='clear-form'>clear form</button>
-  </li>
   <div id="filter">
     <div class="form-group">
-      <form action="/dashboard" method="get">
+      <form id='filter-form' action="/dashboard" method="get">
       {{#if userObj.isAdmin}}
         <li class="list-group-item">
           <div class='row'>
@@ -41,6 +38,9 @@
         </div>
         </li>
       {{/if}}
+      <li class="list-group-item filter-list filter-title">
+        <button id="filter_search" class="btn btn-primary">Search</button>
+      </li>
       <li class="list-group-item filter-list">
         <div class='row'>
           <div class='col-xs-4'><p>Call to:</p></div>
@@ -105,11 +105,12 @@
           <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
         </div>
       </li>
-      <li class="list-group-item filter-list filter-title">
-        <button id="filter_search" class="btn btn-primary btn-lg">Search</button>
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Save as</button>
-      </li>
     </form>
+    <li class='list-group-item filter-list'>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save filter</button>
+      <button id="show-all" class="btn btn-primary">Show all</button>
+      <button class="btn btn-primary" id='clear-form'>Clear form</button>
+    </li>
     </div>
     <form method="post" id="save_filter">
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
