@@ -111,7 +111,7 @@ const formatUserObj = (request, user)=> {
     tags: [],
     untagged: false,
     firstIndex: 0,
-    maxRows: 20,
+    maxRows: 16,
     isAdmin: isAdmin,
     contactID: user.contact_id
   };
