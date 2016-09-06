@@ -74,8 +74,6 @@ module.exports = {
                             if (userObj.firstIndex > 0) {
                               userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
                             }
-                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
-                            done();
                           }
 
                           if (userObj.dateOrder === 'desc') {
@@ -165,7 +163,6 @@ const formatUserObj = (request, user)=> {
     if (request.query.firstIndex!=null && !isNaN(request.query.firstIndex))
       userObj.firstIndex = parseInt(request.query.firstIndex, 10);
 
-    console.log('REQUEST QUERY', request.query);
     if (request.query.dateOrder === 'asc') {
       userObj.dateOrder = 'asc';
     }
