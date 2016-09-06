@@ -58,7 +58,18 @@ font-family: 'Lato', sans-serif;
   margin-bottom: 1em;
   overflow-y: scroll;
 }
-
+.arrow-box{
+  padding-left: 10px;
+}
+.downward-arrow {
+  width: 43%;
+  margin-top: -1px;
+}
+.rotate-arrow {
+  transform: rotate(90deg);
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari */
+}
 #search-bar {
   padding-bottom: 1em;
 }
@@ -72,6 +83,9 @@ body {
 
 .call-headings {
   color: white;
+}
+.call-line{
+  height: 23px;
 }
 .call-heading {
   margin-top: 40px;
