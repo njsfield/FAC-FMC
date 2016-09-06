@@ -87,7 +87,7 @@ const taggedCallsStringCreator = (obj, queryArr, callback) => {
   }
 };
 
-const limitCallsCreator = (obj, queryArr) => {
+const limitCallsCreator = (obj, queryArr, order) => {
   var sequel = '';
 
   if (obj.maxRows < 1 || obj.maxRows > 100)
@@ -95,7 +95,7 @@ const limitCallsCreator = (obj, queryArr) => {
 
   queryArr.push(obj.maxRows + 1);
 
-  sequel += ' ORDER BY calls.date DESC LIMIT $' + queryArr.length;
+  sequel += ' ORDER BY calls.date '+ order +' LIMIT $' + queryArr.length;
 
   if (obj.firstIndex > 0) {
     queryArr.push(obj.firstIndex);
@@ -131,7 +131,7 @@ const limitCallsCreator = (obj, queryArr) => {
  * and duration >= ('8')'
  */
 
-const createQueryString = (queryArr, obj, callback) => {
+const createQueryString = (queryArr, obj, order, callback) => {
   let stringArr = [];
 
   // Must scope all requests to a company. For a normal user that will be the company to which they belong. For
@@ -165,7 +165,7 @@ const createQueryString = (queryArr, obj, callback) => {
           if (filters4) stringArr.push(filters4);
 
           var fullQueryString = queryString + ' '+stringArr.join(' AND ');
-          fullQueryString += limitCallsCreator(obj, qa5);
+          fullQueryString += limitCallsCreator(obj, qa5, order);
           callback(fullQueryString, qa5);
         });
       });

@@ -30,7 +30,7 @@ module.exports = {
               done();
             } else {
               const queryArray = [];
-              filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
+              filterQueryStringCreator.createQueryString(queryArray, userObj, userObj.dateOrder, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
                     errorHandler(err2);
@@ -77,6 +77,16 @@ module.exports = {
                             reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
                             done();
                           }
+
+                          if (userObj.dateOrder === 'desc') {
+                            userCalls.dateOrder = '?' + 'dateOrder=' + 'asc';
+                          }
+                          if (userObj.dateOrder === 'asc') {
+                            userCalls.dateOrder = '?' + 'dateOrder=' + 'desc';
+                          }
+
+                          reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                          done();
                         });
                       }
                     });
@@ -113,7 +123,8 @@ const formatUserObj = (request, user)=> {
     firstIndex: 0,
     maxRows: 20,
     isAdmin: isAdmin,
-    contactID: user.contact_id
+    contactID: user.contact_id,
+    dateOrder: 'desc'
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
@@ -153,6 +164,15 @@ const formatUserObj = (request, user)=> {
     }
     if (request.query.firstIndex!=null && !isNaN(request.query.firstIndex))
       userObj.firstIndex = parseInt(request.query.firstIndex, 10);
+
+    console.log('REQUEST QUERY', request.query);
+    if (request.query.dateOrder === 'asc') {
+      userObj.dateOrder = 'asc';
+    }
+    if (request.query.dateOrder === 'desc') {
+      userObj.dateOrder = 'desc';
+    }
+
   }
   return userObj;
 };
