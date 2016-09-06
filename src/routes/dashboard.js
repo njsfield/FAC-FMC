@@ -74,17 +74,17 @@ module.exports = {
                             if (userObj.firstIndex > 0) {
                               userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
                             }
-                          }
 
-                          if (userObj.dateOrder === 'desc') {
-                            userCalls.dateOrder = '?' + 'dateOrder=' + 'asc';
-                          }
-                          if (userObj.dateOrder === 'asc') {
-                            userCalls.dateOrder = '?' + 'dateOrder=' + 'desc';
-                          }
+                            if (userObj.dateOrder === 'desc') {
+                              userCalls.dateOrder = '?' + 'dateOrder=' + 'asc';
+                            }
+                            if (userObj.dateOrder === 'asc') {
+                              userCalls.dateOrder = '?' + 'dateOrder=' + 'desc';
+                            }
 
-                          reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
-                          done();
+                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                            done();
+                          }
                         });
                       }
                     });
