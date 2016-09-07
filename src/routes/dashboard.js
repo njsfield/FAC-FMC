@@ -30,7 +30,7 @@ module.exports = {
               done();
             } else {
               const queryArray = [];
-              filterQueryStringCreator.createQueryString(queryArray, userObj, (qString, qArray) => {
+              filterQueryStringCreator.createQueryString(queryArray, userObj, userObj.dateOrder, (qString, qArray) => {
                 dbClient.query(qString, qArray, (err2, res) => {
                   if (err2) {
                     errorHandler(err2);
