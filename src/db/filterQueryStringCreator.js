@@ -1,6 +1,5 @@
 'use strict';
 
-
 const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI:SS') AS date, calls.duration, calls.call_id, calls.file_id, calls.company_id,
    participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
    participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
@@ -87,15 +86,18 @@ const taggedCallsStringCreator = (obj, queryArr, callback) => {
   }
 };
 
-const limitCallsCreator = (obj, queryArr, order) => {
+const limitCallsCreator = (obj, queryArr) => {
   var sequel = '';
 
-  if (obj.maxRows < 1 || obj.maxRows > 100)
+  if (obj.maxRows < 1 || obj.maxRows > 100) {
     obj.maxRows = 20;
+  }
 
+  // queryArr.push(obj.dateOrder);
   queryArr.push(obj.maxRows + 1);
 
-  sequel += ' ORDER BY calls.date '+ order +' LIMIT $' + queryArr.length;
+  // sequel += ` ORDER BY calls.date $${queryArr.length-1} LIMIT $${queryArr.length}`;
+  sequel += ' ORDER BY calls.date desc LIMIT $' + queryArr.length;
 
   if (obj.firstIndex > 0) {
     queryArr.push(obj.firstIndex);
@@ -131,7 +133,7 @@ const limitCallsCreator = (obj, queryArr, order) => {
  * and duration >= ('8')'
  */
 
-const createQueryString = (queryArr, obj, order, callback) => {
+const createQueryString = (queryArr, obj, callback) => {
   let stringArr = [];
 
   // Must scope all requests to a company. For a normal user that will be the company to which they belong. For
@@ -165,7 +167,7 @@ const createQueryString = (queryArr, obj, order, callback) => {
           if (filters4) stringArr.push(filters4);
 
           var fullQueryString = queryString + ' '+stringArr.join(' AND ');
-          fullQueryString += limitCallsCreator(obj, qa5, order);
+          fullQueryString += limitCallsCreator(obj, qa5);
           callback(fullQueryString, qa5);
         });
       });
