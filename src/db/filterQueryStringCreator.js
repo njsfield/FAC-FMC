@@ -58,10 +58,17 @@ const minAndMaxQueryStringCreator = (obj, queryArr, callback) => {
 };
 
 const dateQueryStringCreator = (obj, queryArr, callback) => {
-  const dateMillis = (new Date(obj.date).getTime() + 86400000)/1000;
-  if (obj.date !== '') {
+  const selectedDatePlusNumSecondsInDay = (new Date(obj.date).getTime() + 86400000)/1000;
+  const selectedDateRangePlusNumSecondsInDay = (new Date(obj.dateRange).getTime() + 86400000)/1000;
+
+  if (obj.date !== '' && obj.dateRange !== '') {
+    queryArr.push(obj.date, selectedDateRangePlusNumSecondsInDay);
+    const string = `${dateString}$${queryArr.length - 1}${datePlusOneString}$${queryArr.length}${datePlusOneStringEnd}`;
+    callback(queryArr, string);
+  }
+  else if (obj.date !== '') {
     queryArr.push(obj.date);
-    const string = dateString + '$' + queryArr.length + datePlusOneString + dateMillis + datePlusOneStringEnd;
+    const string = dateString + '$' + queryArr.length + datePlusOneString + selectedDatePlusNumSecondsInDay + datePlusOneStringEnd;
     callback(queryArr, string);
   }
   else {

@@ -129,6 +129,7 @@ const formatUserObj = (request, user)=> {
     min: '',
     max: '',
     date: '',
+    dateRange: '',
     tags: [],
     untagged: false,
     firstIndex: 0,
@@ -165,6 +166,8 @@ const formatUserObj = (request, user)=> {
       userObj.max = parseFloat(request.query.max);
     if (request.query.date!=null)
       userObj.date = request.query.date;
+    if (request.query.dateRange!=null)
+      userObj.dateRange = request.query.dateRange;
     if (request.query.untagged!=null)
       userObj.untagged = true;
     else {
