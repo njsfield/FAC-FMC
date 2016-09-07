@@ -68,18 +68,31 @@ module.exports = {
                               }
                             });
                             if (res.rows.length > userObj.maxRows) {
-                              userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                                userCalls.nextPage = baseUrl + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                              } else {
+                                userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                              }
                               res.rows.length = userObj.maxRows;
                             }
+
                             if (userObj.firstIndex > 0) {
-                              userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                                userCalls.prevPage = baseUrl + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                              } else {
+                                userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                              }
                             }
 
                             if (userObj.dateOrder === 'desc') {
-                              userCalls.dateOrder = '?' + 'dateOrder=' + 'asc';
+                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                                userCalls.dateOrder = baseUrl + 'dateOrder=' + 'asc';
+                              }
                             }
                             if (userObj.dateOrder === 'asc') {
-                              userCalls.dateOrder = '?' + 'dateOrder=' + 'desc';
+                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                                userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'desc';
+                              }
                             }
 
                             reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
@@ -116,6 +129,7 @@ const formatUserObj = (request, user)=> {
     min: '',
     max: '',
     date: '',
+    dateRange: '',
     tags: [],
     untagged: false,
     firstIndex: 0,
@@ -152,6 +166,8 @@ const formatUserObj = (request, user)=> {
       userObj.max = parseFloat(request.query.max);
     if (request.query.date!=null)
       userObj.date = request.query.date;
+    if (request.query.dateRange!=null)
+      userObj.dateRange = request.query.dateRange;
     if (request.query.untagged!=null)
       userObj.untagged = true;
     else {
