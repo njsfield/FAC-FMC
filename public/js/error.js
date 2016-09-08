@@ -1,6 +1,6 @@
-const errorMessage= document.getElementById('error-message');
-const errorBox = document.getElementById('error-box');
-const errorHandler = function (error) {
+var errorMessage= document.getElementById('error-message');
+var errorBox = document.getElementById('error-box');
+var errorHandler = function (error) {
   errorMessage.innerHTML = error;
   errorBox.removeAttribute('class', 'hidden');
   setTimeout(function(){
