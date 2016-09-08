@@ -120,7 +120,29 @@ body {
 input[type="checkbox"] {
   color: white;
 }
+input[type=checkbox], input[type=radio] {
+  display: none;
+}
+.checked {
+   background-color: #00A6A3;
+}
+.unchecked {
+    background-color: #FF9531;
+}
+.popular-tags{
+  list-style: none;
+  padding: 0.2em;
+}
 
+.popular-tag {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  margin: 2px;
+  font-weight: normal;
+}
 .scrollbar-tags {
   overflow-y: scroll;
   height: 130px !important;

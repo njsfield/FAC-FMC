@@ -104,13 +104,10 @@
         </div>
       </li>
       <li class="list-group-item filter-list">
-
-        <div class="scrollbar-tags form-control">
-          Saved Tags:<br>
+        Popular tags:
+        <div class="scrollbar-tags popular-tags">
           {{#each savedTags}}
-          <div>
-            <label><input type="checkbox" class="saved-tag" name="company_tag" value="{{tag_name}}"> {{tag_name}} </label> <br>
-          </div>
+            <label class="popular-tag unchecked" for='checked_{{tag_name}}'><input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}} </label>
           {{/each}}
         </div>
       </li>
