@@ -9,7 +9,53 @@ const getFilterSpec = () => {
     }
   }
 };
+// grab tags array
+const fetchTagsList = () => {
+  const tags = document.getElementById('tags').value;
+  var array = [];
+  if (tags!=null && tags.search(/\S/)>=0) array = tags.split(';');
+  return array;
+};
 
+const arrTags = fetchTagsList();
+// check popular tags
+const popularTagArray = document.getElementsByClassName('popular-tag');
+function compareTags() {
+  for(var i = 0; i < popularTagArray.length; i++){
+    console.log('array', arrTags);
+    console.log(popularTagArray[i].childNodes[0].value);
+    if(arrTags.indexOf(popularTagArray[i].childNodes[0].value) >-1){
+      // tags.value = tags.value + popularTagArray[i].value;
+      popularTagArray[i].setAttribute('class', 'popular-tag checked');
+    }
+
+  }
+};
+compareTags();
+
+// changing the colot of popular tags when they are selected
+const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
+const changeColor = function(e) {
+  if (e.target.checked && e.target.disabled === false) {
+    e.target.parentNode.setAttribute('class', 'popular-tag checked');
+    // add to list
+    if (arrTags.indexOf(e.target.value) === -1) {
+      arrTags.push(e.target.value);
+      document.getElementById('tags').value = arrTags.join(';');
+    }
+  } else {
+    e.target.parentNode.setAttribute('class', 'popular-tag unchecked');
+    // remove from list
+    const index = arrTags.indexOf(e.target.value);
+    if (arrTags.indexOf(e.target.value) > -1){
+      arrTags.splice(index, 1);
+      document.getElementById('tags').value = arrTags.join(';');
+    }
+  }
+};
+for(var i = 0; i < scrollbarCheckboxes.length; i++) {
+  scrollbarCheckboxes[i].addEventListener('click', changeColor);
+}
 /** event listener that listens to whether saved filter has been selected*/
 
 const select = document.getElementById('dropdown');
@@ -25,19 +71,18 @@ const saveFilter = (e) => {
   e.stopPropagation();
   e.preventDefault();
   /** get checked input from the scrollbar checboxes div */
-  const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
   const savedTagsArr = [];
-  for(var i=0; i<scrollbarCheckboxes.length; i++) {
-    if(scrollbarCheckboxes[i].checked && scrollbarCheckboxes[i].disabled === false) {
-      savedTagsArr.push(scrollbarCheckboxes[i].value);
+  for(var j=0; j<scrollbarCheckboxes.length; j++) {
+    if(scrollbarCheckboxes[j].checked && scrollbarCheckboxes[j].disabled === false) {
+      savedTagsArr.push(scrollbarCheckboxes[j].value);
     }
   }
 
   /** split content on tags input to store each tag in a new array */
-  const tags = document.getElementById('tags').value;
-  var arrTags = [];
-  if (tags!=null && tags.search(/\S/)>=0)
-    arrTags = tags.split(';');
+
+  // const tags = document.getElementById('tags').value;
+  // var arrTags = [];
+  // if (tags!=null && tags.search(/\S/)>=0) arrTags = tags.split(';');
 
   ESCAPE = function(s) { // eslint-disable-line
     return s.replace(/\"|\<|\>/g,function(s){ // eslint-disable-line
