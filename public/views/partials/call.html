@@ -10,17 +10,29 @@
       <div class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}" aria-controls="collapse{{@index}}" aria-expanded="false">
           <div class='row call-line'>
-            <div class="col-xs-3">
+            <div class="col-xs-1">
               {{caller_number}}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-1">
               {{callee_number}}
+            </div>
+            <div class="col-xs-2">
+              {{duration}}
             </div>
             <div class="col-xs-3">
               {{date}}
             </div>
-            <div class="col-xs-2">
-              {{duration}}
+            <div class='col-xs-4'>
+              {{#each_upto tag_label 3}}
+              <div class='small-tags'>
+                {{name}}
+              </div>
+              {{/each_upto}}
+              {{#if tag_label}}
+              ...
+              {{else}}
+              no tags
+              {{/if}}
             </div>
             <div class="col-xs-1 arrow-box">
               <img class='downward-arrow' src='/img/arrow-black.png'/>
@@ -36,24 +48,18 @@
             <audio controls src='/fetch-audio/{{file_id}}' preload='none'> </audio>
           </div>
         </div>
-        <div class="row tag-cards">
-          <div>
-            <div class="col-xs-3">
-              <div class="form-group">
-                <input name="tag" id="addtag_name_{{ call_id }}" class="tagname form-control" type="text" placeholder="Tag Name">
-              </div>
-            </div>
-            <div class="col-xs-2 tag-bar">
-              <button type="button" id="addtag_{{ call_id }}" class="btn_addtag btn btn-success">Tag Call</button>
-            </div>
-          </div>
-          <div class='col-xs-7' id="calltags_{{ call_id }}">
-            {{#each tag_label}}
-            <div class='tag-card'>
-              <span class="tag-name">{{name}}</span>
-              <em id="delTag_{{id}}" >X</em>
-            </div>
-            {{/each}}
+        <div class='row'>
+          <div class='col-xs-10 col-xs-offset-1'>
+              <ul class="tag-box" id="calltags_{{ call_id }}">
+                {{#each tag_label}}
+                <li class="tags tag-name"> {{name}}
+                  <em id="delTag_{{id}}"class="close"></em>
+                </li>
+                {{/each}}
+                <div class="form-group">
+                <li class="new-tag"><input name = 'tag' id="addtag_name_{{ call_id }}" class="input-tag" type="text" placeholder="Add tag here"></li>
+                </div>
+              </ul>
           </div>
         </div>
       </div>

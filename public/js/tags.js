@@ -28,14 +28,32 @@ const deleteTag = (e) => {
   xhr.open('post', '/delete-tag/' + tagName + '/' + callId);
   xhr.send();
 };
-
-const deleteButton = document.getElementsByTagName('em');
+const deleteButton = document.getElementsByClassName('close');
 for (var i=0; i < deleteButton.length; i++) {
   deleteButton[i].addEventListener('click', deleteTag);
 }
+$('.input-tag').bind('keydown', function (kp) {
+  var tag = $('.input-tag').val().trim();
+  	$('.tags').removeClass('danger');
+  if(tag.length > 0){
+    backSpace = 0;
+    if(kp.keyCode == 13){
+      addTag($(this));
+      $(this).val('');
+    }}
+  else {if(kp.keyCode == 8 ){
+    $('.new-tag').prev().addClass('danger');
+    backSpace++;
+    if(backSpace == 2 ){
+      $('.new-tag').prev().remove();
+      backSpace = 0;
+    }
+  }
+  }
+});
 
 const addTag = (e) => {
-  const callId = e.target.id.replace(/^addtag_/,'');
+  const callId = e.context.id.replace(/^addtag_name_/,'');
   const nameElem = document.getElementById('addtag_name_'+callId);
   const tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
   // Is the tag name valid?
@@ -51,12 +69,14 @@ const addTag = (e) => {
       const response = JSON.parse(xhr.responseText);
       if (response.success === 'success' && response.tag !== 'already exists') {
         /**** CODE HERE TO CREATE THE NEW TAG DOM ELEMENT IN THE CALLS DISPLAY ****/
-        const div = document.createElement('div');
+        const li = document.createElement('li');
         const emId = 'delTag_' + tagName + '^' + callId;
-        div.className = 'tag-card';
-        div.innerHTML = '<span class="tag-name">'+ tagName +'</span> <em id="' + emId + '">X</em> ';
-        document.getElementById('calltags_'+ callId).appendChild(div);
+        li.className = 'tags tag-name';
+        li.innerHTML = tagName + '<em id="' + emId + '" class="close"></em>';
+        const tagList = document.getElementById('calltags_'+ callId);
+        tagList.insertBefore(li, tagList.childNodes[tagList.childNodes.length-2]);
         document.getElementById(emId).addEventListener('click', deleteTag);
+        // $('.new-tag').before('<li class="tags tag-name">'+tag+close+'</li>');
 
         const otherDiv = document.createElement('div');
         otherDiv.innerHTML = '<label><input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '"> ' + tagName + '</label> <br>';
@@ -68,10 +88,6 @@ const addTag = (e) => {
   };
   xhr.open('post', '/tag-call/' + tagName + '/' + callId);
   xhr.send();
-
 };
-
-const addTagButtons = document.getElementsByClassName('btn_addtag');
-for (var i=0; i < addTagButtons.length; i++) {
-  addTagButtons[i].addEventListener('click', addTag);
-}
+var backSpace;
+var close = '<em class="close" id="delTag_{{id}}"></em>';
