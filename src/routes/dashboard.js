@@ -87,10 +87,14 @@ module.exports = {
                             if (userObj.dateOrder === 'desc') {
                               if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
                                 userCalls.dateOrder = baseUrl + 'dateOrder=' + 'asc';
+                              } else {
+                                userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'asc';
                               }
                             }
                             if (userObj.dateOrder === 'asc') {
                               if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                                userCalls.dateOrder = baseUrl + 'dateOrder=' + 'desc';
+                              } else {
                                 userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'desc';
                               }
                             }
@@ -116,6 +120,12 @@ module.exports = {
 
 const createURL = (requestSearch) => {
   let baseUrl = requestSearch.replace(/firstIndex\=\d+\&?/,'');
+
+  if (baseUrl.indexOf('dateOrder=desc') !== -1) {
+    baseUrl = baseUrl.replace(/dateOrder=asc\&?/, '');
+    baseUrl = baseUrl.replace(/dateOrder=desc\&?/, '');
+  }
+
   if (baseUrl == '?') baseUrl = '';
   return baseUrl;
 };
