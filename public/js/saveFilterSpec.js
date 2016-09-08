@@ -1,3 +1,6 @@
+$('#date').datepicker({dateFormat: 'yy-mm-dd'});
+$('#dateRange').datepicker({dateFormat: 'yy-mm-dd'});
+
 /** Fills form with filter values of selected saved filter*/
 const getFilterSpec = () => {
   const filterSpec = select.options[select.selectedIndex].value;
