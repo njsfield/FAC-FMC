@@ -1,18 +1,5 @@
 const xhr = new XMLHttpRequest();
 
-/** untagged checkbox event handler to disable the other tag checkboxes and tags field */
-const untagged = document.getElementById('untagged');
-
-const disableTags = () => {
-  const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
-  const tags = document.getElementById('tags');
-  for(var i=0; i<scrollbarCheckboxes.length; i++)
-    scrollbarCheckboxes[i].disabled = untagged.checked;
-  tags.disabled = untagged.checked;
-};
-
-untagged.addEventListener('change', disableTags);
-
 /** AJAX to delete tags from call*/
 
 const deleteTag = (e) => {
@@ -32,8 +19,10 @@ const deleteButton = document.getElementsByClassName('close');
 for (var i=0; i < deleteButton.length; i++) {
   deleteButton[i].addEventListener('click', deleteTag);
 }
+
+// ************ADD TAG FUNCTIONALITY*************//
 $('.input-tag').bind('keydown', function (kp) {
-  var tag = $('.input-tag').val().trim();
+  var tag = $(this).val().trim();
   	$('.tags').removeClass('danger');
   if(tag.length > 0){
     backSpace = 0;
@@ -51,7 +40,7 @@ $('.input-tag').bind('keydown', function (kp) {
   }
   }
 });
-
+//************add tag ajax request and manipulating dom******//
 const addTag = (e) => {
   const callId = e.context.id.replace(/^addtag_name_/,'');
   const nameElem = document.getElementById('addtag_name_'+callId);
@@ -78,9 +67,11 @@ const addTag = (e) => {
         document.getElementById(emId).addEventListener('click', deleteTag);
         // $('.new-tag').before('<li class="tags tag-name">'+tag+close+'</li>');
 
-        const otherDiv = document.createElement('div');
-        otherDiv.innerHTML = '<label><input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '"> ' + tagName + '</label> <br>';
-        document.getElementsByClassName('scrollbar-tags')[0].appendChild(otherDiv);
+        const label = document.createElement('label');
+        label.innerHTML = '<input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '" id="checked_' + tagName +'"> ' + tagName;
+        label.setAttribute('class', 'popular-tag unchecked');
+        label.setAttribute('for', 'checked_'+tagName);
+        document.getElementsByClassName('scrollbar-tags')[0].appendChild(label);
       } else {
         errorHandler('unable to save your tag'); // eslint-disable-line
       }
