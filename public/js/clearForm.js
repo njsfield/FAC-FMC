@@ -1,5 +1,5 @@
 var clearFilterForm = function () {
-  var filterSpecProperties = ['duration_min', 'duration_max', 'to', 'from', 'tags', 'date'];
+  var filterSpecProperties = ['duration_min', 'duration_max', 'to', 'from', 'tags', 'date', 'dateRange'];
   filterSpecProperties.forEach(function (id) {
     var elem = document.getElementById(id);
     elem.value = '';
