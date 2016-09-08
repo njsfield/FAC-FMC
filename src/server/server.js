@@ -2,6 +2,7 @@ const Hapi = require('hapi');
 const Server = new Hapi.Server();
 const port = process.env.PORT || 3000;
 const handlebarsViews = require('./handlebarsViews.js');
+const handlebarsHelpers = require('./handlebarsHelpers.js');
 const validate = require('../auth/validate.js');
 
 const plugins = [
