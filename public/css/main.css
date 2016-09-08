@@ -275,10 +275,22 @@ text-align: center;
 /*.tagarea {
   display: none;
 }*/
-
+.small-tags{
+  display: inline-block;
+background: #FF9531;
+padding: 0.2em 0.7em;
+border-radius: 5px;
+color: white;
+font-size: 14px;
+margin-right: 8px;
+}
+.orange{
+  font-size: 14px;
+  color: #FF9531;
+}
 .tag-box {
   color: black;
-  border: 1px solid #00A6A3;
+  border: 1px solid #C2CFD9;
   list-style: none;
   padding: 3px;
   margin: 0;
