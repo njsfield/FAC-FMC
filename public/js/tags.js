@@ -2,7 +2,7 @@ const xhr = new XMLHttpRequest();
 
 /** AJAX to delete tags from call*/
 
-const deleteTag = (e) => {
+const deleteTag = function (e) {
   const tagId = e.target.id.replace(/^delTag_/,'');
   const pt = tagId.split(/\^/g);
   const tagName = pt[0];
@@ -41,7 +41,7 @@ $('.input-tag').bind('keydown', function (kp) {
   }
 });
 //************add tag ajax request and manipulating dom******//
-const addTag = (e) => {
+const addTag = function (e) {
   const callId = e.context.id.replace(/^addtag_name_/,'');
   const nameElem = document.getElementById('addtag_name_'+callId);
   const tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
