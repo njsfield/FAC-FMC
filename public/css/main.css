@@ -123,6 +123,9 @@ input[type="checkbox"] {
 input[type=checkbox], input[type=radio] {
   display: none;
 }
+#untagged {
+  display: inline;
+}
 .checked {
    background-color: #00A6A3;
 }
