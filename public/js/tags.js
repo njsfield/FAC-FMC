@@ -1,12 +1,13 @@
-const xhr = new XMLHttpRequest();
+var xhr = new XMLHttpRequest();
 
 /** AJAX to delete tags from call*/
 
-const deleteTag = function (e) {
-  const tagId = e.target.id.replace(/^delTag_/,'');
-  const pt = tagId.split(/\^/g);
-  const tagName = pt[0];
-  const callId = pt[1];
+var deleteTag = (e) => {
+  var tagId = e.target.id.replace(/^delTag_/,'');
+  var pt = tagId.split(/\^/g);
+  var tagName = pt[0];
+  var callId = pt[1];
+
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       e.target.parentNode.remove();
@@ -15,7 +16,7 @@ const deleteTag = function (e) {
   xhr.open('post', '/delete-tag/' + tagName + '/' + callId);
   xhr.send();
 };
-const deleteButton = document.getElementsByClassName('close');
+var deleteButton = document.getElementsByClassName('close');
 for (var i=0; i < deleteButton.length; i++) {
   deleteButton[i].addEventListener('click', deleteTag);
 }
@@ -41,10 +42,10 @@ $('.input-tag').bind('keydown', function (kp) {
   }
 });
 //************add tag ajax request and manipulating dom******//
-const addTag = function (e) {
-  const callId = e.context.id.replace(/^addtag_name_/,'');
-  const nameElem = document.getElementById('addtag_name_'+callId);
-  const tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
+var addTag = (e) => {
+  var callId = e.context.id.replace(/^addtag_name_/,'');
+  var nameElem = document.getElementById('addtag_name_'+callId);
+  var tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
   // Is the tag name valid?
   if (tagName.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
@@ -55,19 +56,19 @@ const addTag = function (e) {
 
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
-      const response = JSON.parse(xhr.responseText);
+      var response = JSON.parse(xhr.responseText);
       if (response.success === 'success' && response.tag !== 'already exists') {
         /**** CODE HERE TO CREATE THE NEW TAG DOM ELEMENT IN THE CALLS DISPLAY ****/
-        const li = document.createElement('li');
-        const emId = 'delTag_' + tagName + '^' + callId;
+        var li = document.createElement('li');
+        var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name';
         li.innerHTML = tagName + '<em id="' + emId + '" class="close"></em>';
-        const tagList = document.getElementById('calltags_'+ callId);
+        var tagList = document.getElementById('calltags_'+ callId);
         tagList.insertBefore(li, tagList.childNodes[tagList.childNodes.length-2]);
         document.getElementById(emId).addEventListener('click', deleteTag);
         // $('.new-tag').before('<li class="tags tag-name">'+tag+close+'</li>');
 
-        const label = document.createElement('label');
+        var label = document.createElement('label');
         label.innerHTML = '<input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '" id="checked_' + tagName +'"> ' + tagName;
         label.setAttribute('class', 'popular-tag unchecked');
         label.setAttribute('for', 'checked_'+tagName);
