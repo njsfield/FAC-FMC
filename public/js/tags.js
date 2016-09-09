@@ -2,7 +2,7 @@ var xhr = new XMLHttpRequest();
 
 /** AJAX to delete tags from call*/
 
-var deleteTag = (e) => {
+var deleteTag = function (e) {
   var tagId = e.target.id.replace(/^delTag_/,'');
   var pt = tagId.split(/\^/g);
   var tagName = pt[0];
@@ -46,6 +46,7 @@ var addTag = (e) => {
   var callId = e.context.id.replace(/^addtag_name_/,'');
   var nameElem = document.getElementById('addtag_name_'+callId);
   var tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
+  tagName = tagName.replace(/\s\s+/g, ' ');
   // Is the tag name valid?
   if (tagName.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
