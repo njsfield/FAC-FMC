@@ -26,20 +26,10 @@ $('.input-tag').bind('keydown', function (kp) {
   var tag = $(this).val().trim();
   	$('.tags').removeClass('danger');
   if(tag.length > 0){
-    backSpace = 0;
     if(kp.keyCode == 13){
       addTag($(this));
       $(this).val('');
     }}
-  else {if(kp.keyCode == 8 ){
-    $('.new-tag').prev().addClass('danger');
-    backSpace++;
-    if(backSpace == 2 ){
-      $('.new-tag').prev().remove();
-      backSpace = 0;
-    }
-  }
-  }
 });
 //************add tag ajax request and manipulating dom******//
 var addTag = (e) => {
@@ -81,5 +71,4 @@ var addTag = (e) => {
   xhr.open('post', '/tag-call/' + tagName + '/' + callId);
   xhr.send();
 };
-var backSpace;
 var close = '<em class="close" id="delTag_{{id}}"></em>';

@@ -88,7 +88,7 @@ body {
   color: white;
 }
 .call-line{
-  height: 23px;
+  height: 26px;
 }
 .call-heading {
   margin-top: 40px;
@@ -382,10 +382,6 @@ margin-right: 8px;
 .tag-box li.tags.edit:hover {
   padding: 4px 6px;
 }
-.tag-box li.tags.danger {
-  background: #F00;
-  opacity: 0.8;
-}
 .tag-box li.tags:hover {
   padding-right: 18px;
 }
@@ -406,4 +402,18 @@ margin-right: 8px;
 .tag-box li .input-tag:hover, .tag-box li .input-tag:focus {
   outline: none;
   border: none;
+}
+.close {
+  float: right;
+font-size: 15px;
+font-weight: normal;
+line-height: 1;
+font-style: normal;
+color: white;
+opacity: 1;
+margin: 4px 0px 0px 0px;
+}
+.tag-container {
+  overflow: hidden;
+  height: 100%
 }
