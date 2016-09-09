@@ -47,6 +47,7 @@ var addTag = (e) => {
   var nameElem = document.getElementById('addtag_name_'+callId);
   var tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
   tagName = tagName.replace(/\s\s+/g, ' ');
+  tagName = tagName.toLowerCase();
   // Is the tag name valid?
   if (tagName.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
