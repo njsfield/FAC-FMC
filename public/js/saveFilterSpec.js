@@ -1,6 +1,8 @@
-/******************* SAVED FILTERS******************/
+$('#date').datepicker({dateFormat: 'yy-mm-dd'});
+$('#dateRange').datepicker({dateFormat: 'yy-mm-dd'});
+
 /** Fills form with filter values of selected saved filter*/
-const getFilterSpec = () => {
+const getFilterSpec = function () {
   const filterSpec = select.options[select.selectedIndex].value;
   var spec = JSON.parse(filterSpec);
   for (var f in spec) {
@@ -14,7 +16,7 @@ const getFilterSpec = () => {
 /**************TAGGING*******************/
 /***************** grabs tags input in the filter form and splits it
 into an array *************/
-const fetchTagsList = () => {
+const fetchTagsList = function () {
   const tags = document.getElementById('tags').value;
   var array = [];
   if (tags!=null && tags.search(/\S/)>=0) array = tags.split(';');
@@ -37,7 +39,7 @@ compareTags();
 
 // This functionailty changes the color of popular tags when they are selected or unselected
 const scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
-const changeColor = function(e) {
+const changeColor = function (e) {
   if (e.target.checked && e.target.disabled === false) {
     e.target.parentNode.setAttribute('class', 'popular-tag checked');
     // add to list
@@ -60,7 +62,7 @@ const changeColor = function(e) {
 /** untagged checkbox event handler to disable the other tag checkboxes and tags field */
 const untagged = document.getElementById('untagged');
 
-const disableTags = () => {
+const disableTags = function () {
   const scrollbarCheckboxesArray = document.getElementsByClassName('saved-tag');
   const tags = document.getElementById('tags');
   for(var i=0; i<scrollbarCheckboxesArray.length; i++)
@@ -82,7 +84,7 @@ select.addEventListener('change', getFilterSpec);
 
 /** AJAX to send saved filter spec when SAVE button has been selected and name to /save-filter route */
 
-const saveFilter = (e) => {
+const saveFilter = function (e) {
   const xhr = new XMLHttpRequest();
   const error = document.getElementById('filter-error-message');
   error.innerHTML = '';
