@@ -1,5 +1,11 @@
-$('#date').datepicker({dateFormat: 'yy-mm-dd'});
-$('#dateRange').datepicker({dateFormat: 'yy-mm-dd'});
+$('#date').datepicker({
+  dateFormat: 'yy-mm-dd',
+  dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+});
+$('#dateRange').datepicker({
+  dateFormat: 'yy-mm-dd',
+  dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+});
 
 /** Fills form with filter values of selected saved filter*/
 var getFilterSpec = function () {
