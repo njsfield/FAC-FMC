@@ -3,14 +3,25 @@ var xhr = new XMLHttpRequest();
 /** AJAX to delete tags from call*/
 
 var deleteTag = function (e) {
-  var tagId = e.target.id.replace(/^delTag_/,'');
+  var tagId;
+  if (e.target) {
+    tagId = e.target.id.replace(/^delTag_/,'');
+  } else {
+    console.log(e);
+    tagId = e[0].childNodes[1].id.replace(/^delTag_/,'');
+
+  }
   var pt = tagId.split(/\^/g);
   var tagName = pt[0];
   var callId = pt[1];
 
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
-      e.target.parentNode.remove();
+      if (e.target) {
+        e.target.parentNode.remove();
+      } else {
+        e.remove();
+      }
     }
   };
   xhr.open('post', '/delete-tag/' + tagName + '/' + callId);
@@ -22,15 +33,28 @@ for (var i=0; i < deleteButton.length; i++) {
 }
 
 // ************ADD TAG FUNCTIONALITY*************//
-/* eslint-disable */
+var backSpace = 0;
 $('.input-tag').bind('keydown', function (kp) {
   var tag = $(this).val().trim();
   	$('.tags').removeClass('danger');
   if(tag.length > 0){
     if(kp.keyCode == 13){
+      backspace='0';
       addTag($(this));
       $(this).val('');
-    }}
+    }
+  } else {
+    if(kp.keyCode == 8) {
+      $('.new-tag').prev().addClass('danger');
+
+      $('.new-tag').prev().removeClass('orange-tag');
+      backSpace++;
+      if(backSpace == 2 ){
+        backSpace = 0;
+        deleteTag($('.new-tag').prev());
+      }
+    }
+  }
 });
 /* eslint-enable */
 
@@ -56,10 +80,10 @@ var addTag = function (e) {
         /**** CODE HERE TO CREATE THE NEW TAG DOM ELEMENT IN THE CALLS DISPLAY ****/
         var li = document.createElement('li');
         var emId = 'delTag_' + tagName + '^' + callId;
-        li.className = 'tags tag-name';
+        li.className = 'tags tag-name orange-tag';
         li.innerHTML = tagName + '<em id="' + emId + '" class="close"></em>';
-        var tagList = document.getElementById('calltags_'+ callId);
-        tagList.insertBefore(li, tagList.childNodes[tagList.childNodes.length-2]);
+        var inputForm = document.getElementById('input_form_'+callId);
+        inputForm.insertBefore(li, inputForm.childNodes[inputForm.childNodes.length-2]);
         document.getElementById(emId).addEventListener('click', deleteTag);
         // $('.new-tag').before('<li class="tags tag-name">'+tag+close+'</li>');
 

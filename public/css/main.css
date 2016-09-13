@@ -310,6 +310,9 @@ font-size: 14px;
 margin-right: 8px;
 margin-bottom: 2px;
 }
+.danger {
+  background-color: red
+}
 .orange{
   font-size: 14px;
   color: #FF9531;
@@ -343,13 +346,14 @@ margin-bottom: 2px;
   float: left;
   display: inline-block;
 }
+.orange-tag {
+  background-color: #FF9531;
+}
 .tag-box li.tags {
-  border: 1px solid #FF9531;
   padding: 6px;
   /*margin-right: 1em;*/
   padding-left: 15px;
   margin-bottom: 1em;
-  background-color: #FF9531;
   color: #fff;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
