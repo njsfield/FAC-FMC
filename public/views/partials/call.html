@@ -54,8 +54,12 @@
               <ul class="tag-box" id="calltags_{{ call_id }}">
                 <div class="input-form form-group" id='input_form_{{call_id}}'>
                 {{#each tag_label}}
-                <li class="tags tag-name orange-tag" tabindex='0'> {{name}}
-                  <em id="delTag_{{id}}"class="close" role='button' tabindex="0"></em>
+                <li class="tags tag-name orange-tag" tabindex='0'>
+                  <label for='delTag_{{id}}' class='close-label'>
+                    <span class='sr-only sr-only-focusable'> delete from call {{call_id}} </span>
+                    {{name}}
+                  </label>
+                  <button id="delTag_{{id}}"class="close" role='button' tabindex="0"></button>
                 </li>
                 {{/each}}
                 <li class="new-tag"><input name='tag' id="addtag_name_{{ call_id }}" class="input-tag" type="text" placeholder="Add tag here"></li>
