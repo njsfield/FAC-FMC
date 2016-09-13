@@ -1,8 +1,8 @@
 <ul class="list-group">
-  <li class="list-group-item filter-list filter-title">
+  <li class="list-group-item filter-title">
     <p id='filter-calls'>Filter Your Calls:</p>
   </li>
-  <li class="list-group-item filter-list">
+  <li class="list-group-item">
     <div class="row">
       <div class='col-xs-4'>
         <p class='saved-filters'>Saved Filters:</p>
@@ -38,10 +38,10 @@
         </div>
         </li>
       {{/if}}
-      <li class="list-group-item filter-list filter-title">
+      <li class="list-group-item filter-title">
         <button id="filter_search" class="btn btn-primary">Search</button>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Call to:</p></div>
           <div class='col-xs-8'>
@@ -49,7 +49,7 @@
           </div>
         </div>
       </li>
-      <li class="filter-list list-group-item ">
+      <li class="list-group-item ">
         <div class='row'>
           <div class='col-xs-4'><p>Call from:</p></div>
           <div class='col-xs-8'>
@@ -57,7 +57,7 @@
           </div>
       </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Min duration:</p></div>
           <div class='col-xs-8'>
@@ -65,7 +65,7 @@
           </div>
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4 max-duration'><p>Max duration:</p></div>
           <div class='col-xs-8'>
@@ -73,7 +73,7 @@
           </div>
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Date: </p></div>
           <div class='col-xs-8'>
@@ -84,7 +84,7 @@
 
 
 
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Date Range: </p></div>
           <div class='col-xs-8'>
@@ -95,7 +95,7 @@
 
 
 
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Tags: </p></div>
           <div class='col-xs-8'>
@@ -103,7 +103,7 @@
           </div>
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         Popular tags:
         <div class="scrollbar-tags popular-tags">
           {{#each savedTags}}
@@ -111,13 +111,13 @@
           {{/each}}
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class="form-control">
           <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
         </div>
       </li>
     </form>
-    <li class='list-group-item filter-list'>
+    <li class='list-group-item'>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save filter</button>
       <button id="show-all" class="btn btn-primary">Show all</button>
       <button class="btn btn-primary" id='clear-form'>Clear form</button>
