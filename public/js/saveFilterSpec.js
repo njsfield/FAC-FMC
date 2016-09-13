@@ -17,8 +17,6 @@ var getFilterSpec = function () {
 /***************** grabs tags input in the filter form and splits it
 into an array *************/
 function fetchTagsList(tags) {
-  console.log('fetchtagslist');
-  console.log(tags);
   var array = [];
   if (tags!=null && tags.search(/\S/)>=0) array = tags.split(';');
   return array;
@@ -52,7 +50,6 @@ var changeColor = function (e) {
     e.target.parentNode.setAttribute('class', 'popular-tag checked');
     // add to list
     if (arrTags.indexOf(e.target.value) === -1) {
-      console.log(arrTags.indexOf(e.target.value), arrTags, e.target.value);
       arrTags.push(e.target.value);
       document.getElementById('tags').value = arrTags.join(';');
     }
