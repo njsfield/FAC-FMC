@@ -121,15 +121,23 @@ var saveFilter = function (e) {
   //**************************SAVE FILTER FUNCTIONALITY
   // filter obj structure to be saved
   var filterObj = {
-    to: document.getElementById('to').value,
-    from: document.getElementById('from').value,
+    to: document.getElementById('to').value.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g, ' ').toLowerCase(),
+    from: document.getElementById('from').value.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g, ' ').toLowerCase(),
     duration_min: document.getElementById('duration_min').value * 60,
     duration_max: document.getElementById('duration_max').value * 60,
     date: document.getElementById('date').value,
+    dateRange: document.getElementById('dateRange').value,
     tags: arrTags.concat(savedTagsArr),
     untagged: document.getElementById('untagged').value,
-    filter_name: document.getElementById('filter_name').value
+    filter_name: document.getElementById('filter_name').value.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g, ' ').toLowerCase()
   };
+
+  if (filterObj.to.search(/[^\w\s]/)>=0 || filterObj.from.search(/[^\w\s]/)>=0 || filterObj.filter_name.search(/[^\w\s]/)>=0) {
+    // NOPE - invalid characters! SHOULD have a way to report errors here.
+    // showUserError("Tag name contains invalid characters");
+    errorHandler('filter contains invalid characters'); // eslint-disable-line
+    return;
+  }
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       console.log('success');
