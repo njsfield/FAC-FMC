@@ -57,8 +57,10 @@ $('.input-tag').bind('keydown', function (kp) {
     }
   }
 });
+/* eslint-enable */
+
 //************add tag ajax request and manipulating dom******//
-var addTag = (e) => {
+var addTag = function (e) {
   var callId = e.context.id.replace(/^addtag_name_/,'');
   var nameElem = document.getElementById('addtag_name_'+callId);
   var tagName = (nameElem.value || '').replace(/^\s+|\s+$/g,'');
@@ -99,4 +101,4 @@ var addTag = (e) => {
   xhr.open('post', '/tag-call/' + tagName + '/' + callId);
   xhr.send();
 };
-var close = '<em class="close" id="delTag_{{id}}"></em>';
+var close = '<em class="close" id="delTag_{{id}}"></em>'; // eslint-disable-line

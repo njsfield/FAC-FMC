@@ -26,22 +26,25 @@ module.exports = {
           return reply.redirect('/').unstate('FMC');
         }
         else {
-          pg.connect(postgresURL, (err, dbClient) => {
+          pg.connect(postgresURL, (err, dbClient, done) => {
             if (err) throw err;
             getTag_id(dbClient, deleteTagObj, (err1, tag_id) => {
               if (err1) {
                 errorHandler(err1);
+                done();
                 reply(JSON.stringify({success: 'fail', tag: deleteTagObj})).type('application/json');
               } else {
                 deleteTagObj.tag_id = tag_id;
                 deleteTag(dbClient, deleteTagObj, (err2) => {
                   if (err2) {
                     errorHandler(err2);
+                    done();
                     reply(JSON.stringify({success: 'fail', tag: deleteTagObj})).type('application/json');
                   } else {
                     reply(JSON.stringify({success: 'success', tag: deleteTagObj})).type('application/json');
                     // reply.redirect('/dashboard').state('FMC', request.state.FMC, cookieOptions);
                   }
+                  done();
                 });
               }
             });
