@@ -5,6 +5,11 @@ var clearFilterForm = function () {
     elem.value = '';
 
   });
+  var checkboxArray = document.getElementsByClassName('saved-tag');
+  for(var i = 0; i < checkboxArray.length; i++){
+    checkboxArray[i].checked = false;
+    checkboxArray[i].parentNode.setAttribute('class', 'popular-tag unchecked');
+  }
   var options = document.getElementById('dropdown');
   options.selectedIndex = 0;
 
