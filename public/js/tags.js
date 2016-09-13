@@ -3,7 +3,6 @@ var xhr = new XMLHttpRequest();
 /** AJAX to delete tags from call*/
 
 var deleteTag = function (e) {
-  console.log(e);
   var tagId;
   if (e.target) {
     tagId = e.target.id.replace(/^delTag_/,'');
