@@ -25,6 +25,9 @@ function fetchTagsList(tags) {
 };
 /*** check duplicates ***/
 
+function removeDuplicates(filterObj) {
+  filterObj;
+}
 /*************FILTER POPULAR TAGS FUNCTIONALITY*************/
 // if the popular tags listed have also been searched, they will turn
 // blue otherwise it will leave it orange
@@ -48,8 +51,8 @@ var changeColor = function (e) {
   if (e.target.checked && e.target.disabled === false) {
     e.target.parentNode.setAttribute('class', 'popular-tag checked');
     // add to list
-    console.log(arrTags, arrTags.indexOf(e.target.value));
     if (arrTags.indexOf(e.target.value) === -1) {
+      console.log(arrTags.indexOf(e.target.value), arrTags, e.target.value);
       arrTags.push(e.target.value);
       document.getElementById('tags').value = arrTags.join(';');
     }
