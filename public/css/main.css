@@ -113,6 +113,10 @@ body {
 
 /************************** filter form ***********************/
 
+.time {
+  font-size: 12px;
+}
+
 input[type="checkbox"] {
   color: white;
 }

@@ -59,17 +59,24 @@
       </li>
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4'><p>Min duration:</p></div>
+          <div class='col-xs-4'>
+            <p>Min duration:</p>
+            <p class='time'>(hh:mm)</p>
+          </div>
           <div class='col-xs-8'>
-            <input type="text" id="duration_min" name="min" class="form-control" placeholder="Min-duration (min):" value="{{userObj.min}}">
+            <input type="time" id="duration_min" name="min" class="form-control" placeholder="Min-duration (hh:mm):" value="{{userObj.min}}">
           </div>
         </div>
       </li>
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4 max-duration'><p>Max duration:</p></div>
+          <div class='col-xs-4 max-duration'>
+            <p>Max duration:</p>
+            <p class='time'>(hh:mm)</p>
+          </div>
+
           <div class='col-xs-8'>
-            <input type="text" id="duration_max" name="max" class="form-control" placeholder="Max-duration (min):" value="{{userObj.max}}">
+            <input type="time" id="duration_max" name="max" class="form-control" placeholder="Max-duration (hh:mm):" value="{{userObj.max}}">
           </div>
         </div>
       </li>
