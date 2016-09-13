@@ -1,10 +1,10 @@
 var clearFilterForm = function () {
-  document.getElementById('filter-form').reset();
-  var checkboxArray = document.getElementsByClassName('saved-tag');
-  for(var i = 0; i < checkboxArray.length; i++){
-    checkboxArray[i].checked = false;
-    checkboxArray[i].parentNode.setAttribute('class', 'popular-tag unchecked');
-  }
+  var filterSpecProperties = ['duration_min', 'duration_max', 'to', 'from', 'tags', 'date', 'dateRange'];
+  filterSpecProperties.forEach(function (id) {
+    var elem = document.getElementById(id);
+    elem.value = '';
+
+  });
   var options = document.getElementById('dropdown');
   options.selectedIndex = 0;
 
