@@ -10,7 +10,6 @@ var clearFilterForm = function () {
     checkboxArray[i].checked = false;
     checkboxArray[i].parentNode.setAttribute('class', 'popular-tag unchecked');
   }
-
   var options = document.getElementById('dropdown');
   options.selectedIndex = 0;
 

@@ -181,10 +181,10 @@ const formatUserObj = (request, user)=> {
     if (request.query.untagged!=null)
       userObj.untagged = true;
     else {
-      if (request.query.tags!=null && request.query.tags.search(/\S/)>=0)
+      // check the tags are valid and split the user tags
+      if (request.query.tags!=null && request.query.tags.search(/\S/)>=0){
         userObj.tags = request.query.tags.replace(/[^\w\s\d\;\,]+|^\s+|\s+$/g,'').split(/\s*[\,\;]\s*/g).filter(w => w.search(/\S/)>=0);
-      if(request.query.company_tag!=null)
-        userObj.tags = userObj.tags.concat(request.query.company_tag);
+      }
     }
     if (request.query.firstIndex!=null && !isNaN(request.query.firstIndex))
       userObj.firstIndex = parseInt(request.query.firstIndex, 10);

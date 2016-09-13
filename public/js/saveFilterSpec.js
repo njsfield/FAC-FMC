@@ -16,19 +16,23 @@ var getFilterSpec = function () {
 /**************TAGGING*******************/
 /***************** grabs tags input in the filter form and splits it
 into an array *************/
-var fetchTagsList = function () {
-  var tags = document.getElementById('tags').value;
+function fetchTagsList(tags) {
   var array = [];
   if (tags!=null && tags.search(/\S/)>=0) array = tags.split(';');
   return array;
 };
-var arrTags = fetchTagsList();
+/*** check duplicates ***/
 
+function removeDuplicates(filterObj) {
+  filterObj;
+}
 /*************FILTER POPULAR TAGS FUNCTIONALITY*************/
 // if the popular tags listed have also been searched, they will turn
 // blue otherwise it will leave it orange
 var popularTagArray = document.getElementsByClassName('popular-tag');
 function compareTags() {
+  var tags = document.getElementById('tags').value;
+  var arrTags = fetchTagsList(tags);
   for(var i = 0; i < popularTagArray.length; i++){
     if(arrTags.indexOf(popularTagArray[i].childNodes[0].value) >-1){
       popularTagArray[i].setAttribute('class', 'popular-tag checked');
@@ -40,6 +44,8 @@ compareTags();
 // This functionailty changes the color of popular tags when they are selected or unselected
 var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
 var changeColor = function (e) {
+  var tags = document.getElementById('tags').value;
+  var arrTags = fetchTagsList(tags);
   if (e.target.checked && e.target.disabled === false) {
     e.target.parentNode.setAttribute('class', 'popular-tag checked');
     // add to list
@@ -64,7 +70,7 @@ var untagged = document.getElementById('untagged');
 
 var disableTags = function () {
   var scrollbarCheckboxesArray = document.getElementsByClassName('saved-tag');
-  var tags = document.getElementById('tags');
+  var tags = document.getElementById('tags').value;
   for(var i=0; i<scrollbarCheckboxesArray.length; i++)
     scrollbarCheckboxesArray[i].disabled = untagged.checked;
   tags.disabled = untagged.checked;
@@ -104,7 +110,8 @@ var saveFilter = function (e) {
       return ({'"': '&quot;', '<': '&lt;','>': '&gt;'})[s];
     });
   };
-
+  var tags = document.getElementById('tags').value;
+  var arrTags = fetchTagsList(tags);
   //**************************SAVE FILTER FUNCTIONALITY
   // filter obj structure to be saved
   var filterObj = {
