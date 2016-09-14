@@ -25,10 +25,6 @@ font-family: 'Lato', sans-serif;
   padding-bottom: 30px;
 }
 
-/*#logo {
-  width: 50%;
-}*/
-
 #login_button {
   width: 100%;
 }
@@ -117,6 +113,10 @@ body {
 
 /************************** filter form ***********************/
 
+.time {
+  font-size: 12px;
+}
+
 input[type="checkbox"] {
   color: white;
 }
@@ -153,12 +153,6 @@ input[type=checkbox], input[type=radio] {
   overflow-y: scroll;
   height: 130px !important;
   background: white;
-}
-
-.filter-list {
-  /*border: none;
-  background-color: #00A6A3;*/
-
 }
 
 .list-group-item {

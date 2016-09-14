@@ -1,8 +1,8 @@
 <ul class="list-group">
-  <li class="list-group-item filter-list filter-title">
+  <li class="list-group-item filter-title">
     <p id='filter-calls'>Filter Your Calls:</p>
   </li>
-  <li class="list-group-item filter-list">
+  <li class="list-group-item">
     <div class="row">
       <div class='col-xs-4'>
         <p class='saved-filters'>Saved Filters:</p>
@@ -38,10 +38,10 @@
         </div>
         </li>
       {{/if}}
-      <li class="list-group-item filter-list filter-title">
+      <li class="list-group-item filter-title">
         <button id="filter_search" class="btn btn-primary">Search</button>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Call to:</p></div>
           <div class='col-xs-8'>
@@ -49,7 +49,7 @@
           </div>
         </div>
       </li>
-      <li class="filter-list list-group-item ">
+      <li class="list-group-item ">
         <div class='row'>
           <div class='col-xs-4'><p>Call from:</p></div>
           <div class='col-xs-8'>
@@ -57,45 +57,52 @@
           </div>
       </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4'><p>Min duration:</p></div>
+          <div class='col-xs-4'>
+            <p>Min duration:</p>
+            <p class='time'>(hh:mm)</p>
+          </div>
           <div class='col-xs-8'>
-            <input type="text" id="duration_min" name="min" class="form-control" placeholder="Min-duration (min):" value="{{userObj.min}}">
+            <input type="time" id="duration_min" name="min" class="form-control" placeholder="Min-duration (hh:mm):" value="{{userObj.min}}">
           </div>
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4 max-duration'><p>Max duration:</p></div>
+          <div class='col-xs-4 max-duration'>
+            <p>Max duration:</p>
+            <p class='time'>(hh:mm)</p>
+          </div>
+
           <div class='col-xs-8'>
-            <input type="text" id="duration_max" name="max" class="form-control" placeholder="Max-duration (min):" value="{{userObj.max}}">
+            <input type="time" id="duration_max" name="max" class="form-control" placeholder="Max-duration (hh:mm):" value="{{userObj.max}}">
           </div>
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Date: </p></div>
           <div class='col-xs-8'>
-            <input type="text" id="date" name="date" class="form-control" placeholder="Date:" value="{{userObj.date}}">
+            <input type="text" id="date" name="date" class="form-control" placeholder="yyyy/mm/dd" value="{{userObj.date}}">
           </div>
         </div>
       </li>
 
 
 
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Date Range: </p></div>
           <div class='col-xs-8'>
-            <input type="text" id="dateRange" name="dateRange" class="form-control" placeholder="Date Range:" value="{{userObj.dateRange}}">
+            <input type="text" id="dateRange" name="dateRange" class="form-control" placeholder="yyyy/mm/dd" value="{{userObj.dateRange}}">
           </div>
         </div>
       </li>
 
 
 
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-4'><p>Tags: </p></div>
           <div class='col-xs-8'>
@@ -103,7 +110,7 @@
           </div>
         </div>
       </li>
-      <li class="list-group-item filter-list">
+      <li class="list-group-item">
         Popular tags:
         <div class="scrollbar-tags popular-tags">
           {{#each savedTags}}
@@ -111,7 +118,7 @@
           {{/each}}
         </div>
       </li>
-      <ul class="list-group-item filter-list">
+      <li class="list-group-item">
         <div class="form-control">
           <li>
             <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
@@ -119,7 +126,7 @@
         </div>
       </ul>
     </form>
-    <li class='list-group-item filter-list'>
+    <li class='list-group-item'>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save filter</button>
       <button id="show-all" class="btn btn-primary">Show all</button>
       <button class="btn btn-primary" id='clear-form'>Clear form</button>
