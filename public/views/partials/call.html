@@ -28,11 +28,13 @@
                 {{name}}
               </div>
               {{/each_upto}}
-              {{#if tag_label}}
-              <p id='tag_container_text_{{call_id}}'>...</p>
-              {{else}}
-              <p id='tag_container_text_{{call_id}}'>no tags</p>
-              {{/if}}
+              <p id='tag_container_text_{{call_id}}'>
+                {{#if tag_label}}
+                
+                {{else}}
+                no tags
+                {{/if}}
+              </p>
             </div>
             <div class="col-xs-1 arrow-box">
               <img class='downward-arrow' src='/img/arrow-black.png'/>
