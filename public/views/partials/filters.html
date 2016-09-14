@@ -93,13 +93,13 @@
         </div>
       </li>
       <li class="list-group-item">
-        Popular tags:
+        Saved tags:
         <div class="scrollbar-tags popular-tags">
-          {{#each savedTags}}
+          {{#each_upto savedTags 20}}
             <label class="popular-tag unchecked" tabindex="0" for='checked_{{tag_name}}'>
               <input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}}
             </label>
-          {{/each}}
+          {{/each_upto}}
         </div>
       </li>
       <li class="list-group-item">

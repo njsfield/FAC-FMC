@@ -76,10 +76,18 @@ var untagged = document.getElementById('untagged');
 
 var disableTags = function () {
   var scrollbarCheckboxesArray = document.getElementsByClassName('saved-tag');
-  var tags = document.getElementById('tags').value;
+  var tags = document.getElementById('tags');
   for(var i=0; i<scrollbarCheckboxesArray.length; i++)
     scrollbarCheckboxesArray[i].disabled = untagged.checked;
   tags.disabled = untagged.checked;
+
+  if (untagged.checked){
+    document.getElementsByClassName('popular-tags')[0].setAttribute('id', 'fade');
+    document.getElementById('tags')[0].setAttribute('id', 'fade');
+  } else {
+    document.getElementsByClassName('popular-tags')[0].removeAttribute('id');
+    document.getElementById('tags')[0].setAttribute('id');
+  }
 };
 
 untagged.addEventListener('change', disableTags);

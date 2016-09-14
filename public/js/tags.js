@@ -1,6 +1,6 @@
 var xhr = new XMLHttpRequest();
 
-/** ADD EVENT LISTENDERS TO TAGS IN CALLS FOR THE DELETE CALL **/
+/** ADD EVENT LISTENERS TO TAGS IN CALLS FOR THE DELETE CALL **/
 var tagsList = document.getElementsByClassName('tags');
 var deleteListener = function (e) {
   if (e.key === 'Delete') {
@@ -14,18 +14,16 @@ for(var i = 0 ; i < tagsList.length; i++){
 /** AJAX to delete tags from call*/
 
 var deleteTag = function (node){
-  console.log('node', node);
   var e ;
+  var tagId;
   if (node.target) {
     e = node.target;
   } else {
-    console.log('no target');
     e = node[0];
   }
-  var tagId;
-  console.log('eeeee', e);
-  console.log('nodeName', e.nodeName);
-  if (e.nodeName === 'LI') {
+  if (e.nodeName === 'LI' && e.childNodes[2].nodeName === 'BUTTON') {
+    tagId = e.childNodes[2].id.replace(/^delTag_/,'');
+  } else if (e.nodeName === 'LI' && e.childNodes[3].nodeName === 'BUTTON') {
     tagId = e.childNodes[3].id.replace(/^delTag_/,'');
   }
   else if (e.nodeName === 'BUTTON') {
@@ -37,6 +35,7 @@ var deleteTag = function (node){
   var pt = tagId.split(/\^/g);
   var tagName = pt[0];
   var callId = pt[1];
+  console.log('tag info', tagName, callId);
 
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
@@ -44,6 +43,14 @@ var deleteTag = function (node){
         e.parentNode.remove();
       } else {
         e.remove();
+      }
+      var callLine = document.getElementById('tag_container_'+ callId);
+      for(var k = 0; k < callLine.childNodes.length; k++ ){
+        if (callLine.childNodes[k].innerHTML) {
+          if (callLine.childNodes[k].innerHTML.trim() === tagName){
+            callLine.childNodes[k].remove();
+          }
+        }
       }
     }
   };
@@ -105,21 +112,39 @@ var addTag = function (e) {
         var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name orange-tag';
         li.tabIndex = 0;
-        li.innerHTML = '<label for="'+ emId +
-          '"> <span class="sr-only sr-only-focusable"> delete tag from ' +
+        li.innerHTML = '<label class="close-label" for="'+ emId +
+          '"> <span class="sr-only sr-only-focusable"> delete tag from call ' +
            callId +'</span>' + tagName + '</label> <button type="button" tabindex=0 id="' +
             emId + '" class="close"> x </button>';
         var inputForm = document.getElementById('input_form_'+callId);
         inputForm.insertBefore(li, inputForm.childNodes[inputForm.childNodes.length-2]);
         document.getElementById(emId).addEventListener('click', deleteTag);
         li.addEventListener('keypress', deleteListener);
-        // $('.new-tag').before('<li class="tags tag-name">'+tag+close+'</li>');
-
+// ADD label to the saved tags section in the filterform
         var label = document.createElement('label');
         label.innerHTML = '<input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '" id="checked_' + tagName +'"> ' + tagName;
         label.setAttribute('class', 'popular-tag unchecked');
         label.setAttribute('for', 'checked_'+tagName);
-        document.getElementsByClassName('scrollbar-tags')[0].appendChild(label);
+        var savedTags = document.getElementsByClassName('popular-tag');
+        var duplicate = false;
+        for (var l = 0 ; l < savedTags.length; l++) {
+          var forAttribute = savedTags[l].getAttribute('for').replace(/^checked_/,'');
+          if (forAttribute === tagName) {
+            duplicate = true;
+          }
+          if (!duplicate && l === savedTags.length - 1 && savedTags.length < 20) {
+            document.getElementsByClassName('scrollbar-tags')[0].appendChild(label);
+          }
+        }
+// add tag to call line
+
+        var callLine = document.getElementById('tag_container_' + callId);
+        console.log(callLine, callId);
+        var div = document.createElement('div');
+        div.setAttribute('class', 'small-tags');
+        div.innerHTML = tagName;
+        var p = document.getElementById('tag_container_text_' + callId);
+        callLine.insertBefore(div, p);
       } else {
         errorHandler('unable to save your tag'); // eslint-disable-line
       }
