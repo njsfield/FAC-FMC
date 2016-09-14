@@ -136,6 +136,9 @@ input[type=checkbox], input[type=radio] {
   list-style: none;
   padding: 0.2em;
 }
+.popular-tags:focus {
+  font-weight: bold;
+}
 
 .popular-tag {
   display: inline-block;
@@ -378,15 +381,21 @@ margin-bottom: 2px;
 .tag-box li.tags.edit .input-tag {
   height: auto;
 }
-.tag-box li.tags.edit:hover {
-  padding: 4px 6px;
-}
 .tag-box li.tags:hover {
   padding-right: 18px;
 }
+
+.tag-box li.tags:focus {
+  padding-right: 18px;
+}
+
 .tag-box li.tags:hover .close {
   width: 14px;
 }
+.tag-box li.tags:focus .close {
+  width: 14px;
+}
+
 .tag-box li .input-tag {
   color: black;
   height: 24px;

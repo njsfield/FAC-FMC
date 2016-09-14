@@ -114,15 +114,17 @@
         Popular tags:
         <div class="scrollbar-tags popular-tags">
           {{#each savedTags}}
-            <label class="popular-tag unchecked" for='checked_{{tag_name}}'><input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}} </label>
+            <label class="popular-tag unchecked" tabindex="0" for='checked_{{tag_name}}'><input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}} </label>
           {{/each}}
         </div>
       </li>
       <li class="list-group-item">
         <div class="form-control">
-          <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
+          <li>
+            <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
+          </li>
         </div>
-      </li>
+      </ul>
     </form>
     <li class='list-group-item'>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save filter</button>

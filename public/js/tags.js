@@ -1,15 +1,38 @@
 var xhr = new XMLHttpRequest();
 
+/** ADD EVENT LISTENDERS TO TAGS IN CALLS FOR THE DELETE CALL **/
+var tagsList = document.getElementsByClassName('tags');
+var deleteListener = function (e) {
+  if (e.key === 'Delete') {
+    deleteTag(e);
+  }
+};
+for(var i = 0 ; i < tagsList.length; i++){
+  tagsList[i].addEventListener('keypress', deleteListener);
+}
+
 /** AJAX to delete tags from call*/
 
-var deleteTag = function (e) {
-  var tagId;
-  if (e.target) {
-    tagId = e.target.id.replace(/^delTag_/,'');
+var deleteTag = function (node){
+  console.log('node', node);
+  var e ;
+  if (node.target) {
+    e = node.target;
   } else {
-    console.log(e);
-    tagId = e[0].childNodes[1].id.replace(/^delTag_/,'');
-
+    console.log('no target');
+    e = node[0];
+  }
+  var tagId;
+  console.log('eeeee', e);
+  console.log('nodeName', e.nodeName);
+  if (e.nodeName === 'LI') {
+    tagId = e.childNodes[3].id.replace(/^delTag_/,'');
+  }
+  else if (e.nodeName === 'BUTTON') {
+    tagId = e.id.replace(/^delTag_/,'');
+  }
+  else {
+    tagId = e.childNodes[1].id.replace(/^delTag_/,'');
   }
   var pt = tagId.split(/\^/g);
   var tagName = pt[0];
@@ -17,8 +40,8 @@ var deleteTag = function (e) {
 
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
-      if (e.target) {
-        e.target.parentNode.remove();
+      if (e.nodeName === 'BUTTON') {
+        e.parentNode.remove();
       } else {
         e.remove();
       }
@@ -32,7 +55,7 @@ for (var i=0; i < deleteButton.length; i++) {
   deleteButton[i].addEventListener('click', deleteTag);
 }
 
-// ************ADD TAG FUNCTIONALITY*************//
+// ************ADD TAG and DELETE TAG*************//
 var backSpace = 0;
 $('.input-tag').bind('keydown', function (kp) {
   var tag = $(this).val().trim();
@@ -81,10 +104,15 @@ var addTag = function (e) {
         var li = document.createElement('li');
         var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name orange-tag';
-        li.innerHTML = tagName + '<em id="' + emId + '" class="close"></em>';
+        li.tabIndex = 0;
+        li.innerHTML = '<label for="'+ emId +
+          '"> <span class="sr-only sr-only-focusable"> delete tag from ' +
+           callId +'</span>' + tagName + '</label> <button type="button" tabindex=0 id="' +
+            emId + '" class="close"> x </button>';
         var inputForm = document.getElementById('input_form_'+callId);
         inputForm.insertBefore(li, inputForm.childNodes[inputForm.childNodes.length-2]);
         document.getElementById(emId).addEventListener('click', deleteTag);
+        li.addEventListener('keypress', deleteListener);
         // $('.new-tag').before('<li class="tags tag-name">'+tag+close+'</li>');
 
         var label = document.createElement('label');
@@ -100,4 +128,4 @@ var addTag = function (e) {
   xhr.open('post', '/tag-call/' + tagName + '/' + callId);
   xhr.send();
 };
-var close = '<em class="close" id="delTag_{{id}}"></em>'; // eslint-disable-line
+var close = '<button class="close" id="delTag_{{id}}"></button>'; // eslint-disable-line
