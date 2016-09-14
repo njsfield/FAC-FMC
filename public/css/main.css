@@ -139,7 +139,9 @@ input[type=checkbox], input[type=radio] {
 .popular-tags:focus {
   font-weight: bold;
 }
-
+#fade {
+  opacity: 0.5;
+}
 .popular-tag {
   display: inline-block;
   padding: 0.2em 0.7em;
