@@ -105,7 +105,7 @@ var addTag = function (e) {
         var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name orange-tag';
         li.tabIndex = 0;
-        li.innerHTML = '<label for="'+ emId + 
+        li.innerHTML = '<label for="'+ emId +
           '"> <span class="sr-only sr-only-focusable"> delete tag from ' +
            callId +'</span>' + tagName + '</label> <button type="button" tabindex=0 id="' +
             emId + '" class="close"> x </button>';

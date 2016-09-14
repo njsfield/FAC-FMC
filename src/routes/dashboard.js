@@ -146,7 +146,8 @@ const formatUserObj = (request, user)=> {
     maxRows: 16,
     isAdmin: isAdmin,
     contactID: user.contact_id,
-    dateOrder: 'desc'
+    dateOrder: 'desc',
+    string: 'New to old'
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
@@ -191,11 +192,8 @@ const formatUserObj = (request, user)=> {
 
     if (request.query.dateOrder === 'asc') {
       userObj.dateOrder = 'asc';
+      userObj.string = 'Old to new';
     }
-    if (request.query.dateOrder === 'desc') {
-      userObj.dateOrder = 'desc';
-    }
-
   }
   return userObj;
 };
