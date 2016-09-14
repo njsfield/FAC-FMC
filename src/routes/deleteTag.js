@@ -38,7 +38,6 @@ module.exports = {
                 deleteTag(dbClient, deleteTagObj, (err2) => {
                   if (err2) {
                     errorHandler(err2);
-                    done();
                     reply(JSON.stringify({success: 'fail', tag: deleteTagObj})).type('application/json');
                   } else {
                     reply(JSON.stringify({success: 'success', tag: deleteTagObj})).type('application/json');

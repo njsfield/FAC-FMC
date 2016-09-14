@@ -14,18 +14,16 @@ for(var i = 0 ; i < tagsList.length; i++){
 /** AJAX to delete tags from call*/
 
 var deleteTag = function (node){
-  console.log('node', node);
   var e ;
+  var tagId;
   if (node.target) {
     e = node.target;
   } else {
-    console.log('no target');
     e = node[0];
   }
-  var tagId;
-  console.log('eeeee', e);
-  console.log('nodeName', e.nodeName);
-  if (e.nodeName === 'LI') {
+  if (e.nodeName === 'LI' && e.childNodes[2].nodeName === 'BUTTON') {
+    tagId = e.childNodes[2].id.replace(/^delTag_/,'');
+  } else if (e.nodeName === 'LI' && e.childNodes[3].nodeName === 'BUTTON') {
     tagId = e.childNodes[3].id.replace(/^delTag_/,'');
   }
   else if (e.nodeName === 'BUTTON') {
@@ -37,13 +35,16 @@ var deleteTag = function (node){
   var pt = tagId.split(/\^/g);
   var tagName = pt[0];
   var callId = pt[1];
+  console.log('tag info', tagName, callId);
 
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       if (e.nodeName === 'BUTTON') {
         e.parentNode.remove();
+        console.log('nodeparent removed');
       } else {
         e.remove();
+        console.log('node removed');
       }
     }
   };
@@ -105,8 +106,8 @@ var addTag = function (e) {
         var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name orange-tag';
         li.tabIndex = 0;
-        li.innerHTML = '<label for="'+ emId +
-          '"> <span class="sr-only sr-only-focusable"> delete tag from ' +
+        li.innerHTML = '<label class="close-label" for="'+ emId +
+          '"> <span class="sr-only sr-only-focusable"> delete tag from call ' +
            callId +'</span>' + tagName + '</label> <button type="button" tabindex=0 id="' +
             emId + '" class="close"> x </button>';
         var inputForm = document.getElementById('input_form_'+callId);
