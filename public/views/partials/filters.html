@@ -4,16 +4,14 @@
   </li>
   <li class="list-group-item">
     <div class="row">
-      <div class='col-xs-4'>
-        <p class='saved-filters'>Saved Filters:</p>
-      </div>
-      <div class='col-xs-8'>
+      <div class='col-xs-12'>
         <select id="dropdown" name="saved-filters">
           <option selected disabled id='dropdown-option'>Your saved filters</option>
           {{#each filters}}
           <option value="{{filter_spec}}">{{filter_name}}</option>
           {{/each}}
         </select>
+        <label class='sr-only' for='saved-filters'>Saved Filters: </label>
       </div>
     </div>
   </li>
@@ -23,17 +21,14 @@
       {{#if userObj.isAdmin}}
         <li class="list-group-item">
           <div class='row'>
-            <div class='col-xs-4'>
-              <p>
-                <p class='saved-filters'> Company: </p>
-              </p>
-            </div>
-            <div class='col-xs-8'>
+            <div class='col-xs-12'>
               <select class='drop-options' id="companies" name="admin_company">
+                <option selected disabled id='dropdown-option'>Choose Company</option>
                 {{#each userObj.adminCompanies}}
                 <option value={{name}} {{{./selected}}}>{{name}}</option>
                 {{/each}}
               </select>
+              <label class='sr-only' for='saved-filters'>Choose Company: </label>
             </div>
         </div>
         </li>
@@ -43,70 +38,57 @@
       </li>
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4'><p>Call to:</p></div>
-          <div class='col-xs-8'>
-            <input type="text" id="to" name="to" class="form-control" placeholder="To:   e.g. 435" value="{{userObj.to}}">
+          <div class='col-xs-12'>
+            <input type="text" id="to" name="to" class="form-control" placeholder="Call to:   e.g. 435" value="{{userObj.to}}">
+            <label class='sr-only' for='to'>Call to: </label>
           </div>
         </div>
       </li>
       <li class="list-group-item ">
         <div class='row'>
-          <div class='col-xs-4'><p>Call from:</p></div>
-          <div class='col-xs-8'>
-            <input type="text" id="from" name="from" class="form-control" placeholder="From:  e.g. 234" value="{{userObj.from}}">
-          </div>
-      </div>
-      </li>
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-4'>
-            <p>Min duration:</p>
-            <p class='time'>(hh:mm)</p>
-          </div>
-          <div class='col-xs-8'>
-            <input type="time" id="duration_min" name="min" class="form-control" placeholder="Min-duration (hh:mm):" value="{{userObj.min}}">
+          <div class='col-xs-12'>
+            <input type="text" id="from" name="from" class="form-control" placeholder="Call from:  e.g. 234" value="{{userObj.from}}">
+            <label class='sr-only' for='from'>Call from: </label>
           </div>
         </div>
       </li>
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4 max-duration'>
-            <p>Max duration:</p>
-            <p class='time'>(hh:mm)</p>
-          </div>
-
-          <div class='col-xs-8'>
-            <input type="time" id="duration_max" name="max" class="form-control" placeholder="Max-duration (hh:mm):" value="{{userObj.max}}">
+          <div class='col-xs-12'>
+            <input type="text" id="duration_min" name="min" class="form-control" placeholder="Min-duration: (hh:mm)" value="{{userObj.min}}">
+            <label class='sr-only' for='min'>Minimum duration: (hh:mm)</label>
           </div>
         </div>
       </li>
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4'><p>Date: </p></div>
-          <div class='col-xs-8'>
+          <div class='col-xs-12'>
+            <input type="text" id="duration_max" name="max" class="form-control" placeholder="Max-duration: (hh:mm)" value="{{userObj.max}}">
+            <label class='sr-only' for='max'>Maximum duration: (hh:mm) </label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class='row'>
+          <div class='col-xs-12'>
             <input type="text" id="date" name="date" class="form-control" placeholder="yyyy-mm-dd" value="{{userObj.date}}">
+            <label class='sr-only' for='date'>Date: </label>
           </div>
         </div>
       </li>
-
-
-
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4'><p>Date Range: </p></div>
-          <div class='col-xs-8'>
+          <div class='col-xs-12'>
             <input type="text" id="dateRange" name="dateRange" class="form-control" placeholder="yyyy-mm-dd" value="{{userObj.dateRange}}">
+            <label class='sr-only' for='dateRange'>Date Range: </label>
           </div>
         </div>
       </li>
-
-
-
       <li class="list-group-item">
         <div class='row'>
-          <div class='col-xs-4'><p>Tags: </p></div>
-          <div class='col-xs-8'>
+          <div class='col-xs-12'>
             <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
+            <label class='sr-only' for='date'>Tags: </label>
           </div>
         </div>
       </li>
@@ -114,13 +96,16 @@
         Popular tags:
         <div class="scrollbar-tags popular-tags">
           {{#each savedTags}}
-            <label class="popular-tag unchecked" tabindex="0" for='checked_{{tag_name}}'><input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}} </label>
+            <label class="popular-tag unchecked" tabindex="0" for='checked_{{tag_name}}'>
+              <input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}}
+            </label>
           {{/each}}
         </div>
       </li>
       <li class="list-group-item">
         <div class="form-control">
           <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
+          <label class='sr-only' for='untagged'>Untagged: </label>
         </div>
       </li>
     </form>
