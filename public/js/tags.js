@@ -44,6 +44,14 @@ var deleteTag = function (node){
       } else {
         e.remove();
       }
+      var callLine = document.getElementById('tag_container_'+ callId);
+      for(var k = 0; k < callLine.childNodes.length; k++ ){
+        if (callLine.childNodes[k].innerHTML) {
+          if (callLine.childNodes[k].innerHTML.trim() === tagName){
+            callLine.childNodes[k].remove();
+          }
+        }
+      }
     }
   };
   xhr.open('post', '/delete-tag/' + tagName + '/' + callId);
@@ -117,7 +125,17 @@ var addTag = function (e) {
         label.innerHTML = '<input type="checkbox" class="saved-tag" name="company_tag" value="' + tagName + '" id="checked_' + tagName +'"> ' + tagName;
         label.setAttribute('class', 'popular-tag unchecked');
         label.setAttribute('for', 'checked_'+tagName);
-        document.getElementsByClassName('scrollbar-tags')[0].appendChild(label);
+        var savedTags = document.getElementsByClassName('popular-tag');
+        var duplicate = false;
+        for (var l = 0 ; l < savedTags.length; l++) {
+          var forAttribute = savedTags[l].getAttribute('for').replace(/^checked_/,'');
+          if (forAttribute === tagName) {
+            duplicate = true;
+          }
+          if (!duplicate && l === savedTags.length - 1 && savedTags.length < 20) {
+            document.getElementsByClassName('scrollbar-tags')[0].appendChild(label);
+          }
+        }
 // add tag to call line
 
         var callLine = document.getElementById('tag_container_' + callId);
