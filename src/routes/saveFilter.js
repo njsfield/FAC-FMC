@@ -23,6 +23,7 @@ module.exports = {
           duration_min: parsePayload.duration_min,
           duration_max: parsePayload.duration_max,
           date: parsePayload.date,
+          dateRange: parsePayload.dateRange,
           tags: parsePayload.tags,
           untagged: parsePayload.untagged
         }
