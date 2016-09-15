@@ -176,10 +176,22 @@ const formatUserObj = (request, user)=> {
       userObj.to = request.query.to;
     if (request.query.from!=null)
       userObj.from = request.query.from;
-    if (request.query.min!=null && !isNaN(request.query.min) && request.query.min>0)
-      userObj.min = parseFloat(request.query.min);
-    if (request.query.max!=null && !isNaN(request.query.max) && request.query.max>0)
-      userObj.max = parseFloat(request.query.max);
+    if (request.query.min!=null && request.query.min.indexOf(':') !== -1) {
+      const minHour = parseInt(request.query.min.split(':')[0], 10) * 60;
+      const minMins = parseInt(request.query.min.split(':')[1], 10);
+      const totalMinTime = minHour + minMins;
+      if (!isNaN(totalMinTime) && totalMinTime>0) {
+        userObj.min = totalMinTime;
+      }
+    }
+    if (request.query.max!=null && request.query.max.indexOf(':') !== -1) {
+      const maxHour = parseInt(request.query.max.split(':')[0], 10) * 60;
+      const maxMins = parseInt(request.query.max.split(':')[1], 10);
+      const totalMaxTime = maxHour + maxMins;
+      if (!isNaN(totalMaxTime) && totalMaxTime>0) {
+        userObj.max = totalMaxTime;
+      }
+    }
     if (request.query.date!=null)
       userObj.date = request.query.date;
     if (request.query.dateRange!=null)
@@ -203,9 +215,15 @@ const formatUserObj = (request, user)=> {
   return userObj;
 };
 
-const formatCallDuration = (call) => {
-  const totalSec = call.duration;
-  const minutes = parseInt( totalSec / 60 );
-  const seconds = totalSec % 60;
-  return (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+const formatCallDuration = (duration) => {
+  const hours = parseInt( duration / 3600);
+  const minutes = parseInt( duration / 60 );
+  const seconds = duration % 60;
+  return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+};
+
+const formatSearchDuration = (duration) => {
+  const hours = parseInt( duration / 60);
+  const minutes = duration % 60;
+  return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes);
 };
