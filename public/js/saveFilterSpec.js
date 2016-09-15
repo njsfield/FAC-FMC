@@ -131,8 +131,8 @@ var saveFilter = function (e) {
   var filterObj = {
     to: document.getElementById('to').value.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g, ' ').toLowerCase(),
     from: document.getElementById('from').value.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g, ' ').toLowerCase(),
-    duration_min: document.getElementById('duration_min').value * 60,
-    duration_max: document.getElementById('duration_max').value * 60,
+    duration_min: document.getElementById('duration_min').value,
+    duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
     dateRange: document.getElementById('dateRange').value,
     tags: arrTags.concat(savedTagsArr),
