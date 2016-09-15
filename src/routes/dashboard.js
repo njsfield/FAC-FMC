@@ -225,5 +225,6 @@ const formatCallDuration = (duration) => {
 const formatSearchDuration = (duration) => {
   const hours = parseInt( duration / 60);
   const minutes = duration % 60;
-  return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes);
+  const time = (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes);
+  return time === '00:00' ? '' : time;
 };
