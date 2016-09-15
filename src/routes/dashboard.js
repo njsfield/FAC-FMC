@@ -40,17 +40,21 @@ module.exports = {
                     getFilterNameAndSpec(dbClient, decoded, (err3, filters) => {
                       if (err3) {
                         errorHandler(err3);
+                        done();
                         return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                       } else {
                         getTagNames(dbClient, decoded, (err4, savedTags) => {
                           if (err4) {
                             errorHandler(err4);
+                            done();
                             return reply.view('dashboard', {filters, callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
                           }
                           res.rows.forEach( (call) => {
-                            call.duration = formatCallDuration(call);
+                            call.duration = formatCallDuration(call.duration);
                           });
                           userObj.tags = userObj.tags.join(';');
+                          userObj.min = formatSearchDuration(userObj.min);
+                          userObj.max = formatSearchDuration(userObj.max);
                           const userCalls = {
                             filters,
                             savedTags,
@@ -58,6 +62,7 @@ module.exports = {
                           };
                           if (res.rows.length === 0) {
                             userCalls.callError = 'no calls for these parameters';
+                            done();
                             reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
                           } else {
                             userCalls.calls = res.rows;
