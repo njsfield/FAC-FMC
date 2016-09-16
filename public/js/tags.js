@@ -48,7 +48,6 @@ var deleteTag = function (node){
       var smallTags = 0;
       for(var k = 0; k < callLine.childNodes.length; k++ ){
         if (callLine.childNodes[k].innerHTML) {
-          console.log(callLine.childNodes[k]);
           if (callLine.childNodes[k].innerHTML.trim() === tagName){
             callLine.childNodes[k].remove();
           }
