@@ -4,7 +4,7 @@ module.exports = (dbClient, obj, cb) => {
     if (err) {
       cb(err);
     } else if (res.rowCount === 0) {
-      cb(null, 'no tags');
+      cb(null, '');
     } else {
       const arrTags = res.rows;
       cb(null, arrTags);
