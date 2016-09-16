@@ -75,7 +75,6 @@ $('.input-tag').bind('keydown', function (kp) {
     }
   } else {
     if(kp.keyCode == 8) {
-      var tagCallId = $(this)[0].id.replace(/^addtag_name_/,'');
       $(this).parent().prev().addClass('danger');
       $(this).parent().prev().removeClass('orange-tag');
       backSpace++;
@@ -140,7 +139,6 @@ var addTag = function (e) {
 // add tag to call line
 
         var callLine = document.getElementById('tag_container_' + callId);
-        console.log(callLine, callId);
         var div = document.createElement('div');
         div.setAttribute('class', 'small-tags');
         div.innerHTML = tagName;
