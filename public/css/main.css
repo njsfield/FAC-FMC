@@ -328,7 +328,6 @@ margin-bottom: 2px;
   color: black;
   border: 1px solid #C2CFD9;
   list-style: none;
-  padding: 3px;
   margin: 0;
   display: inline-block;
   font-family: arial;
@@ -359,7 +358,7 @@ margin-bottom: 2px;
 .tag-box li.tags {
   padding: 6px;
   /*margin-right: 1em;*/
-  padding-left: 15px;
+  padding-left: 10px;
   margin-bottom: 1em;
   color: #fff;
   -moz-border-radius: 4px;
@@ -375,7 +374,7 @@ margin-bottom: 2px;
   overflow: hidden;
   width: 0;
   right: 0;
-  height: 18px;
+  height: 14px;
   cursor: pointer;
   top: 4px;
 }
@@ -392,7 +391,7 @@ margin-bottom: 2px;
   height: auto;
 }
 .tag-box li.tags:hover {
-  padding-right: 18px;
+  padding-right: 25px;
 }
 
 .tag-box li.tags:focus {
@@ -400,7 +399,7 @@ margin-bottom: 2px;
 }
 
 .tag-box li.tags:hover .close {
-  width: 14px;
+  width: 26px;
 }
 .tag-box li.tags:focus .close {
   width: 14px;

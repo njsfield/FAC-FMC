@@ -45,12 +45,19 @@ var deleteTag = function (node){
         e.remove();
       }
       var callLine = document.getElementById('tag_container_'+ callId);
+      var smallTags = 0;
       for(var k = 0; k < callLine.childNodes.length; k++ ){
         if (callLine.childNodes[k].innerHTML) {
           if (callLine.childNodes[k].innerHTML.trim() === tagName){
             callLine.childNodes[k].remove();
           }
+          if (callLine.childNodes[k].nodeName === 'DIV'){
+            smallTags ++;
+          }
         }
+      }
+      if (smallTags === 0) {
+        document.getElementById('tag_container_text_' + callId).innerHTML = 'no tags';
       }
     }
   };
