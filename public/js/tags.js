@@ -112,9 +112,9 @@ var addTag = function (e) {
         var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name orange-tag';
         li.tabIndex = 0;
-        li.innerHTML = '<label class="close-label" for="'+ emId +
-          '"> <span class="sr-only sr-only-focusable"> delete tag from call ' +
-           callId +'</span>' + tagName + '</label> <button type="button" tabindex=0 id="' +
+        li.innerHTML = tagName + '<label class="close-label" for="'+ emId +
+          '"> <span class="sr-only sr-only-focusable"> delete tag' + tagName + 'from call ' +
+           callId +'</span>' + '</label> <button type="button" tabindex=0 id="' +
             emId + '" class="close"> x </button>';
         var inputForm = document.getElementById('input_form_'+callId);
         inputForm.insertBefore(li, inputForm.childNodes[inputForm.childNodes.length-2]);
