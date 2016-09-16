@@ -35,13 +35,13 @@ var deleteTag = function (node){
   var pt = tagId.split(/\^/g);
   var tagName = pt[0];
   var callId = pt[1];
-  console.log('tag info', tagName, callId);
 
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       if (e.nodeName === 'BUTTON') {
         e.parentNode.remove();
       } else {
+        document.getElementById('tag-card-'+tagName+ '-' + callId);
         e.remove();
       }
       var callLine = document.getElementById('tag_container_'+ callId);
@@ -75,13 +75,13 @@ $('.input-tag').bind('keydown', function (kp) {
     }
   } else {
     if(kp.keyCode == 8) {
-      $('.new-tag').prev().addClass('danger');
-
-      $('.new-tag').prev().removeClass('orange-tag');
+      var tagCallId = $(this)[0].id.replace(/^addtag_name_/,'');
+      $(this).parent().prev().addClass('danger');
+      $(this).parent().prev().removeClass('orange-tag');
       backSpace++;
       if(backSpace == 2 ){
         backSpace = 0;
-        deleteTag($('.new-tag').prev());
+        deleteTag($(this).parent().prev());
       }
     }
   }
@@ -111,6 +111,7 @@ var addTag = function (e) {
         var li = document.createElement('li');
         var emId = 'delTag_' + tagName + '^' + callId;
         li.className = 'tags tag-name orange-tag';
+        li.id = 'tag-card-' + callId;
         li.tabIndex = 0;
         li.innerHTML = tagName + '<label class="close-label" for="'+ emId +
           '"> <span class="sr-only sr-only-focusable"> delete tag' + tagName + 'from call ' +
