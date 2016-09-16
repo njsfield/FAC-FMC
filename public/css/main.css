@@ -1,6 +1,14 @@
 html {
 }
 
+.hidden {
+  display: none;
+}
+
+#date_range_checkbox {
+  display: inline;
+}
+
 #content {
 font-family: 'Lato', sans-serif;
 }

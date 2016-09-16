@@ -71,24 +71,34 @@
       <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-12'>
-            <input type="text" id="date" name="date" class="form-control" placeholder="yyyy-mm-dd" value="{{userObj.date}}">
+            <input type="text" id="date" name="date" class="form-control" placeholder="Select date:  yyyy-mm-dd" value="{{userObj.date}}">
             <label class='sr-only' for='date'>Date: </label>
           </div>
         </div>
       </li>
-      <li class="list-group-item">
+      <li class="list-group-item hidden" id="date_range_box">
         <div class='row'>
           <div class='col-xs-12'>
-            <input type="text" id="dateRange" name="dateRange" class="form-control" placeholder="yyyy-mm-dd" value="{{userObj.dateRange}}">
+            <input type="text" id="dateRange" name="dateRange" class="form-control" placeholder="Date to:  yyyy-mm-dd" value="{{userObj.dateRange}}">
             <label class='sr-only' for='dateRange'>Date Range: </label>
           </div>
         </div>
       </li>
+
+      <li class="list-group-item">
+        <div class='row'>
+          <div class='col-xs-12'>
+            <input type="checkbox" id="date_range_checkbox" name="date_range_checkbox">
+            <label for'date_range_checkbox'>Search by date range</label><br>
+          </div>
+        </div>
+      </li>
+
       <li class="list-group-item">
         <div class='row'>
           <div class='col-xs-12'>
             <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
-            <label class='sr-only' for='date'>Tags: </label>
+            <label class='sr-only' for='tags'>Tags: </label>
           </div>
         </div>
       </li>

@@ -7,6 +7,22 @@ $('#dateRange').datepicker({
   dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 });
 
+var dateRangeCheckbox = document.getElementById('date_range_checkbox');
+var dateRangeBox = document.getElementById('date_range_box');
+var date = document.getElementById('date');
+
+var showRange = function () {
+  if (dateRangeCheckbox.checked) {
+    dateRangeBox.className = 'list-group-item';
+    date.placeholder = 'Date from:  yyyy-mm-dd';
+  } else {
+    dateRangeBox.className = 'list-group-item hidden';
+    date.placeholder = 'Select date:  yyyy-mm-dd';
+  }
+};
+
+dateRangeCheckbox.addEventListener('change', showRange);
+
 /** Fills form with filter values of selected saved filter*/
 var getFilterSpec = function () {
   var filterSpec = select.options[select.selectedIndex].value;
