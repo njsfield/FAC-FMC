@@ -30,7 +30,7 @@
               {{/each_upto}}
               <p id='tag_container_text_{{call_id}}'>
                 {{#if tag_label}}
-                
+
                 {{else}}
                 no tags
                 {{/if}}
@@ -54,17 +54,17 @@
           <div class='col-xs-10 col-xs-offset-1'>
             <h4>Tags:</h4>
               <ul class="tag-box" id="calltags_{{ call_id }}">
-                <div class="input-form form-group" id='input_form_{{call_id}}'>
+                <div class="input-form form-group" id='input_form_{{ call_id }}'>
                 {{#each tag_label}}
-                <li class="tags tag-name orange-tag" tabindex='0'>
-                  <label for='delTag_{{id}}' class='close-label'>
-                    <span class='sr-only sr-only-focusable'> delete from call {{call_id}} </span>
-                    {{name}}
+                <li id='tag-card-{{ id}}' class="tags tag-name orange-tag" tabindex='0'>
+                  {{name}}
+                  <label for='delTag_{{ id }} sr-only sr-only-focusable' class='close-label'>
+                    <span class='sr-only sr-only-focusable'> delete tag {{ name }} from call {{ call_id }} </span>
                   </label>
-                  <button id="delTag_{{id}}"class="close" role='button' tabindex="0"></button>
+                  <button id="delTag_{{ id }}"class="close" role='button' tabindex="0"></button>
                 </li>
                 {{/each}}
-                <li class="new-tag"><input name='tag' id="addtag_name_{{ call_id }}" class="input-tag" type="text" placeholder="Add tag here"></li>
+                <li class="new-tag-{{ call_id }}"><input name='tag' id="addtag_name_{{ call_id }}" class="input-tag" type="text" placeholder="Add tag here"></li>
                 </div>
               </ul>
           </div>
