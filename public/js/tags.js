@@ -1,18 +1,15 @@
 var xhr = new XMLHttpRequest();
+var tagsList = document.getElementsByClassName('tags');
+var deleteButton = document.getElementsByClassName('close');
 
 /** ADD EVENT LISTENERS TO TAGS IN CALLS FOR THE DELETE CALL **/
-var tagsList = document.getElementsByClassName('tags');
 var deleteListener = function (e) {
   if (e.key === 'Delete') {
     deleteTag(e);
   }
 };
-for(var i = 0 ; i < tagsList.length; i++){
-  tagsList[i].addEventListener('keypress', deleteListener);
-}
 
 /** AJAX to delete tags from call*/
-
 var deleteTag = function (node){
   var e ;
   var tagId;
@@ -75,12 +72,9 @@ var deleteTag = function (node){
   xhr.open('post', '/delete-tag/' + tagName + '/' + callId);
   xhr.send();
 };
-var deleteButton = document.getElementsByClassName('close');
-for (var i=0; i < deleteButton.length; i++) {
-  deleteButton[i].addEventListener('click', deleteTag);
-}
 
 // ************ADD TAG and DELETE TAG*************//
+/* eslint-disable */
 var backSpace = 0;
 $('.input-tag').bind('keydown', function (kp) {
   var tag = $(this).val().trim();
@@ -175,6 +169,7 @@ var addTag = function (e) {
 var close = '<button class="close" id="delTag_{{id}}"></button>'; // eslint-disable-line
 
 // Focuses the parent of the delete button of tag call
+/* eslint-disable */
 var addFocus = function () {
   $('.close').focus(
     function(){
@@ -188,5 +183,14 @@ var addFocus = function () {
       $(this).parent().css('padding-right', '6px');
     });
 };
+/* eslint-enable */
 
 addFocus();
+
+for (var i=0; i < deleteButton.length; i++) {
+  deleteButton[i].addEventListener('click', deleteTag);
+}
+
+for(var i = 0 ; i < tagsList.length; i++){
+  tagsList[i].addEventListener('keypress', deleteListener);
+}

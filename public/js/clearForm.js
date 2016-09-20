@@ -1,3 +1,6 @@
+var showAll = document.getElementById('show-all');
+var clearForm = document.getElementById('clear-form');
+
 var clearFilterForm = function () {
   var filterSpecProperties = ['duration_min', 'duration_max', 'to', 'from', 'tags', 'date', 'dateRange'];
   filterSpecProperties.forEach(function (id) {
@@ -15,14 +18,13 @@ var clearFilterForm = function () {
 
 };
 
-var clearForm = document.getElementById('clear-form');
-
-clearForm.addEventListener('click', clearFilterForm);
-
-var showAll = document.getElementById('show-all');
-
 var showAllCalls = function() {
   clearFilterForm();
   document.getElementById('filter-form').submit();
 };
+
+/** event listener to show all calls */
 showAll.addEventListener('click', showAllCalls);
+
+/** event listener to clear the filter form */
+clearForm.addEventListener('click', clearFilterForm);

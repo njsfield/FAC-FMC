@@ -1,32 +1,8 @@
-$('#date').datepicker({
-  dateFormat: 'yy-mm-dd',
-  dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-});
-$('#dateRange').datepicker({
-  dateFormat: 'yy-mm-dd',
-  dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-});
-
-var dateRangeCheckbox = document.getElementById('date_range_checkbox');
-var dateRangeBox = document.getElementById('date_range_box');
-var date = document.getElementById('date');
-
-if (dateRangeCheckbox.value === 'true') {
-  dateRangeCheckbox.setAttribute('checked', true);
-}
-
-var showRange = function () {
-  if (dateRangeCheckbox.checked) {
-    dateRangeBox.className = 'list-group-item';
-    date.placeholder = 'Date from:  yyyy-mm-dd';
-  } else {
-    dateRangeBox.className = 'list-group-item hidden';
-    date.placeholder = 'Select date:  yyyy-mm-dd';
-  }
-};
-
-dateRangeCheckbox.addEventListener('change', showRange);
-window.addEventListener('load', showRange);
+var select = document.getElementById('dropdown');
+var untagged = document.getElementById('untagged');
+var saveButton = document.getElementById('save_filter');
+var popularTagArray = document.getElementsByClassName('popular-tag');
+var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
 
 /** Fills form with filter values of selected saved filter*/
 var getFilterSpec = function () {
@@ -41,8 +17,7 @@ var getFilterSpec = function () {
 };
 
 /**************TAGGING*******************/
-/***************** grabs tags input in the filter form and splits it
-into an array *************/
+/** grabs tags input in the filter form and splits it into an array */
 function fetchTagsList(tags) {
   var array = [];
   if (tags!=null && tags.search(/\S/)>=0) array = tags.split(';');
@@ -54,9 +29,8 @@ function removeDuplicates(filterObj) {
   filterObj;
 }
 /*************FILTER POPULAR TAGS FUNCTIONALITY*************/
-// if the popular tags listed have also been searched, they will turn
-// blue otherwise it will leave it orange
-var popularTagArray = document.getElementsByClassName('popular-tag');
+/** if the popular tags listed have also been searched, they will turn
+blue otherwise it will leave it orange */
 function compareTags() {
   var tags = document.getElementById('tags').value;
   var arrTags = fetchTagsList(tags);
@@ -69,7 +43,6 @@ function compareTags() {
 compareTags();
 
 // This functionailty changes the color of popular tags when they are selected or unselected
-var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
 var changeColor = function (e) {
   var tags = document.getElementById('tags').value;
   var arrTags = fetchTagsList(tags);
@@ -93,7 +66,6 @@ var changeColor = function (e) {
 
 /****UNTAGGED search query ******/
 /** untagged checkbox event handler to disable the other tag checkboxes and tags field */
-var untagged = document.getElementById('untagged');
 
 var disableTags = function () {
   var scrollbarCheckboxesArray = document.getElementsByClassName('saved-tag');
@@ -110,18 +82,6 @@ var disableTags = function () {
     document.getElementById('tags')[0].setAttribute('id');
   }
 };
-
-untagged.addEventListener('change', disableTags);
-
-// event listener that checks as to whether the checkboxes have been selected
-for(var i = 0; i < scrollbarCheckboxes.length; i++) {
-  scrollbarCheckboxes[i].addEventListener('click', changeColor);
-}
-
-/** event listener that listens to whether saved filter has been selected*/
-
-var select = document.getElementById('dropdown');
-select.addEventListener('change', getFilterSpec);
 
 /** AJAX to send saved filter spec when SAVE button has been selected and name to /save-filter route */
 
@@ -191,5 +151,13 @@ var saveFilter = function (e) {
   xhr.send(JSON.stringify(filterObj));
 };
 
-var saveButton = document.getElementById('save_filter');
+untagged.addEventListener('change', disableTags);
 saveButton.addEventListener('submit', saveFilter);
+
+/** event listener that listens to whether saved filter has been selected*/
+select.addEventListener('change', getFilterSpec);
+
+// event listener that checks as to whether the checkboxes have been selected
+for(var i = 0; i < scrollbarCheckboxes.length; i++) {
+  scrollbarCheckboxes[i].addEventListener('click', changeColor);
+}
