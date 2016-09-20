@@ -87,7 +87,10 @@ body {
 .font {
   font-family: 'Lato', sans-serif;
 }
-
+#sortby {
+  float: right;
+  margin-right: -15px;
+}
 .call-headings {
   color: white;
 }
