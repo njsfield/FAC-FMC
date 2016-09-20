@@ -184,7 +184,6 @@ var addFocus = function () {
 
   $('.close').on('focusout',
     function(){
-      console.log('off');
       $(this).css('width', '0');
       $(this).parent().css('padding-right', '6px');
     });
