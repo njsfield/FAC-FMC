@@ -28,7 +28,7 @@ const processPollTimes = (dbClient, done, company_name, companiesObj, pollTimesQ
   ],
 function(err) {
   if (err) {
-    cb(true);
+    cb(err);
   } else if (pollTimesQueue.length > 0) {
     processPollTimes(dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, cb);
   } else {
