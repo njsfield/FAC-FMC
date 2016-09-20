@@ -160,3 +160,17 @@ var addTag = function (e) {
   xhr.send();
 };
 var close = '<button class="close" id="delTag_{{id}}"></button>'; // eslint-disable-line
+
+// Focuses the parent of the delete button of tag call
+$('.close').focus(
+    function(){
+      $(this).css('width', '26px');
+      $(this).parent().css('padding-right', '25px');
+    });
+
+$('.close').on('focusout',
+        function(){
+          console.log('off');
+          $(this).css('width', '0');
+          $(this).parent().css('padding-right', '6px');
+        });
