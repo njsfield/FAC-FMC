@@ -167,6 +167,9 @@ var saveFilter = function (e) {
     // showUserError("Tag name contains invalid characters");
     errorHandler('filter contains invalid characters'); // eslint-disable-line
     return;
+  } else if (filterObj.filter_name === '') {
+    errorHandler('please choose a name for your filter'); // eslint-disable-line
+    return;
   }
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
