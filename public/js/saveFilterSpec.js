@@ -48,11 +48,6 @@ function fetchTagsList(tags) {
   if (tags!=null && tags.search(/\S/)>=0) array = tags.split(';');
   return array;
 };
-/*** check duplicates ***/
-
-function removeDuplicates(filterObj) {
-  filterObj;
-}
 /*************FILTER POPULAR TAGS FUNCTIONALITY*************/
 // if the popular tags listed have also been searched, they will turn
 // blue otherwise it will leave it orange
@@ -69,7 +64,6 @@ function compareTags() {
 compareTags();
 
 // This functionailty changes the color of popular tags when they are selected or unselected
-var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
 var changeColor = function (e) {
   var tags = document.getElementById('tags').value;
   var arrTags = fetchTagsList(tags);
@@ -114,10 +108,14 @@ var disableTags = function () {
 untagged.addEventListener('change', disableTags);
 
 // event listener that checks as to whether the checkboxes have been selected
-for(var i = 0; i < scrollbarCheckboxes.length; i++) {
-  scrollbarCheckboxes[i].addEventListener('click', changeColor);
+function addCheckboxListener() {
+  var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
+  for(var i = 0; i < scrollbarCheckboxes.length; i++) {
+    scrollbarCheckboxes[i].addEventListener('click', changeColor);
+  }
 }
 
+addCheckboxListener();
 /** event listener that listens to whether saved filter has been selected*/
 
 var select = document.getElementById('dropdown');
@@ -126,6 +124,7 @@ select.addEventListener('change', getFilterSpec);
 /** AJAX to send saved filter spec when SAVE button has been selected and name to /save-filter route */
 
 var saveFilter = function (e) {
+  var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
   var xhr = new XMLHttpRequest();
   var error = document.getElementById('filter-error-message');
   error.innerHTML = '';

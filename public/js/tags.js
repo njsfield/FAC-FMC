@@ -141,6 +141,7 @@ var addTag = function (e) {
           }
           if (!duplicate && l === savedTags.length - 1 && savedTags.length < 20) {
             document.getElementsByClassName('scrollbar-tags')[0].appendChild(label);
+            addCheckboxListener(); // this function is in saveFilterSpec.js
           }
         }
 // add tag to call line
