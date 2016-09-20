@@ -165,11 +165,9 @@ var saveFilter = function (e) {
   if (filterObj.to.search(/[^\w\s]/)>=0 || filterObj.from.search(/[^\w\s]/)>=0 || filterObj.filter_name.search(/[^\w\s]/)>=0) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
     // showUserError("Tag name contains invalid characters");
-    errorHandler('filter contains invalid characters'); // eslint-disable-line
-    return;
+    error.innerHTML = 'filter contains invalid characters';
   } else if (filterObj.filter_name === '') {
-    errorHandler('please choose a name for your filter'); // eslint-disable-line
-    return;
+    error.innerHTML = 'please choose a name for your filter';
   }
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
