@@ -378,18 +378,11 @@ margin-bottom: 2px;
   cursor: pointer;
   top: 4px;
 }
+
 .tag-box li.tags .close:after {
-  content: 'x';
   color: white;
 }
-.tag-box li.tags.edit {
-  background: none;
-  border: 1px solid rgba(255,149,49, 0.90);
-  color: rgba(255,149,49, 0.90);
-}
-.tag-box li.tags.edit .input-tag {
-  height: auto;
-}
+
 .tag-box li.tags:hover {
   padding-right: 25px;
 }
@@ -402,8 +395,9 @@ margin-bottom: 2px;
   width: 26px;
 }
 .tag-box li.tags:focus .close {
-  width: 14px;
+  width: 26px;
 }
+
 
 .tag-box li .input-tag {
   color: black;
