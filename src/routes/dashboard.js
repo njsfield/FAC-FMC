@@ -145,6 +145,7 @@ const formatUserObj = (request, user)=> {
     max: '',
     date: '',
     dateRange: '',
+    dateRangeCheckbox: false,
     tags: [],
     untagged: false,
     firstIndex: 0,
@@ -198,6 +199,8 @@ const formatUserObj = (request, user)=> {
       userObj.dateRange = request.query.dateRange;
     if (request.query.untagged!=null)
       userObj.untagged = true;
+    if (request.query.date_range_checkbox!=null)
+      userObj.dateRangeCheckbox = true;
     else {
       // check the tags are valid and split the user tags
       if (request.query.tags!=null && request.query.tags.search(/\S/)>=0){
@@ -210,6 +213,9 @@ const formatUserObj = (request, user)=> {
     if (request.query.dateOrder === 'asc') {
       userObj.dateOrder = 'asc';
       userObj.string = 'Old to new';
+    }
+    if (!userObj.dateRangeCheckbox) {
+      userObj.dateRange = '';
     }
   }
   return userObj;

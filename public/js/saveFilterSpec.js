@@ -11,6 +11,10 @@ var dateRangeCheckbox = document.getElementById('date_range_checkbox');
 var dateRangeBox = document.getElementById('date_range_box');
 var date = document.getElementById('date');
 
+if (dateRangeCheckbox.value === 'true') {
+  dateRangeCheckbox.setAttribute('checked', true);
+}
+
 var showRange = function () {
   if (dateRangeCheckbox.checked) {
     dateRangeBox.className = 'list-group-item';
@@ -22,6 +26,7 @@ var showRange = function () {
 };
 
 dateRangeCheckbox.addEventListener('change', showRange);
+window.addEventListener('load', showRange);
 
 /** Fills form with filter values of selected saved filter*/
 var getFilterSpec = function () {
@@ -151,6 +156,7 @@ var saveFilter = function (e) {
     duration_max: document.getElementById('duration_max').value,
     date: document.getElementById('date').value,
     dateRange: document.getElementById('dateRange').value,
+    dateRangeCheckbox: document.getElementById('dateRange').checked,
     tags: arrTags.concat(savedTagsArr),
     untagged: document.getElementById('untagged').value,
     filter_name: document.getElementById('filter_name').value.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g, ' ').toLowerCase()
@@ -160,6 +166,9 @@ var saveFilter = function (e) {
     // NOPE - invalid characters! SHOULD have a way to report errors here.
     // showUserError("Tag name contains invalid characters");
     errorHandler('filter contains invalid characters'); // eslint-disable-line
+    return;
+  } else if (filterObj.filter_name === '') {
+    errorHandler('please choose a name for your filter'); // eslint-disable-line
     return;
   }
   xhr.onreadystatechange = function () {
