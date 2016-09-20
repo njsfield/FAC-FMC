@@ -36,13 +36,7 @@ const processCompany = (dbClient, done, companyNamesQueue, companiesObj, startPo
     },
 
     function (callback) {
-      selectMinParticipantsId(dbClient, companiesObj[company_name], done, (err) => {
-        if (err) {
-          callback(err);
-        } else {
-          callback(null);
-        }
-      });
+      selectMinParticipantsId(dbClient, companiesObj[company_name], done, callback);
     }
   ],
     function (err) {
@@ -67,14 +61,13 @@ const selectMinParticipantsId = (dbClient, companyObj, done, callback) => {
   const queryString = 'select calls.date, participants.participant_id from calls left join participants on calls.call_id=participants.call_id where participants.company_id =$1 ' + string;
   dbClient.query(queryString, queryArray, (err, res) => {
     if (err) {
-      callback(err);
+      callback('selectMinParticipantsId: '+err);
     } else if (res.rowCount !== 0) {
       companyObj.minPartyId = res.rows[0].participant_id;
-      callback(null);
+      callback();
     } else {
-      callback(null);
+      callback();
     }
-    done();
   });
 };
 

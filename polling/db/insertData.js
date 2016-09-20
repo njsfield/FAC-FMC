@@ -12,11 +12,10 @@ const insertIntoCompaniesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.company_name];
   dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error, res) => {
     if (error) {
-      callback(error);
+      callback('insertIntoCompaniesTable: '+error);
     } else {
       callback(null, res.command);
     }
-    done();
   });
 };
 // insert into Files table returns file_id of the file and the command so that we know
@@ -25,7 +24,7 @@ const insertIntoFilesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.file_name];
   dbClient.query('INSERT INTO files (file_name) VALUES ($1)', queryArray, (error, res) => {
     if (error) {
-      callback(error);
+      callback('insertIntoFilesTable: '+error);
     } else {
       getFile_id(dbClient, object, done, (err, file_id) => {
         if (err) {
@@ -35,7 +34,6 @@ const insertIntoFilesTable = (dbClient, object, done, callback) => {
         }
       });
     }
-    done();
   });
 };
 
@@ -43,24 +41,21 @@ const insertIntoCallsTable = (dbClient, object, done, callback) => {
   const queryArray2 = [object.date, object.company_id, object.file_id, object.duration];
   dbClient.query('INSERT INTO calls (date, company_id, file_id, duration) VALUES ((TO_TIMESTAMP($1)), $2, $3, $4)', queryArray2, (error, response) => {
     if (error) {
-      callback(error);
+      callback('insertIntoCallsTable: '+error);
     } else {
       callback(null, response);
     }
-
   });
-  done();
 };
 
 const insertIntoParticipantsTable = (dbClient, object, done, callback) => {
   const queryArray = [object.call_id, object.company_id, object.number, object.internal, object.participant_role, object.contact_id];
   dbClient.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role, contact_id) VALUES ($1, $2, $3, $4, $5, $6)', queryArray, (error, response) => {
     if (error) {
-      callback(error);
+      callback('insertIntoParticipantsTable: '+error);
     } else {
       callback(null, response);
     }
-    done();
   });
 };
 
@@ -72,7 +67,6 @@ const insertIntoLastPollTable = (dbClient, object, done, callback) => {
     } else {
       callback(null, response);
     }
-    done();
   });
 };
 
