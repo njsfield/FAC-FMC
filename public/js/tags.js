@@ -39,17 +39,28 @@ var deleteTag = function (node){
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
       if (e.nodeName === 'BUTTON') {
-        e.parentNode.remove();
+        if (typeof e.parentNode.removeNode !== 'undefined') {
+          e.parentNode.removeNode(true);
+        } else {
+          e.parentNode.remove();
+        }
       } else {
-        document.getElementById('tag-card-'+tagName+ '-' + callId);
-        e.remove();
+        if (typeof e.removeNode !== 'undefined') {
+          e.removeNode(true);
+        } else {
+          e.remove();
+        }
       }
       var callLine = document.getElementById('tag_container_'+ callId);
       var smallTags = 0;
       for(var k = 0; k < callLine.childNodes.length; k++ ){
         if (callLine.childNodes[k].innerHTML) {
           if (callLine.childNodes[k].innerHTML.trim() === tagName){
-            callLine.childNodes[k].remove();
+            if (typeof callLine.childNodes[k].removeNode !== 'undefined') {
+              callLine.childNodes[k].removeNode(true);
+            } else {
+              callLine.childNodes[k].remove();
+            }
           }
           if (callLine.childNodes[k].nodeName === 'DIV'){
             smallTags ++;
@@ -145,6 +156,8 @@ var addTag = function (e) {
         }
 // add tag to call line
 
+        addFocus();
+        //adds focus to new tags created
         var callLine = document.getElementById('tag_container_' + callId);
         var div = document.createElement('div');
         div.setAttribute('class', 'small-tags');
@@ -162,15 +175,18 @@ var addTag = function (e) {
 var close = '<button class="close" id="delTag_{{id}}"></button>'; // eslint-disable-line
 
 // Focuses the parent of the delete button of tag call
-$('.close').focus(
+var addFocus = function () {
+  $('.close').focus(
     function(){
       $(this).css('width', '26px');
       $(this).parent().css('padding-right', '25px');
     });
 
-$('.close').on('focusout',
-        function(){
-          console.log('off');
-          $(this).css('width', '0');
-          $(this).parent().css('padding-right', '6px');
-        });
+  $('.close').on('focusout',
+    function(){
+      $(this).css('width', '0');
+      $(this).parent().css('padding-right', '6px');
+    });
+};
+
+addFocus();
