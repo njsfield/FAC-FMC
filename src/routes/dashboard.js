@@ -153,7 +153,7 @@ const formatUserObj = (request, user)=> {
     isAdmin: isAdmin,
     contactID: user.contact_id,
     dateOrder: 'desc',
-    string: 'New to old'
+    dateSortString: 'New to old'
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
@@ -212,7 +212,7 @@ const formatUserObj = (request, user)=> {
 
     if (request.query.dateOrder === 'asc') {
       userObj.dateOrder = 'asc';
-      userObj.string = 'Old to new';
+      userObj.dateSortString = 'Old to new';
     }
     if (!userObj.dateRangeCheckbox) {
       userObj.dateRange = '';
