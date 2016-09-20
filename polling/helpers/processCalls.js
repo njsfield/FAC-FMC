@@ -28,12 +28,18 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
             if (err1) {
               callback(err1);
             } else {
-              fs.writeFileSync(process.env.SAVE_AUDIO_PATH + `${file_id}.wav`, data);
-              callback(null);
+              var fname = process.env.SAVE_AUDIO_PATH+file_id+'.wav'
+              try {
+                fs.writeFileSync(fname, data);
+                callback();
+              }
+              catch(ev) {
+                callback("Can't write audio file to: "+fname)
+              }
             }
           });
         } else {
-          callback(null);
+          callback();
         }
       });
     },
@@ -84,7 +90,7 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
 function(err) {
   if (err) {
     dbClient.query('rollback', (err1) => {
-      done(err1);
+      cb(err);
     });
   } else if (arrOfCalls.length > 0) {
     processCalls(dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, cb);
