@@ -90,10 +90,16 @@ body {
 #sortby {
   float: right;
   margin-right: -15px;
+  margin-top: -6px;
+}
+#sortby .dropdown-menu {
+  right: 0;
+  left: auto;
 }
 .call-headings {
   color: white;
 }
+
 .call-line{
   height: 26px;
   font-size: 15px;
