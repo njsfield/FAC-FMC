@@ -20,10 +20,13 @@ module.exports = {
             if (err) {
               console.log(err);
             } else if (isValid1) {
+              console.log("RESPONSE QUERY: ", request.query);
               const response = reply(fs.createReadStream(process.env.SAVE_AUDIO_PATH + `${fileId}.wav`));
               response.type('audio/wav');
+              if (request.query.download=='yes')
+                response.type('content-disposition', 'attachment; filename='+fileId+'.wav');
             } else {
-              const response = reply('you are not authorized to listen to this call');
+              reply('you are not authorized to listen to this call');
             }
           });
         }
