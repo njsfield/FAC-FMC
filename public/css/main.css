@@ -1,3 +1,63 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?mzlf3o');
+  src:  url('../fonts/icomoon.eot?mzlf3o#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?mzlf3o') format('truetype'),
+    url('../fonts/icomoon.woff?mzlf3o') format('woff'),
+    url('../fonts/icomoon.svg?mzlf3o#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-circle-up:before {
+  content: "\ea41";
+}
+.icon-circle-right:before {
+  content: "\ea42";
+}
+.icon-circle-down:before {
+  content: "\ea43";
+}
+.icon-cloud:before {
+  content: "\e9c1";
+}
+.icon-cloud-download:before {
+  content: "\e9c2";
+}
+.icon-cloud-upload:before {
+  content: "\e9c3";
+}
+.icon-cloud-check:before {
+  content: "\e9c4";
+}
+.icon-play2:before {
+  content: "\ea15";
+}
+.icon-pause:before {
+  content: "\ea16";
+}
+.icon-play3:before {
+  content: "\ea1c";
+}
+.icon-pause2:before {
+  content: "\ea1d";
+}
+
+
 html {
 }
 
@@ -238,11 +298,15 @@ option {
   padding: 1em;
 }
 
-audio {
-  width: 100%;
-}
-
-
+.expanded-call {padding:0;margin:0}
+.expanded-call .row {padding:0;margin:0}
+.expanded-call .tab {display:table;width:100%;padding:0 10px;margin:0}
+.expanded-call .control {display:table-row}
+.expanded-call .control > div {display:table-cell;vertical-align:middle;padding:0;margin:0}
+.audio audio {width: 100%; padding:0;margin:0;xdisplay:block}
+.expanded-call .download {font-size:50px; width:60px;text-align:right}
+.expanded-call .download a {color:#00416F}
+.expanded-call .download a:hover {color:#FF9531}
 
 em {
   margin-left: 15px;
