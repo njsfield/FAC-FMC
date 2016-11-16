@@ -1,17 +1,17 @@
 <ul class="list-group">
   <li class="list-group-item filter-title">
-    <p id='filter-calls'>Filter Your Calls:</p>
+    <p id='filter-calls'>Search Your Calls:</p>
   </li>
   <li class="list-group-item">
     <div class="row">
       <div class='col-xs-12'>
         <select id="dropdown" name="saved-filters">
-          <option selected disabled id='dropdown-option'>Your saved filters</option>
+          <option selected disabled id='dropdown-option'>Your saved searches</option>
           {{#each filters}}
           <option value="{{filter_spec}}">{{filter_name}}</option>
           {{/each}}
         </select>
-        <label class='sr-only' for='saved-filters'>Saved Filters: </label>
+        <label class='sr-only' for='saved-filters'>Saved searches: </label>
       </div>
     </div>
   </li>
@@ -28,7 +28,7 @@
                 <option value={{name}} {{{./selected}}}>{{name}}</option>
                 {{/each}}
               </select>
-              <label class='sr-only' for='saved-filters'>Choose Company: </label>
+              <label class='sr-only' for='companies'>Choose Company: </label>
             </div>
         </div>
         </li>
@@ -121,7 +121,8 @@
       </li>
     </form>
     <li class='list-group-item'>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save filter</button>
+      <button id="filter_search2" class="btn btn-primary">Search</button>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save search</button>
       <button class="btn btn-primary" id='clear-form'>Clear form</button>
     </li>
     </div>
@@ -133,10 +134,10 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <h4 class="modal-title" id="myModalLabel">Save filter as...</h4>
+              <h4 class="modal-title" id="myModalLabel">Save search as...</h4>
             </div>
             <div class="modal-body">
-              <input type="text" id="filter_name" name="filter_name" class="form-control" placeholder="Name your filter">
+              <input type="text" id="filter_name" name="filter_name" class="form-control" placeholder="Name your search">
               <p id="filter-error-message"></p>
             </div>
             <div class="modal-footer">
