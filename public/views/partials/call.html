@@ -43,10 +43,13 @@
       </div>
     </div>
     <div id="collapse{{@index}}" class="panel-collapse collapse">
-      <div class="panel-body">
+      <div class="panel-body expanded-call">
         <div class="row">
-          <div class="col-xs-12">
-            <audio controls src='/fetch-audio/{{file_id}}' preload='metadata'> </audio>
+          <div class="col-xs-12 tab">
+            <div class="control">
+              <div class="audio"><audio controls src='/fetch-audio/{{file_id}}' preload='metadata'> </audio></div>
+              <div class="download"><a href='/fetch-audio/{{file_id}}?download=yes'><span class="icon-cloud-download"></span></a></div>
+            </div>
           </div>
         </div>
         <div class='row'>
@@ -54,16 +57,16 @@
             <h4>Tags:</h4>
               <ul class="tag-box" id="calltags_{{ call_id }}">
                 <div class="input-form form-group" id='input_form_{{ call_id }}'>
-                {{#each tag_label}}
-                <li id='tag-card-{{ id}}' class="tags tag-name orange-tag" tabindex='0'>
-                  {{name}}
-                  <label for='delTag_{{ id }} sr-only sr-only-focusable' class='close-label'>
-                    <span class='sr-only sr-only-focusable'> delete tag {{ name }} from call {{ call_id }} </span>
-                  </label>
-                  <button id="delTag_{{ id }}"class="close" role='button' tabindex="0"> x </button>
-                </li>
-                {{/each}}
-                <li class="new-tag-{{ call_id }}"><input name='tag' id="addtag_name_{{ call_id }}" class="input-tag" type="text" placeholder="Add tag here"></li>
+                  {{#each tag_label}}
+                  <li id='tag-card-{{ id}}' class="tags tag-name orange-tag" tabindex='0'>
+                    {{name}}
+                    <label for='delTag_{{ id }} sr-only sr-only-focusable' class='close-label'>
+                      <span class='sr-only sr-only-focusable'> delete tag {{ name }} from call {{ call_id }} </span>
+                    </label>
+                    <button id="delTag_{{ id }}"class="close" role='button' tabindex="0"> x </button>
+                  </li>
+                  {{/each}}
+                  <li class="new-tag-{{ call_id }}"><input name='tag' id="addtag_name_{{ call_id }}" class="input-tag" type="text" placeholder="Type tag here"></li>
                 </div>
               </ul>
           </div>
