@@ -15,10 +15,15 @@
   <div class='row' id='call-container'>
 
     <div class="row" id='dashboard-title-container'>
-      <div class="col-xs-3">
+      <div class="col-xs-12">
         <p id='dashboard-title'>Find My Call</p>
       </div>
-      <div class="col-xs-9 call-headings">
+    </div>
+    <div class="row">
+      {{> filters}}
+    </div>
+    <div class="row">
+      <div class="col-xs-12 call-headings">
         <div class="row">
           <div class="col-xs-2">
             <h4 class='call-heading'>from:</h4>
@@ -50,13 +55,12 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-3">
-        {{> filters}}
-      </div>
-      <div class="col-xs-9">
+      <div class="col-xs-12">
         <div class='row'>
           {{> call}}
         </div>
+      </div>
+      <div class="col-xs-12">
         <div class='row'>
           <div class='col-xs-2 col-xs-offset-4'>
             {{#if prevPage}}
