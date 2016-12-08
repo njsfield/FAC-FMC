@@ -18,6 +18,8 @@ module.exports = {
       const decoded = JWT.decode(request.state.FMC);
       let userObj = formatUserObj(request, decoded);
 
+      console.log("PROCESSING FILTER REQUEST", userObj);
+//includeHidden
       validate(decoded, request, (error, isValid) => {
         if (error || !isValid) {
           return reply.redirect('/').unstate('FMC');
@@ -29,89 +31,93 @@ module.exports = {
               reply.view('login', {loginErr: 'Apologies we cannot log you on at the moment, try again later'});
               done();
             } else {
-              const queryArray = [];
-              filterQueryStringCreator.createQueryString(queryArray, userObj, userObj.dateOrder, (qString, qArray) => {
-                dbClient.query(qString, qArray, (err2, res) => {
-                  if (err2) {
-                    errorHandler(err2);
-                    done();
-                    return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
-                  } else {
-                    getFilterNameAndSpec(dbClient, decoded, (err3, filters) => {
-                      if (err3) {
-                        errorHandler(err3);
-                        done();
-                        return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
-                      } else {
-                        getTagNames(dbClient, decoded, (err4, savedTags) => {
-                          if (err4) {
-                            errorHandler(err4);
-                            done();
-                            return reply.view('dashboard', {filters, callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
-                          }
-                          res.rows.forEach( (call) => {
-                            call.duration = formatCallDuration(call.duration);
-                          });
-                          userObj.tags = userObj.tags.join(';');
-                          userObj.min = formatSearchDuration(userObj.min);
-                          userObj.max = formatSearchDuration(userObj.max);
-                          const userCalls = {
-                            filters,
-                            savedTags,
-                            userObj
-                          };
-                          if (res.rows.length === 0) {
-                            userCalls.callError = 'no calls for these parameters';
-                            done();
-                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
-                          } else {
-                            userCalls.calls = res.rows;
-                            userCalls.calls.forEach(c => {
-                              if (c.tag_name.length>0) {
-                                c.tag_label = [];
-                                c.tag_name.forEach(t => c.tag_label.push({name: t,id: t+'^'+c.call_id}));
-                              }
-                            });
-                            if (res.rows.length > userObj.maxRows) {
-                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
-                                userCalls.nextPage = baseUrl + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
-                              } else {
-                                userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
-                              }
-                              res.rows.length = userObj.maxRows;
-                            }
+              const qArray = [];
 
-                            if (userObj.firstIndex > 0) {
-                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
-                                userCalls.prevPage = baseUrl + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
-                              } else {
-                                userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
-                              }
-                            }
+              var qString = filterQueryStringCreator.createQueryString(qArray, userObj, userObj.dateOrder);
 
-                            if (userObj.dateOrder === 'desc') {
-                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
-                                userCalls.dateOrder = baseUrl + 'dateOrder=' + 'asc';
-                              } else {
-                                userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'asc';
-                              }
-                            }
-                            if (userObj.dateOrder === 'asc') {
-                              if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
-                                userCalls.dateOrder = baseUrl + 'dateOrder=' + 'desc';
-                              } else {
-                                userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'desc';
-                              }
-                            }
-
-                            reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
-                            done();
-                          }
+              dbClient.query(qString, qArray, (err2, res) => {
+                console.log('QUERY STRING: '+qString);
+                console.log('PARAMS STRING: '+qArray);
+                if (err2) {
+                  errorHandler(err2);
+                  done();
+                  return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
+                } else {
+                  getFilterNameAndSpec(dbClient, decoded, (err3, filters) => {
+                    if (err3) {
+                      errorHandler(err3);
+                      done();
+                      return reply.view('dashboard', {callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
+                    } else {
+                      getTagNames(dbClient, decoded, 10, (err4, savedTags) => {
+                        if (err4) {
+                          errorHandler(err4);
+                          done();
+                          return reply.view('dashboard', {filters, callError: 'no calls for these parameters'}).state('FMC', request.state.FMC, cookieOptions);
+                        }
+                        res.rows.forEach( (call) => {
+                          call.duration = formatCallDuration(call.duration);
                         });
-                      }
-                    });
-                  }
-                });
+                        userObj.tags = userObj.tags.join(';');
+                        userObj.min = formatSearchDuration(userObj.min);
+                        userObj.max = formatSearchDuration(userObj.max);
+                        const userCalls = {
+                          filters,
+                          savedTags,
+                          userObj
+                        };
+                        if (res.rows.length === 0) {
+                          userCalls.callError = 'no calls for these parameters';
+                          done();
+                          reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                        } else {
+                          console.log('ROWS RETURNED: ',res.rows);
+                          userCalls.calls = res.rows;
+                          userCalls.calls.forEach(c => {
+                            if (c.tag_name.length>0) {
+                              c.tag_label = [];
+                              c.tag_name.forEach(t => c.tag_label.push({name: t,id: t+'^'+c.call_id}));
+                            }
+                          });
+                          if (res.rows.length > userObj.maxRows) {
+                            if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                              userCalls.nextPage = baseUrl + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                            } else {
+                              userCalls.nextPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + (userObj.firstIndex + userObj.maxRows);
+                            }
+                            res.rows.length = userObj.maxRows;
+                          }
+
+                          if (userObj.firstIndex > 0) {
+                            if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                              userCalls.prevPage = baseUrl + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                            } else {
+                              userCalls.prevPage = baseUrl + (baseUrl === '' ? '?' : '&') + 'firstIndex=' + Math.max(0, userObj.firstIndex - userObj.maxRows);
+                            }
+                          }
+
+                          if (userObj.dateOrder === 'desc') {
+                            if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                              userCalls.dateOrder = baseUrl + 'dateOrder=' + 'asc';
+                            } else {
+                              userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'asc';
+                            }
+                          }
+                          if (userObj.dateOrder === 'asc') {
+                            if (baseUrl.indexOf('&',baseUrl.length-1) !== -1) {
+                              userCalls.dateOrder = baseUrl + 'dateOrder=' + 'desc';
+                            } else {
+                              userCalls.dateOrder = baseUrl + (baseUrl === '' ? '?' : '&') + 'dateOrder=' + 'desc';
+                            }
+                          }
+
+                          reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
+                          done();
+                        }
+                      });
+                    }
+                  });
+                }
               });
             }
           });
@@ -136,8 +142,16 @@ const createURL = (requestSearch) => {
 };
 
 const formatUserObj = (request, user)=> {
-  let isAdmin = (user.userRole==='admin');
+  let isAdmin   = (user.userRole==='admin');
+
+  // 'isManager' is not currently supported but will be used when we implement a
+  // manager authentication level and will be true if the person logged in can see
+  // the calls of other people for which they have authority.
+  let isManager = false;
   let userObj = {
+    isAdmin: isAdmin,
+    isManager: isManager,
+    isIndividual: (!isAdmin && !isManager),
     company_id: user.company_id,
     to: '',
     from: '',
@@ -150,10 +164,10 @@ const formatUserObj = (request, user)=> {
     untagged: false,
     firstIndex: 0,
     maxRows: 16,
-    isAdmin: isAdmin,
     contactID: user.contact_id,
     dateOrder: 'desc',
-    dateSortString: 'new to old'
+    dateSortString: 'new to old',
+    includeHidden: false
   };
   if (isAdmin) {
     userObj.adminCompanies = user.adminCompanies;
@@ -172,40 +186,61 @@ const formatUserObj = (request, user)=> {
     else if (isAdmin) {
       // If no company has been selected, default to the user's home company
       userObj.adminCompanies.forEach((c) => {if (c.company_id==user.company_id) c.selected='selected';});
+      userObj.includeHidden = true;
+    }
+    else {
+      // *NOT* an administrator so either a manager or a 'standard' user
+      userObj.includeHidden = (isManager || (request.query.include_hidden=='yes'));
     }
     if (request.query.to!=null)
       userObj.to = request.query.to;
     if (request.query.from!=null)
       userObj.from = request.query.from;
-    if (request.query.min!=null && request.query.min.indexOf(':') !== -1) {
-      const minHour = parseInt(request.query.min.split(':')[0], 10) * 60;
-      const minMins = parseInt(request.query.min.split(':')[1], 10);
-      const totalMinTime = minHour + minMins;
-      if (!isNaN(totalMinTime) && totalMinTime>0) {
-        userObj.min = totalMinTime;
+    if (request.query.min!=null) {
+      if (request.query.min.indexOf(':') !== -1) {
+        const minHour = parseInt(request.query.min.split(':')[0], 10) * 60;
+        const minMins = parseInt(request.query.min.split(':')[1], 10);
+        const totalMinTime = minHour + minMins;
+        if (!isNaN(totalMinTime) && totalMinTime>0) {
+          userObj.min = totalMinTime;
+        }
+      }
+      else {
+        // Treat it as anumber (expect *ONLY* a number) and this is taken as minutes (allow float so seconds also allowed).
+        const minMins = parseInt(request.query.min, 10);
+        if (!isNaN(minMins))
+          userObj.min = minMins;
       }
     }
-    if (request.query.max!=null && request.query.max.indexOf(':') !== -1) {
-      const maxHour = parseInt(request.query.max.split(':')[0], 10) * 60;
-      const maxMins = parseInt(request.query.max.split(':')[1], 10);
-      const totalMaxTime = maxHour + maxMins;
-      if (!isNaN(totalMaxTime) && totalMaxTime>0) {
-        userObj.max = totalMaxTime;
+    if (request.query.max!=null) {
+      if (request.query.max.indexOf(':') !== -1) {
+        const maxHour = parseInt(request.query.max.split(':')[0], 10) * 60;
+        const maxMins = parseInt(request.query.max.split(':')[1], 10);
+        const totalMaxTime = maxHour + maxMins;
+        if (!isNaN(totalMaxTime) && totalMaxTime>0) {
+          userObj.max = totalMaxTime;
+        }
+      }
+      else {
+        const maxMins = parseInt(request.query.max, 10);
+        if (!isNaN(maxMins))
+          userObj.max = maxMins;
       }
     }
     if (request.query.date!=null)
       userObj.date = request.query.date;
     if (request.query.dateRange!=null)
       userObj.dateRange = request.query.dateRange;
-    if (request.query.untagged!=null)
-      userObj.untagged = true;
-    if (request.query.date_range_checkbox!=null)
-      userObj.dateRangeCheckbox = true;
-    else {
+    userObj.dateRangeCheckbox = (request.query.date_range_checkbox!=null);
+    userObj.untagged = (request.query.untagged!=null);
+
+    if (!userObj.untagged && request.query.tags!=null && request.query.tags.search(/\S/)>=0){
       // check the tags are valid and split the user tags
-      if (request.query.tags!=null && request.query.tags.search(/\S/)>=0){
-        userObj.tags = request.query.tags.replace(/[^\w\s\d\;\,]+|^\s+|\s+$/g,'').split(/\s*[\,\;]\s*/g).filter(w => w.search(/\S/)>=0);
-      }
+      userObj.tags = request.query.tags
+        .replace(/[^\w\s\d\;\,]+|^\s+|\s+$/g,'')
+        .toLowerCase()
+        .split(/\s*[\,\;]\s*/g)
+        .filter(w => w.search(/\S/)>=0);
     }
     if (request.query.firstIndex!=null && !isNaN(request.query.firstIndex))
       userObj.firstIndex = parseInt(request.query.firstIndex, 10);
