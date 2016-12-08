@@ -23,40 +23,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-circle-up:before {
-  content: "\ea41";
-}
-.icon-circle-right:before {
-  content: "\ea42";
-}
-.icon-circle-down:before {
-  content: "\ea43";
-}
-.icon-cloud:before {
-  content: "\e9c1";
-}
-.icon-cloud-download:before {
-  content: "\e9c2";
-}
-.icon-cloud-upload:before {
-  content: "\e9c3";
-}
-.icon-cloud-check:before {
-  content: "\e9c4";
-}
-.icon-play2:before {
-  content: "\ea15";
-}
-.icon-pause:before {
-  content: "\ea16";
-}
-.icon-play3:before {
-  content: "\ea1c";
-}
-.icon-pause2:before {
-  content: "\ea1d";
-}
-
+.icon-ipcortex-icon:before {content: "\e900"}
+.icon-phone:before {content: "\e942"}
+.icon-phone-hang-up:before {content: "\e943"}
+.icon-office:before {content: "\e903"}
+.icon-price-tag:before {content: "\e935"}
+.icon-price-tags:before {content: "\e936"}
+.icon-history:before {content: "\e94d"}
+.icon-clock:before {content: "\e94e"}
+.icon-stopwatch:before {content: "\e952"}
+.icon-calendar:before {content: "\e953"}
+.icon-floppy-disk:before {content: "\e962"}
+.icon-switch:before {content: "\e9b6"}
+.icon-cloud-download:before {content: "\e9c2"}
+.icon-eye:before {content: "\e9ce"}
+.icon-eye-blocked:before {content: "\e9d1"}
+.icon-cancel-circle:before {content: "\ea0d"}
+.icon-checkmark:before {content: "\ea10"}
+.icon-checkmark2:before {content: "\ea11"}
+.icon-play3:before {content: "\ea1c"}
+.icon-circle-up:before {content: "\ea41"}
+.icon-circle-right:before {content: "\ea42"}
+.icon-circle-down:before {content: "\ea43"}
+.icon-circle-left:before {content: "\ea44"}
+.icon-checkbox-checked:before {content: "\ea52"}
+.icon-checkbox-unchecked:before {content: "\ea53"}
+.icon-close:before {content: "\ea41"}
+.icon-open:before {content: "\ea43"}
 
 html {
 }
@@ -122,18 +115,27 @@ font-family: 'Lato', sans-serif;
   margin-bottom: 1em;
   overflow-y: scroll;
 }
-.arrow-box{
-  padding-left: 10px;
+#call-container .call-line {
+  position: relative
 }
-.downward-arrow {
-  width: 43%;
-  margin-top: -1px;
+#call-container .arrow-box {position:absolute; top:-8px;right:10px}
+#call-container .visible {position:absolute; top:-8px;right:60px}
+
+#call-container .arrow-box:before, #call-container .visible:before {
+  font-family: 'icomoon' !important;
+  font-size:32px;
+  color:#00416F
 }
-.rotate-arrow {
-  transform: rotate(90deg);
-  -ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg); /* Safari */
-}
+#call-container .arrow-box:before {content: "\ea43"}
+#call-container .visible:before {content: "\e9ce";}
+
+#call-container .arrow-box.expand:before {content: "\ea41"}
+#call-container .visible.no:before {content: "\e9d1";}
+
+.icon-eye:before {content: "\e9ce"}
+.icon-eye-blocked:before {content: "\e9d1"}
+
+
 .max-duration{
   padding-right: 0px;
 }
@@ -188,9 +190,116 @@ body {
   text-align: center
 }
 
+/*************** STANDARD FORM LAYOUTS ********************/
+.stdForm .control-group, .stdForm .form-group {padding:0px}
+.stdForm fieldset {border:none}
+.stdForm fieldset legend {font-weight:normal; font-size:120%; border:0; margin-bottom:5px}
+.stdForm textarea,
+.stdForm select, .stdForm input[type=text], .stdForm input[type=email], .stdForm input[type=password], .stdForm input[type=phone] {
+  width:100%;
+  padding:10px;
+  border-radius:5px;
+  border:1px solid #00416F;
+  color:#808080;
+  font-size:120%
+}
+.stdForm select {appearance:none; -webkit-appearance:none; -moz-appearance:none}
+.stdForm .sel_popup {
+  /** Absolutely position this element */
+  position:absolute; top:50px; z-index:1
+}
+.stdForm button {
+  display:block;
+  float:left;
+  margin-left:10px;
+  padding:5px 10px;
+  background-color:#FF9531;
+  border:1px solid #00416F;
+  color:#fff;
+  border-radius:5px;
+  font-size:20px;
+}
+.stdForm button.primary {
+  background-color:#00416F;
+  border:1px solid #00416F;
+}
+.stdForm .control-group.right {
+  display:inline-block; float:right; width:auto
+}
+.stdForm input[type=text]:focus, .stdForm input[type=email]:focus, .stdForm input[type=password]:focus, .stdForm input[type=phone]:focus, .stdForm textarea:focus {
+  border-color:#00416F;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+}
+.stdForm input:placeholder-shown {
+  color:#e0e0e0
+}
+.stdForm .control-group, .stdForm .form-group {
+  position:relative;
+  display:table;
+  width:100%;
+  padding:0;
+  margin:8px 0;
+}
+.stdForm .form-item input {
+  border-color:0;
+  border-radius:0
+}
+.stdForm .form-item:first-child {}
+.stdForm .form-item {display:table-row;padding:0;margin:0}
+.stdForm .form-item > input{display:table-cell;xpadding:0;margin:0;}
+.stdForm .form-item .addon {display:table-cell;color:#00416F;background-color:#C2CFD9;text-align:center;width:48px;font-size:24px}
+.stdForm .form-item .addon span:before {font-size:28px;vertical-align:middle}
+
+.stdForm .checkbox input {position:absolute; top:-10000px;left:0}
+.stdForm .checkbox label:before {
+  font-family: 'icomoon' !important;
+  font-size:18px;
+  position:relative;top:3px;
+  padding-right:5px;
+  content: "\ea53"
+}
+.stdForm .checkbox label.checked:before, .stdForm .checkbox.checked label:before {content: "\ea52"}
+
+
+/* Deal with the radius */
+.stdForm .form-item .form-ctrl {
+  border-radius:5px;
+  border:1px solid #00416F
+}
+.stdForm .form-item .form-ctrl:not(:first-child) {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-left:0;
+}
+.stdForm .form-item .form-ctrl:not(:last-child) {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-right:0;
+}
+.stdForm .form-item .addon {
+  border:1px solid #00416F
+}
+.stdForm .form-item .addon:first-child {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.stdForm .form-item .addon:not(:first-child) {
+  border-left:0
+}
+.stdForm .form-item .addon:last-child {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.stdForm .form-item .addon:not(:last-child) {
+  border-right:0
+}
+
+
 
 /************************** filter form ***********************/
-
+#filter-form {
+  padding:5px 10px; background-color:#C2CFD9;border-radius:5px
+}
 .time {
   font-size: 12px;
 }
@@ -204,12 +313,8 @@ input[type=checkbox], input[type=radio] {
 #untagged {
   display: inline;
 }
-.checked {
-   background-color: #00A6A3;
-}
-.unchecked {
-    background-color: #FF9531;
-}
+#popular-tags .popular-tag {background-color: #FF9531}
+#popular-tags .popular-tag.checked {background-color: #00A6A3}
 .popular-tags{
   list-style: none;
   padding: 0.2em;
@@ -217,7 +322,7 @@ input[type=checkbox], input[type=radio] {
 .popular-tags:focus {
   font-weight: bold;
 }
-#fade {
+.fade {
   opacity: 0.5;
 }
 .popular-tag {
@@ -249,54 +354,17 @@ input[type=checkbox], input[type=radio] {
 #filter-calls {
   font-size: 20px;
 }
-#dropdown {
-  background-image: none;
-background-color: white;
-border: none;
-color: black;
-padding: 7px;
-border-radius: 6px;
-width: 100%
-}
-
-#dropdown-option {
-  background-image: none;
-  background-color: white;
-  border: none;
-  color: black;
-  padding: 7px;
-  border-radius: 6px;
-  width: 100%;
-}
-
-.drop-options {
-  background-image: none;
-background-color: white;
-border: none;
-color: black;
-padding: 7px;
-border-radius: 6px;
-width: 100%
-}
-
-option {
-  padding: 7px;
-}
-
-.saved-filters {
-  font-size: 14px;
-  margin-top: 6px;
-}
-
 
 /*calls list css*/
 .panel-default>.panel-heading {
-  background-color: #C2CFD9;
+  xxbackground-color: #C2CFD9;
 }
 
 .tag-calls-container {
   padding: 1em;
 }
+
+/************ CALL DISPLAY *********/
 
 .expanded-call {padding:0;margin:0}
 .expanded-call .row {padding:0;margin:0}
