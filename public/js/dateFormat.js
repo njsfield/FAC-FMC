@@ -32,12 +32,10 @@
     function toggleRealSelect(list) {
       var p = $('#'+list.prop('id')+'_id');
       if (list.hasClass('hidden')) {
-        console.log("SELECT HIDDEN - Show and focus");
         list.removeClass('hidden').focus();
       }
       else {
         // Already shown so needs to be hidden
-        console.log("SELECT VISIBLE - Hide and focus proxy");
         list.addClass('hidden');
         //p.focus();
       }
@@ -50,7 +48,6 @@
     $(".stdForm").on("click", ".select-dropdown", function(ev) {
       var wrap = $(ev.currentTarget).closest('.control-group');
       var sel = $('select', wrap);
-      console.log("ICON FOUND SELECT CONTROL: ",sel.length);
       toggleRealSelect(sel);
       ev.stopPropagation();
       ev.preventDefault();
@@ -69,7 +66,6 @@
 
       // Add a text box to replace it with.
       var repl = '<input readonly="readonly" type="text" class="sel_proxy form-ctrl select-dropdown" name="'+elem.prop('name')+'_n" id="'+id+'_id" value="'+val+'" placeholder="'+placeholder+'">';
-      console.log("NEW_ELEM: ", repl);
       // elem = elem.replaceWith(repl);
       $(repl).insertAfter(elem);
 
@@ -79,7 +75,6 @@
 
       $('.sel_proxy').on('focus blur', function(ev) {
         // Proxy has been given focus so display the popup and give it focus.
-        console.log("PROXY CLICK", ev.type, ev);
         openRealSelect(ev);
         ev.stopPropagation();
         ev.preventDefault();
@@ -87,7 +82,6 @@
       $('.sel_target').on('change blur', function(ev) {
         var t = $(ev.currentTarget);
         var v = t.val();
-        console.log('SELECT CHANGE OR BLUR',$('option:selected',t).text());
         var name = t.html();
         var p = $('#'+t.prop('id')+'_id');
         t.addClass('hidden');

@@ -6,11 +6,9 @@
       // Work out the call ID
       var visTag = $(ev.currentTarget);
       var callID = visTag.closest('.panel').prop('id').replace(/^call_/,'');
-      console.log('CHANGING VISIBILITY... ID: '+callID);
 
       if (!isNaN(callID)) {
         $.post('/toggle-visibility/' + callID, (resp) => {
-          console.log("POST RESPONSE: ", resp);
 
           if (resp.success=='success') {
             // State change OK - change the visual representation
