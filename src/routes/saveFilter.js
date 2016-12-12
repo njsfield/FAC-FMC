@@ -25,7 +25,8 @@ module.exports = {
           date: parsePayload.date,
           dateRange: parsePayload.dateRange,
           tags: parsePayload.tags,
-          untagged: parsePayload.untagged
+          untagged: parsePayload.untagged,
+          include_hidden: parsePayload.include_hidden
         }
       };
       validate(decoded, request, (error, isValid) => {
