@@ -22,7 +22,7 @@
     "no-shadow": [2, { "builtinGlobals": true, "allow": ["_", "__", "done", "cb", "resolve", "reject"] }],
     "comma-dangle": [2, "only-multiline"],
     "no-undef": 2,
-    "no-multi-spaces": 2,
+    "no-multi-spaces": [2, {exceptions: {VariableDeclarator: true}}],
     "no-unused-expressions": 2,
     "no-multiple-empty-lines": [2, { "max": 1, "maxEOF": 1 }]
   }
