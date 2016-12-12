@@ -11,12 +11,6 @@ const joinBase =
 
 const toString2 = 'p2.number =';
 const fromString = 'p1.number =';
-const minTimeString = 'duration >=';
-const maxTimeString = 'duration <=';
-
-const dateString = 'date > ';
-const datePlusOneString = 'and date < (select timestamp with time zone \'epoch\' + ';
-const datePlusOneStringEnd = ' * interval \'1\' second)';
 
 const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
 const taggedCalls = ' calls.call_id IN (select call_id from tags_calls where tag_id IN (select tag_id from tags where ';
@@ -27,7 +21,7 @@ const buildBasicSQL = (obj, queryArr) => {
 
   if (!obj.isAdmin && !obj.isManager) {
     queryArr.push(obj.contactID);
-    stringArray.push(', owned.hidden AS hidden FROM calls')
+    stringArray.push(', owned.hidden AS hidden FROM calls');
     stringArray.push(`INNER JOIN participants owned ON calls.call_id = owned.call_id AND owned.contact_id=$${queryArr.length}`);
     if (!obj.includeHidden)
       stringArray.push('AND owned.hidden=false');
@@ -57,34 +51,32 @@ const toAndFromQueryStringCreator = (obj, queryArr, tests) => {
 const minAndMaxQueryStringCreator = (obj, queryArr, tests) => {
   if (obj.min !== '' && obj.max !== '') {
     queryArr.push(obj.min * 60, obj.max * 60);
-    tests.push(`${minTimeString}$${queryArr.length -1} AND ${maxTimeString}$${queryArr.length}`);
+    tests.push(`duration BETWEEN $${queryArr.length -1} AND $${queryArr.length}`);
   }
   else if (obj.min !== '') {
     queryArr.push(obj.min * 60);
-    tests.push(`${minTimeString}$${queryArr.length}`);
+    tests.push(`duration >= $${queryArr.length}`);
   }
   else if (obj.max !== '') {
     queryArr.push(obj.max * 60);
-    tests.push(`${maxTimeString}$${queryArr.length}`);
+    tests.push(`duration <= $${queryArr.length}`);
   }
 };
 
+const makeDateString = function(date) {
+  return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+};
 const dateQueryStringCreator = (obj, queryArr, tests) => {
-  const baseDate = '2016-01-01';
-  const selectedDatePlusNumSecondsInDay = (new Date(obj.date).getTime() + 86400000)/1000;
-  const selectedDateRangePlusNumSecondsInDay = (new Date(obj.dateRange).getTime() + 86400000)/1000;
+  console.log("DATE TESTS: ", obj.date, obj.dateRange);
 
-  if (obj.date !== '' && obj.dateRange !== '') {
-    queryArr.push(obj.date, selectedDateRangePlusNumSecondsInDay);
-    tests.push(`${dateString}$${queryArr.length - 1}${datePlusOneString}$${queryArr.length}${datePlusOneStringEnd}`);
+  if (obj.startDate!=null && obj.endDate!=null) {
+    queryArr.push(makeDateString(obj.startDate), makeDateString(obj.endDate));
+    tests.push(`date::date BETWEEN $${queryArr.length-1} AND $${queryArr.length}`);
   }
-  else if (obj.date === '' && obj.dateRange !== '') {
-    queryArr.push(baseDate, selectedDateRangePlusNumSecondsInDay);
-    tests.push(`${dateString}$${queryArr.length - 1}${datePlusOneString}$${queryArr.length}${datePlusOneStringEnd}`);
-  }
-  else if (obj.date !== '') {
-    queryArr.push(obj.date);
-    tests.push(dateString + '$' + queryArr.length + datePlusOneString + selectedDatePlusNumSecondsInDay + datePlusOneStringEnd);
+  else if (obj.startDate) {
+    // EXACT date match
+    queryArr.push(makeDateString(obj.startDate));
+    tests.push(`date::date = $${queryArr.length }`);
   }
 };
 

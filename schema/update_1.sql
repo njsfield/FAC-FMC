@@ -1,4 +1,4 @@
-BEGIN
+BEGIN;
 /****** PARTICIPANTS TABLE *******
  ****** Add a 'hidden' flag against each participant entry. If 'true' then the contact_d in that participant
  ****** row no longer wants to see this message (unless show all messages is selected).

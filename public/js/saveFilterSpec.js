@@ -1,7 +1,8 @@
+/** global jQuery */
 var select = document.getElementById('saved-filters');
-var untagged = document.getElementById('untagged');
+//var untagged = document.getElementById('untagged');
 var saveButton = document.getElementById('save_filter');
-var popularTagArray = document.getElementsByClassName('popular-tag');
+//var popularTagArray = document.getElementsByClassName('popular-tag');
 var scrollbarCheckboxes = document.getElementsByClassName('saved-tag');
 
 /** Fills form with filter values of selected saved filter*/
@@ -73,7 +74,6 @@ var saveFilter = function (e) {
   }
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4 && xhr.status === 200) {
-      console.log('success');
 
       var response = JSON.parse(xhr.response.toString());
       if (response.success) {
@@ -109,30 +109,23 @@ select.addEventListener('change', getFilterSpec);
 
     var rebuildPopularTagList = function() {
       popularTags = $('#popular-tags .saved-tag');
-      console.log("NUMBER OF SAVED TAGS: "+popularTags.length);
       popularTags.each(function() {
-        popularTags_a[$(this).val()] = {tag:$(this), parent:$(this).parent()};
+        popularTags_a[$(this).val()] = {tag: $(this), parent: $(this).parent()};
       });
-    }
-    console.log("SAVED TAGS: ",popularTags_a);
+    };
 
     var changeSavedTagState = function (ev) {
       var tags        = searchTags.val();
       var arrTags     = fetchTagsList(tags);
 
-      console.log("SELECTED TAGS: ", arrTags);
-
       // What have we just clicked on and is it selected or not?
       var thisTag    = $(ev.currentTarget);
       var tagName    = thisTag.val();
       var isSelected = thisTag.prop('checked');
-      var wrap       = thisTag.closest('#popular-tags')
-
-      console.log('Clicked Tag: '+tagName+', IS SELECTED: '+isSelected);
+      var wrap       = thisTag.closest('#popular-tags');
 
       if (!wrap.prop('disabled')) {
         var idx = arrTags.indexOf(tagName);
-        console.log("CURRENTLY SELECTED AT INDEX: "+idx);
         if (isSelected && idx<0) {
           // NOT already selected so add it to the list.
           arrTags.push(tagName);
@@ -149,8 +142,8 @@ select.addEventListener('change', getFilterSpec);
     };
     var recheckSavedTagStatus = function() {
       var arrTags  = fetchTagsList(searchTags.val());
-      console.log("RECHECKING TAG USAGE-------------------------------", arrTags);
       var usedTags = {};
+      var aTag, tag;
       for (var i=0;i<arrTags.length;i++) {
         aTag = arrTags[i];
 
@@ -161,7 +154,6 @@ select.addEventListener('change', getFilterSpec);
           // YES - make sure it's checked.
           tag = popularTags_a[aTag];
           if (!tag.parent.hasClass('checked')) {
-            console.log("IDENTIFIED NEW SAVED TAG: "+aTag, tag);
             tag.parent.addClass('checked');
             tag.tag.prop('checked', true);
           }
@@ -171,26 +163,24 @@ select.addEventListener('change', getFilterSpec);
       for (var tagName in popularTags_a) {
         if (!usedTags.hasOwnProperty(tagName) && popularTags_a[tagName].parent.hasClass('checked')) {
           // Checked when it shouldn't be
-          console.log("IDENTIFIED UNSELECTED SAVED TAG: "+tagName);
           popularTags_a[tagName].parent.removeClass('checked');
         }
       }
-    }
+    };
 
     var processTagChange = function(ev) {
       // If this is a 'blur' or a 'keyup' and one of our significant characters then re-check the saved tag status.
       if (ev.type=='blur' || (ev.type=='keyup' && (ev.key==',' || ev.key==';' || ev.keyCode==8)))
         recheckSavedTagStatus();
-    }
+    };
 
     // toggleUntaggedCalls
-    var toggleUntaggedCalls = function(ev) {
+    var toggleUntaggedCalls = function() {
       var untagged = untaggedSearch.prop('checked');
       popularTags.prop('disabled',untagged).toggleClass('fade',untagged);
       searchTags.prop('disabled',untagged);
       searchTagWrap.toggleClass('fade',untagged);
     };
-
 
     // Prime intial data values
     rebuildPopularTagList();
