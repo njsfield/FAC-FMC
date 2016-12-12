@@ -141,8 +141,55 @@ const createURL = (requestSearch) => {
   return baseUrl;
 };
 
+function parseDate(date) {
+  // The date MUST be in the form YYYY-MM-DD (not sure this is ideal!). For flexibility also process
+  // as follows:
+  //   if there is only one part to the date then any time in that year
+  //   if there are two parts to the date then any time in that month
+  //   if there are three parts then this will be the full date
+  // This method returns: [dateFrom, dateTo]. dateFrom and dateTo will be the same
+  // if a full date (three parts) is specified then dateFrom will be midnight of the date specifified and
+  // dateTo will be midnight on the following day. If the format of the date is not recognised then
+  // null is returned.
+  //
+  // The return items are both date objects.
+  var res, date1, date2, fmt;
+  if (date!=null) {
+    // Split using a regexp.
+    var pt = (/^\s*(\d{2,4})(\-\d{1,2})?(\-\d{1,2})?\s*$/).exec(date);
+    console.log('PARSING "'+date+'" YIELDS: ',pt);
+    if (pt!=null) {
+      console.log('PT.LENGTH: ['+pt.length+']');
+      if (pt[2]==null) {
+        // It's a year
+        date1 = new Date(parseInt(pt[1],10),0,1,0,0,0);
+        date2 = new Date(parseInt(pt[1],10)+1,0,1,0,0,0);
+        // And generate the correct format output.
+        fmt = date1.getFullYear();
+      }
+      else if (pt[3]==null) {
+        // It's a month
+        date1 = new Date(parseInt(pt[1],10),(-parseInt(pt[2],10))-1,1,0,0);
+        date2 = new Date(parseInt(pt[1],10),(-parseInt(pt[2],10)),1,0,0);
+        fmt = date1.getFullYear()+'-'+('0'+(date1.getMonth()+1)).substr(-2);
+      }
+      else if (pt.length==4) {
+        // Full date - all parts included.
+        date1 = new Date(parseInt(pt[1],10),(-parseInt(pt[2],10))-1,-parseInt(pt[3],10),0,0);
+        date2 = new Date(parseInt(pt[1],10),(-parseInt(pt[2],10))-1,-parseInt(pt[3],10)+1,0,0);
+        fmt = date1.getFullYear()+'-'+('0'+(date1.getMonth()+1)).substr(-2)+'-'+('0'+date1.getDate()).substr(-2);
+      }
+      // What ever end date we selected we want to move to 1 second before midmight on the day before.
+      date2 = new Date(date2.valueOf()-1000); // Should be 1 second before midnight on the previous day.
+
+      res = [date1, date2, fmt];
+    }
+  }
+  console.log("DATE PROCESSING: ",res);
+  return res;
+}
 const formatUserObj = (request, user)=> {
-  let isAdmin   = (user.userRole==='admin');
+  let isAdmin = (user.userRole==='admin');
 
   // 'isManager' is not currently supported but will be used when we implement a
   // manager authentication level and will be true if the person logged in can see
@@ -227,11 +274,53 @@ const formatUserObj = (request, user)=> {
           userObj.max = maxMins;
       }
     }
-    if (request.query.date!=null)
-      userObj.date = request.query.date;
-    if (request.query.dateRange!=null)
-      userObj.dateRange = request.query.dateRange;
-    userObj.dateRangeCheckbox = (request.query.date_range_checkbox!=null);
+    var startDates, endDates;
+    if (request.query.date!=null) {
+      // Start date specified - get the range
+      startDates = parseDate(request.query.date);
+    }
+    if (startDates!=null && request.query.dateRange!=null) {
+      // And an end date
+      endDates = parseDate(request.query.dateRange);
+      // If the dates in start and end are the same then we have an implied range.
+      if (endDates!=null) {
+        if (startDates[0]==endDates[0] && startDates[1]==endDates[1])
+          endDates = null;
+      }
+    }
+    // If we have BOTH a stard and end date specified then check we have them in the right order.
+    if (startDates!=null && endDates!=null) {
+      // Check order
+      if (+endDates[0] < +startDates[0]) {
+        // Swap the order
+        [startDates, endDates] = [endDates, startDates];
+      }
+      // Make sure we choose the widest range.
+      if (+endDates[0] < +startDates[0]) startDates[0] = endDates[0];
+      // if (+endDates[1] < +startDates[1] > ) endDates[1] = startDates[1];
+    }
+    if (startDates!=null) {
+      userObj.startDate = startDates[0];
+      userObj.endDate = startDates[1];
+      if (endDates!=null)
+        userObj.endDate = endDates[1];
+
+      // Will have both a start and end date, if they are the same then delete the end date from the test.
+      if (userObj.startDate.getFullYear() == userObj.endDate.getFullYear() &&
+          userObj.startDate.getMonth() == userObj.endDate.getMonth() &&
+          userObj.startDate.getDate() == userObj.endDate.getDate()) {
+        // Start and end of the range are the same so we don't want an end date.
+        delete userObj.endDate;
+      }
+    }
+    // Now text format the dates so they appear correctly on the clients form.
+    if (userObj.startDate!=null)
+      userObj.date = startDates[2];
+    if (endDates!=null && userObj.endDate!=null)
+      userObj.dateRange = endDates[2];
+
+    userObj.dateRangeCheckbox = (endDates!=null);
+
     userObj.untagged = (request.query.untagged!=null);
 
     if (!userObj.untagged && request.query.tags!=null && request.query.tags.search(/\S/)>=0){
