@@ -24,6 +24,7 @@ const routes = [
   require('../routes/publicDirectory.js'),
   require('../routes/saveFilter.js'),
   require('../routes/deleteTag.js'),
+  require('../routes/toggleVisibility.js'),
   require('../routes/error.js')
 ];
 

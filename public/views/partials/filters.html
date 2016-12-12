@@ -1,153 +1,183 @@
-<ul class="list-group">
-  <li class="list-group-item filter-title">
-    <p id='filter-calls'>Search Your Calls:</p>
-  </li>
-  <li class="list-group-item">
-    <div class="row">
-      <div class='col-xs-12'>
-        <select id="dropdown" name="saved-filters">
-          <option selected disabled id='dropdown-option'>Your saved searches</option>
-          {{#each filters}}
-          <option value="{{filter_spec}}">{{filter_name}}</option>
-          {{/each}}
-        </select>
-        <label class='sr-only' for='saved-filters'>Saved searches: </label>
+<div id='filter-form' class="xcontainer">
+  <form  action="/dashboard" method="get" class="stdForm">
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <div class="row">
+        <div class="col-xs-12 col-md-6">
+          <div class="control-group">
+            <label class='sr-only' for='from'>Call from: </label>
+            <div class="form-item">
+              <span class="addon"><span class="icon-phone"></span></span>
+              <input type="text" id="from" name="from" class="form-ctrl" placeholder="Call from:  e.g. 234" value="{{userObj.from}}">
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <div class="control-group">
+            <label class='sr-only' for='to'>Call to: </label>
+            <div class="form-item">
+              <span class="addon"><span class="icon-phone"></span></span>
+              <input type="text" id="to" name="to" class="form-ctrl" placeholder="Call to:   e.g. 435" value="{{userObj.to}}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-md-6">
+          <div class="control-group">
+            <label class='sr-only' for='min'>Minimum duration: (hh:mm) </label>
+            <div class="form-item">
+              <span class="addon"><span class="icon-stopwatch"></span></span>
+              <input type="text" id="duration_min" name="min" class="form-ctrl" placeholder="Min-duration: (hh:mm), (00:01)" value="{{userObj.min}}">
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <div class="control-group">
+            <label class='sr-only' for='max'>Maximum duration: (hh:mm) </label>
+            <div class="form-item">
+              <span class="addon"><span class="icon-stopwatch"></span></span>
+              <input type="text" id="duration_max" name="max" class="form-ctrl" placeholder="Max-duration: (hh:mm), (01:24)" value="{{userObj.max}}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-md-6">
+          <div class="control-group">
+            <label class='sr-only' for='date'>Date: </label>
+            <div class="form-item">
+              <span class="addon"><span class="icon-calendar"></span></span>
+              <input type="text" id="date" name="date" class="form-ctrl" placeholder="Select date:  yyyy-mm-dd" value="{{userObj.date}}">
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <div {{#unless userObj.dateRangeCheckbox}}class="hidden"{{/unless}} id="date_range_box">
+            <div class="control-group">
+              <label class='sr-only' for='dateRange'>Date Range: </label>
+              <div class="form-item">
+                <span class="addon"><span class="icon-calendar"></span></span>
+                <input type="text" id="dateRange" name="dateRange" class="form-ctrl" placeholder="Date to:  yyyy-mm-dd" value="{{userObj.dateRange}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class='col-xs-12 col-md-6'>
+          <div class="control-group">
+            <div class="form-item checkbox">
+              <label for="date_range_checkbox">Search by date range
+                <input type="checkbox" id="date_range_checkbox" name="date_range_checkbox" value="yes" {{#if userObj.dateRangeCheckbox}}checked{{/if}}>
+              </label>
+            </div>
+          </div>
+        </div>
+        {{#if userObj.isIndividual}}
+        <div class='col-xs-12 col-md-6'>
+          <div class="control-group">
+            <div class="form-item checkbox">
+              <label for="showhidden_checkbox" class="showhidden">Include hidden calls
+                <input type="checkbox" id="showhidden_checkbox" name="include_hidden" value="yes" {{#if userObj.includeHidden}}checked{{/if}}>
+              </label>
+            </div>
+          </div>
+        </div>
+        {{/if}}
       </div>
     </div>
-  </li>
-  <div id="filter">
-    <div class="form-group">
-      <form id='filter-form' action="/dashboard" method="get">
-      {{#if userObj.isAdmin}}
-        <li class="list-group-item">
-          <div class='row'>
-            <div class='col-xs-12'>
-              <select class='drop-options' id="companies" name="admin_company">
-                <option selected disabled id='dropdown-option'>Choose Company</option>
-                {{#each userObj.adminCompanies}}
-                <option value={{name}} {{{./selected}}}>{{name}}</option>
-                {{/each}}
-              </select>
-              <label class='sr-only' for='companies'>Choose Company: </label>
-            </div>
+    <div class="col-xs-12 col-md-4">
+      <div class="control-group">
+        <label class='sr-only' for='tags'>Tags: </label>
+        <div class="form-item">
+          <span class="addon"><span class="icon-price-tags"></span></span>
+          <input type="text" id="tags" name="tags" class="form-ctrl typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
         </div>
-        </li>
-      {{/if}}
-      <li class="list-group-item filter-title">
-        <button id="filter_search" class="btn btn-primary">Search</button>
-        <button id="show-all" class="btn btn-primary">Show all</button>
-      </li>
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="to" name="to" class="form-control" placeholder="Call to:   e.g. 435" value="{{userObj.to}}">
-            <label class='sr-only' for='to'>Call to: </label>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item ">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="from" name="from" class="form-control" placeholder="Call from:  e.g. 234" value="{{userObj.from}}">
-            <label class='sr-only' for='from'>Call from: </label>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="duration_min" name="min" class="form-control" placeholder="Min-duration: (hh:mm), (00:01)" value="{{userObj.min}}">
-            <label class='sr-only' for='min'>Minimum duration: (hh:mm) </label>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="duration_max" name="max" class="form-control" placeholder="Max-duration: (hh:mm), (01:24)" value="{{userObj.max}}">
-            <label class='sr-only' for='max'>Maximum duration: (hh:mm) </label>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="date" name="date" class="form-control" placeholder="Select date:  yyyy-mm-dd" value="{{userObj.date}}">
-            <label class='sr-only' for='date'>Date: </label>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item hidden" id="date_range_box">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="dateRange" name="dateRange" class="form-control" placeholder="Date to:  yyyy-mm-dd" value="{{userObj.dateRange}}">
-            <label class='sr-only' for='dateRange'>Date Range: </label>
-          </div>
-        </div>
-      </li>
-
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="checkbox" id="date_range_checkbox" name="date_range_checkbox" value="{{userObj.dateRangeCheckbox}}">
-            <label for="date_range_checkbox">Search by date range</label><br>
-          </div>
-        </div>
-      </li>
-
-      <li class="list-group-item">
-        <div class='row'>
-          <div class='col-xs-12'>
-            <input type="text" id="tags" name="tags" class="form-control typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
-            <label class='sr-only' for='tags'>Tags: </label>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        Saved tags:
-        <div class="scrollbar-tags popular-tags">
+      </div>
+      <fieldset class="form-item">
+        <legend>Popular tags:</legend>
+        <div class="scrollbar-tags popular-tags" id="popular-tags">
           {{#each_upto savedTags 20 }}
-            <label class="popular-tag unchecked" tabindex="0" for='checked_{{tag_name}}'>
-              <input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}"> {{tag_name}}
-            </label>
+            <label class="popular-tag" tabindex="0" for='checked_{{tag_name}}'>
+              <input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}">{{tag_name}}</label>
           {{/each_upto}}
         </div>
-      </li>
-      <li class="list-group-item">
-        <div class="form-control">
-          <input type="checkbox" id="untagged" name="untagged" value="untagged">Untagged calls<br>
-          <label class='sr-only' for='untagged'>Untagged: </label>
+      </fieldset>
+      <div class="control-group">
+        <div class="form-item checkbox">
+          <label for='untagged'>
+            <input type="checkbox" id="untagged" name="untagged" value="untagged" {{#if userObj.untagged}}checked{{/if}}> Only show untagged calls
+          </label>
         </div>
-      </li>
-    </form>
-    <li class='list-group-item'>
-      <button id="filter_search2" class="btn btn-primary">Search</button>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Save search</button>
-      <button class="btn btn-primary" id='clear-form'>Clear form</button>
-    </li>
+      </div>
     </div>
-    <form method="post" id="save_filter">
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 class="modal-title" id="myModalLabel">Save search as...</h4>
-            </div>
-            <div class="modal-body">
-              <input type="text" id="filter_name" name="filter_name" class="form-control" placeholder="Name your search">
-              <p id="filter-error-message"></p>
-            </div>
-            <div class="modal-footer">
-              <span id="error_message"></span>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" xid="save_filter" class="btn btn-primary">Save</button>
-            </div>
+  </div>
+  <div class="row">
+    <div class='col-xs-12 col-md-4'>
+      <div class="control-group">
+        <label class='sr-only' for='saved-filters'>Saved searches: </label>
+        <div class="form-item">
+          <span class="addon select-dropdown"><label for="saved-filters"><span class="icon-floppy-disk"></span></label></span>
+          <select class="drop-options form-ctrl" id="saved-filters">
+            <option selected disabled>Your saved searches</option>
+            {{#each filters}}
+            <option value="{{filter_spec}}">{{filter_name}}</option>
+            {{/each}}
+          </select>
+          <span class="addon select-dropdown"><label for="saved-filters"><span class="icon-circle-down"></span></label></span>
+        </div>
+      </div>
+    </div>
+    {{#if userObj.isAdmin}}
+      <div class='col-xs-12 col-md-4'>
+        <div class="control-group">
+          <label class='sr-only' for='companies'>Choose Company: </label>
+          <div class="form-item">
+            <span class="addon select-dropdown"><label for="companies"><span class="icon-office select-office"></span></label></span>
+            <select class='form-ctrl' id="companies" name="admin_company">
+              <option selected disabled>Choose Company</option>
+              {{#each userObj.adminCompanies}}
+              <option value={{name}} {{{./selected}}}>{{name}}</option>
+              {{/each}}
+            </select>
+
+            <span class="addon"><label for="companies"><span class="icon-circle-down select-dropdown"></span></label></span>
           </div>
         </div>
       </div>
-    </form>
+    {{/if}}
+    <div class='col-xs-12 {{#if userObj.isAdmin}}col-md-4{{else}}col-md-8{{/if}}'>
+      <div class="control-group right">
+        <button type="button" data-toggle="modal" data-target="#myModal">Save</button>
+        <button id='clear-form'>Clear</button>
+        <button id="show-all">Reset</button>
+        <button id="filter_search2" class="primary">Search</button>
+      </div>
+    </div>
   </div>
-</ul>
+</form>
+  <form method="post" id="save_filter">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Save search as...</h4>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="filter_name" name="filter_name" class="form-ctrl" placeholder="Name your search">
+            <p id="filter-error-message"></p>
+          </div>
+          <div class="modal-footer">
+            <span id="error_message"></span>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" xid="save_filter" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
