@@ -32,12 +32,15 @@ const buildBasicSQL = (obj, queryArr) => {
 
 const normaliseNumber = (number) => {
   // Remove all spaces and any characters we don't like. Leace '*' for wildcards.
-  number = number.replace(/[^a-zA-Z0-9\*]/g,'');
+  number = number.replace(/[^a-zA-Z0-9]/g,'')+'*';
 
   // If all we have left is a '*' (ANY) then we return null to prevent a SQL clause being inserted.
-  if (number.search(/\*/)>=0) {
+  var hasWildcard = (number.search(/\*/)>=0);
+  var hasContent  = (number.search(/[^\*]/)>=0);
+
+  if (hasContent) {
     // Any '*' in the call?
-    return [number, number.search(/\*/)>=0];
+    return [number, hasWildcard];
   }
 };
 
@@ -79,8 +82,6 @@ const makeDateString = function(date) {
   return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
 };
 const dateQueryStringCreator = (obj, queryArr, tests) => {
-  console.log("DATE TESTS: ", obj.date, obj.dateRange);
-
   if (obj.startDate!=null && obj.endDate!=null) {
     queryArr.push(makeDateString(obj.startDate), makeDateString(obj.endDate));
     tests.push(`date::date BETWEEN $${queryArr.length-1} AND $${queryArr.length}`);
