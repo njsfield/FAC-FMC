@@ -9,9 +9,6 @@ const joinBase =
    `LEFT JOIN participants p1 ON calls.call_id = p1.call_id AND p1.participant_role = 'caller'
     LEFT JOIN participants p2 ON calls.call_id = p2.call_id AND p2.participant_role = 'callee' `;
 
-const toString2 = 'p2.number =';
-const fromString = 'p1.number =';
-
 const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
 const taggedCalls = ' calls.call_id IN (select call_id from tags_calls where tag_id IN (select tag_id from tags where ';
 
@@ -33,18 +30,33 @@ const buildBasicSQL = (obj, queryArr) => {
   return stringArray.join(' ');
 };
 
+const normaliseNumber = (number) => {
+  // Remove all spaces and any characters we don't like. Leace '*' for wildcards.
+  number = number.replace(/[^a-zA-Z0-9\*]/g,'');
+
+  // If all we have left is a '*' (ANY) then we return null to prevent a SQL clause being inserted.
+  if (number.search(/\*/)>=0) {
+    // Any '*' in the call?
+    return [number, number.search(/\*/)>=0];
+  }
+};
+
 const toAndFromQueryStringCreator = (obj, queryArr, tests) => {
-  if (obj.to !== '' && obj.from !== '') {
-    queryArr.push(obj.to, obj.from);
-    tests.push(`${toString2}$${queryArr.length - 1} AND ${fromString}$${queryArr.length}`);
+  var pFrom, pTo;
+
+  if (obj.from!=='')
+    pFrom = normaliseNumber(obj.from);
+
+  if (obj.to!='')
+    pTo = normaliseNumber(obj.to);
+
+  if (pFrom!=null) {
+    queryArr.push(pFrom[0].replace(/\*/g,'%'));
+    tests.push(pFrom[1] ? `p1.number LIKE $${queryArr.length}` : `p1.number = $${queryArr.length}`);
   }
-  else if (obj.to !== '') {
-    queryArr.push(obj.to);
-    tests.push(`${toString2}$${queryArr.length}`);
-  }
-  else if (obj.from !== '') {
-    queryArr.push(obj.from);
-    tests.push(`${fromString}$${queryArr.length}`);
+  if (pTo!=null) {
+    queryArr.push(pTo[0].replace(/\*/g,'%'));
+    tests.push(pTo[1] ? `p2.number LIKE $${queryArr.length}` : `p2.number = $${queryArr.length}`);
   }
 };
 

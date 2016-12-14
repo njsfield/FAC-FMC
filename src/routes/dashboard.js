@@ -239,9 +239,9 @@ const formatUserObj = (request, user)=> {
       // *NOT* an administrator so either a manager or a 'standard' user
       userObj.includeHidden = (isManager || (request.query.include_hidden=='yes'));
     }
-    if (request.query.to!=null)
+    if (request.query.to!=null && request.query.to.search(/\S/)>=0)
       userObj.to = request.query.to;
-    if (request.query.from!=null)
+    if (request.query.from!=null && request.query.from.search(/\S/)>=0)
       userObj.from = request.query.from;
     if (request.query.min!=null) {
       if (request.query.min.indexOf(':') !== -1) {
