@@ -22,6 +22,10 @@
 
     };
 
-    $('#show-all, #clear-form').on('click', clearFilterForm);
+    $('#clear-form').on('click', clearFilterForm);
+    $('#show-all').on('click', function() {
+      clearFilterForm();
+      document.getElementById('filter-form').submit();
+    });
   });
 })(jQuery);

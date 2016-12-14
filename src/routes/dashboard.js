@@ -71,7 +71,6 @@ module.exports = {
                           done();
                           reply.view('dashboard', userCalls).state('FMC', request.state.FMC, cookieOptions);
                         } else {
-                          console.log('ROWS RETURNED: ',res.rows);
                           userCalls.calls = res.rows;
                           userCalls.calls.forEach(c => {
                             if (c.tag_name.length>0) {
@@ -210,7 +209,7 @@ const formatUserObj = (request, user)=> {
     tags: [],
     untagged: false,
     firstIndex: 0,
-    maxRows: 16,
+    maxRows: 20,
     contactID: user.contact_id,
     dateOrder: 'desc',
     dateSortString: 'new to old',
