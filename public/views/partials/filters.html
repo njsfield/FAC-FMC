@@ -1,5 +1,5 @@
-<div id='filter-form' class="xcontainer">
-  <form  action="/dashboard" method="get" class="stdForm">
+<div class="xcontainer">
+  <form  action="/dashboard" method="get" class="stdForm" id="filter-form">
   <div class="row">
     <div class="col-xs-12 col-md-8">
       <div class="row">
@@ -8,7 +8,7 @@
             <label class='sr-only' for='from'>Call from: </label>
             <div class="form-item">
               <span class="addon"><span class="icon-phone"></span></span>
-              <input type="text" id="from" name="from" class="form-ctrl" placeholder="Call from:  e.g. 234" value="{{userObj.from}}">
+              <input tabindex="1000" type="text" id="from" name="from" class="form-ctrl" placeholder="Call from:  e.g. 234" value="{{userObj.from}}">
             </div>
           </div>
         </div>
@@ -17,7 +17,7 @@
             <label class='sr-only' for='to'>Call to: </label>
             <div class="form-item">
               <span class="addon"><span class="icon-phone"></span></span>
-              <input type="text" id="to" name="to" class="form-ctrl" placeholder="Call to:   e.g. 435" value="{{userObj.to}}">
+              <input tabindex="1010" type="text" id="to" name="to" class="form-ctrl" placeholder="Call to:   e.g. 435" value="{{userObj.to}}">
             </div>
           </div>
         </div>
@@ -28,7 +28,7 @@
             <label class='sr-only' for='min'>Minimum duration: (hh:mm) </label>
             <div class="form-item">
               <span class="addon"><span class="icon-stopwatch"></span></span>
-              <input type="text" id="duration_min" name="min" class="form-ctrl" placeholder="Min-duration: (hh:mm), (00:01)" value="{{userObj.min}}">
+              <input tabindex="1020" type="text" id="duration_min" name="min" class="form-ctrl" placeholder="Min-duration: (hh:mm), (00:01)" value="{{userObj.min}}">
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
             <label class='sr-only' for='max'>Maximum duration: (hh:mm) </label>
             <div class="form-item">
               <span class="addon"><span class="icon-stopwatch"></span></span>
-              <input type="text" id="duration_max" name="max" class="form-ctrl" placeholder="Max-duration: (hh:mm), (01:24)" value="{{userObj.max}}">
+              <input tabindex="1030" type="text" id="duration_max" name="max" class="form-ctrl" placeholder="Max-duration: (hh:mm), (01:24)" value="{{userObj.max}}">
             </div>
           </div>
         </div>
@@ -48,7 +48,7 @@
             <label class='sr-only' for='date'>Date: </label>
             <div class="form-item">
               <span class="addon"><span class="icon-calendar"></span></span>
-              <input type="text" id="date" name="date" class="form-ctrl" placeholder="Select date:  yyyy-mm-dd" value="{{userObj.date}}">
+              <input tabindex="1040" type="text" id="date" name="date" class="form-ctrl" placeholder="Select date:  yyyy-mm-dd" value="{{userObj.date}}">
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@
               <label class='sr-only' for='dateRange'>Date Range: </label>
               <div class="form-item">
                 <span class="addon"><span class="icon-calendar"></span></span>
-                <input type="text" id="dateRange" name="dateRange" class="form-ctrl" placeholder="Date to:  yyyy-mm-dd" value="{{userObj.dateRange}}">
+                <input tabindex="1050" type="text" id="dateRange" name="dateRange" class="form-ctrl" placeholder="Date to:  yyyy-mm-dd" value="{{userObj.dateRange}}">
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
           <div class="control-group">
             <div class="form-item checkbox">
               <label for="date_range_checkbox">Search by date range
-                <input type="checkbox" id="date_range_checkbox" name="date_range_checkbox" value="yes" {{#if userObj.dateRangeCheckbox}}checked{{/if}}>
+                <input tabindex="1060" type="checkbox" id="date_range_checkbox" name="date_range_checkbox" value="yes" {{#if userObj.dateRangeCheckbox}}checked{{/if}}>
               </label>
             </div>
           </div>
@@ -78,8 +78,8 @@
         <div class='col-xs-12 col-md-6'>
           <div class="control-group">
             <div class="form-item checkbox">
-              <label for="showhidden_checkbox" class="showhidden">Include hidden calls
-                <input type="checkbox" id="showhidden_checkbox" name="include_hidden" value="yes" {{#if userObj.includeHidden}}checked{{/if}}>
+              <label for="showhidden_checkbox">Include hidden calls
+                <input tabindex="1070" type="checkbox" id="showhidden_checkbox" name="include_hidden" value="yes" {{#if userObj.includeHidden}}checked{{/if}}>
               </label>
             </div>
           </div>
@@ -92,22 +92,22 @@
         <label class='sr-only' for='tags'>Tags: </label>
         <div class="form-item">
           <span class="addon"><span class="icon-price-tags"></span></span>
-          <input type="text" id="tags" name="tags" class="form-ctrl typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
+          <input tabindex="1080" type="text" id="tags" name="tags" class="form-ctrl typeahead" data-source="{{tags}}" placeholder="Tags: e.g. meeting;important" value="{{userObj.tags}}">
         </div>
       </div>
       <fieldset class="form-item">
         <legend>Popular tags:</legend>
         <div class="scrollbar-tags popular-tags" id="popular-tags">
           {{#each_upto savedTags 20 }}
-            <label class="popular-tag" tabindex="0" for='checked_{{tag_name}}'>
-              <input type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}">{{tag_name}}</label>
+            <label class="popular-tag" for='checked_{{tag_name}}'>
+              <input tabindex="1100" type="checkbox" class="saved-tag" id='checked_{{tag_name}}' name="company_tag" value="{{tag_name}}">{{tag_name}}</label>
           {{/each_upto}}
         </div>
       </fieldset>
       <div class="control-group">
         <div class="form-item checkbox">
           <label for='untagged'>
-            <input type="checkbox" id="untagged" name="untagged" value="untagged" {{#if userObj.untagged}}checked{{/if}}> Only show untagged calls
+            <input tabindex="1110" type="checkbox" id="untagged" name="untagged" value="untagged" {{#if userObj.untagged}}checked{{/if}}> Only show untagged calls
           </label>
         </div>
       </div>
@@ -119,7 +119,7 @@
         <label class='sr-only' for='saved-filters'>Saved searches: </label>
         <div class="form-item">
           <span class="addon select-dropdown"><label for="saved-filters"><span class="icon-floppy-disk"></span></label></span>
-          <select class="drop-options form-ctrl" id="saved-filters">
+          <select tabindex="1200" class="drop-options form-ctrl" id="saved-filters">
             <option selected disabled>Your saved searches</option>
             {{#each filters}}
             <option value="{{filter_spec}}">{{filter_name}}</option>
@@ -135,7 +135,7 @@
           <label class='sr-only' for='companies'>Choose Company: </label>
           <div class="form-item">
             <span class="addon select-dropdown"><label for="companies"><span class="icon-office select-office"></span></label></span>
-            <select class='form-ctrl' id="companies" name="admin_company">
+            <select tabindex="1300" class='form-ctrl' id="companies" name="admin_company">
               <option selected disabled>Choose Company</option>
               {{#each userObj.adminCompanies}}
               <option value={{name}} {{{./selected}}}>{{name}}</option>
@@ -149,32 +149,32 @@
     {{/if}}
     <div class='col-xs-12 {{#if userObj.isAdmin}}col-md-4{{else}}col-md-8{{/if}}'>
       <div class="control-group right">
-        <button type="button" data-toggle="modal" data-target="#myModal">Save</button>
-        <button type="button" name="clear" id='clear-form'>Clear</button>
-        <button type="submit" name="reset" id="show-all">Reset</button>
-        <button type="submit" name="search" id="filter_search2" class="primary">Search</button>
+        <button tabindex="1530" type="button" data-toggle="modal" data-target="#myModal">Save</button>
+        <button tabindex="1520" type="button" name="clear" id='clear-form'>Clear</button>
+        <button tabindex="1510" type="button" name="reset" id="show-all">Reset</button>
+        <button tabindex="1500" type="submit" name="search" id="filter_search2" class="primary">Search</button>
       </div>
     </div>
   </div>
 </form>
   <form method="post" id="save_filter">
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button tabindex="5999" type="button" class="close" data-dismiss="modal" aria-label="Close" autofocus>
               <span aria-hidden="true">&times;</span>
             </button>
             <h4 class="modal-title" id="myModalLabel">Save search as...</h4>
           </div>
           <div class="modal-body">
-            <input type="text" id="filter_name" name="filter_name" class="form-ctrl" placeholder="Name your search">
+            <input tabindex="5000" type="text" id="filter_name" name="filter_name" class="form-ctrl" placeholder="Name your search">
             <p id="filter-error-message"></p>
           </div>
           <div class="modal-footer">
             <span id="error_message"></span>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" xid="save_filter" class="btn btn-primary">Save</button>
+            <button tabindex="5999" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button tabindex="5200" type="submit" xid="save_filter" class="btn btn-primary">Save</button>
           </div>
         </div>
       </div>
