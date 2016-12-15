@@ -24,6 +24,8 @@
 }
 
 .icon-ipcortex-icon:before {content: "\e900"}
+.icon-caller:before {content: "\e901"}
+.icon-callee:before {content: "\e902"}
 .icon-phone:before {content: "\e942"}
 .icon-phone-hang-up:before {content: "\e943"}
 .icon-office:before {content: "\e903"}
