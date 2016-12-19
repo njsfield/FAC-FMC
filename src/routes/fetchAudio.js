@@ -24,7 +24,7 @@ module.exports = {
               const response = reply(fs.createReadStream(process.env.SAVE_AUDIO_PATH + `${fileId}.wav`));
               response.type('audio/wav');
               if (request.query.download=='yes')
-                response.type('attachment; filename='+fileId+'.wav');
+                response.header('content-disposition','attachment; filename='+fileId+'.wav');
             } else {
               reply('you are not authorized to listen to this call');
             }
