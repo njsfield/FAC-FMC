@@ -225,7 +225,6 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
       ON DELETE CASCADE;
 
 
-<<<<<<< HEAD
 
 =======
 /****** MANAGER TABLE *******
@@ -272,6 +271,6 @@ ALTER TABLE popular_tags ADD CONSTRAINT pop_tag_fk
       FOREIGN KEY (tag_id)
       REFERENCES tags (tag_id)
       ON DELETE CASCADE;
->>>>>>> master
+
 
 COMMIT;
