@@ -98,7 +98,8 @@ const dataObj = {
     contact_id: 3222,
     internal: true,
     number: 100,
-    participant_role: 'callee'
+    participant_role: 'callee',
+    hidden: false
   },
   tagsT: {
     tag_name: 'important',

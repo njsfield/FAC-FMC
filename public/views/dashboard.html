@@ -15,10 +15,15 @@
   <div class='row' id='call-container'>
 
     <div class="row" id='dashboard-title-container'>
-      <div class="col-xs-3">
+      <div class="col-xs-12">
         <p id='dashboard-title'>Find My Call</p>
       </div>
-      <div class="col-xs-9 call-headings">
+    </div>
+    <div class="row">
+      {{> filters}}
+    </div>
+    <div class="row">
+      <div class="col-xs-12 call-headings">
         <div class="row">
           <div class="col-xs-2">
             <h4 class='call-heading'>from:</h4>
@@ -50,26 +55,30 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-3">
-        {{> filters}}
-      </div>
-      <div class="col-xs-9">
+      <div class="col-xs-12">
         <div class='row'>
           {{> call}}
         </div>
+      </div>
+      <div class="col-xs-12" id="prevnav">
         <div class='row'>
-          <div class='col-xs-2 col-xs-offset-4'>
+          <div class="col-xs-6">
             {{#if prevPage}}
-              <a class='pages' href='/dashboard{{prevPage}}'>prev page</a><br>
+              <a class='pages' href="/dashboard{{prevPage}}" name="Previous Page"><span class="icon-circle-left"></span></a><br>
             {{/if}}
           </div>
-          <div class='col-xs-2'>
+          <div class='col-xs-6'>
             {{#if nextPage}}
-            <a class='pages' href='/dashboard{{nextPage}}'>next page</a><br>
+            <a class='pages' href="/dashboard{{nextPage}}" name="Next Page"><span class="icon-circle-right"></span></a><br>
             {{/if}}
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">Version 0.1</div>
     </div>
   </div>
 </div>

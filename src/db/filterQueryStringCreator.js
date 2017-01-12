@@ -1,101 +1,109 @@
 'use strict';
 
-const queryString = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI') AS date, calls.duration, calls.call_id, calls.file_id, calls.company_id,
-   participants1.participant_id AS caller_id, participants1.internal AS caller_internal, participants1.number AS caller_number, participants1.contact_id AS caller_contact,
-   participants2.participant_id AS callee_id, participants2.internal AS callee_internal, participants2.number AS callee_number, participants2.contact_id AS callee_contact,
-   array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name
-FROM calls
-    LEFT JOIN participants participants1 ON calls.call_id = participants1.call_id AND participants1.participant_role = 'caller'
-    LEFT JOIN participants participants2 ON calls.call_id = participants2.call_id AND participants2.participant_role = 'callee'
-WHERE `;
+const queryFields = `SELECT TO_CHAR(calls.date, 'DD Mon YY HH24:MI') AS date, calls.duration, calls.call_id, calls.file_id, calls.company_id,
+   p1.participant_id AS caller_id, p1.internal AS caller_internal, p1.number AS caller_number, p1.contact_id AS caller_contact,
+   p2.participant_id AS callee_id, p2.internal AS callee_internal, p2.number AS callee_number, p2.contact_id AS callee_contact,
+   array(select tag_name from tags where tag_id in (select tag_id from tags_calls where tags_calls.call_id = calls.call_id)) AS tag_name`;
 
-const toString2 = 'participants2.number =';
-const fromString = 'participants1.number =';
-const minTimeString = 'duration >=';
-const maxTimeString = 'duration <=';
-
-const dateString = 'date > ';
-const datePlusOneString = 'and date < (select timestamp with time zone \'epoch\' + ';
-const datePlusOneStringEnd = ' * interval \'1\' second)';
+const joinBase =
+   `LEFT JOIN participants p1 ON calls.call_id = p1.call_id AND p1.participant_role = 'caller'
+    LEFT JOIN participants p2 ON calls.call_id = p2.call_id AND p2.participant_role = 'callee' `;
 
 const untaggedCalls = 'NOT EXISTS (SELECT 1 FROM tags_calls WHERE tags_calls.call_id = calls.call_id)';
 const taggedCalls = ' calls.call_id IN (select call_id from tags_calls where tag_id IN (select tag_id from tags where ';
 
-const toAndFromQueryStringCreator = (obj, queryArr, callback) => {
-  if (obj.to !== '' && obj.from !== '') {
-    queryArr.push(obj.to, obj.from);
-    callback(queryArr, `${toString2}$${queryArr.length - 1} AND ${fromString}$${queryArr.length}`);
-  }
-  else if (obj.to !== '') {
-    queryArr.push(obj.to);
-    callback(queryArr, `${toString2}$${queryArr.length}`);
-  }
-  else if (obj.from !== '') {
-    queryArr.push(obj.from);
-    callback(queryArr, `${fromString}$${queryArr.length}`);
+const buildBasicSQL = (obj, queryArr) => {
+  // What joins do we want?
+  var stringArray = [queryFields];
+
+  if (!obj.isAdmin && !obj.isManager) {
+    queryArr.push(obj.contactID);
+    stringArray.push(', owned.hidden AS hidden FROM calls');
+    stringArray.push(`INNER JOIN participants owned ON calls.call_id = owned.call_id AND owned.contact_id=$${queryArr.length}`);
+    if (!obj.includeHidden)
+      stringArray.push('AND owned.hidden=false');
   }
   else {
-    callback(queryArr);
+    stringArray.push(', false AS hidden FROM calls');
+  }
+  stringArray.push(joinBase,'WHERE');
+  return stringArray.join(' ');
+};
+
+const normaliseNumber = (number) => {
+  // Remove all spaces and any characters we don't like. Leace '*' for wildcards.
+  number = number.replace(/[^a-zA-Z0-9]/g,'')+'*';
+
+  // If all we have left is a '*' (ANY) then we return null to prevent a SQL clause being inserted.
+  var hasWildcard = (number.search(/\*/)>=0);
+  var hasContent  = (number.search(/[^\*]/)>=0);
+
+  if (hasContent) {
+    // Any '*' in the call?
+    return [number, hasWildcard];
   }
 };
 
-const minAndMaxQueryStringCreator = (obj, queryArr, callback) => {
+const toAndFromQueryStringCreator = (obj, queryArr, tests) => {
+  var pFrom, pTo;
+
+  if (obj.from!=='')
+    pFrom = normaliseNumber(obj.from);
+
+  if (obj.to!='')
+    pTo = normaliseNumber(obj.to);
+
+  if (pFrom!=null) {
+    queryArr.push(pFrom[0].replace(/\*/g,'%'));
+    tests.push(pFrom[1] ? `p1.number LIKE $${queryArr.length}` : `p1.number = $${queryArr.length}`);
+  }
+  if (pTo!=null) {
+    queryArr.push(pTo[0].replace(/\*/g,'%'));
+    tests.push(pTo[1] ? `p2.number LIKE $${queryArr.length}` : `p2.number = $${queryArr.length}`);
+  }
+};
+
+const minAndMaxQueryStringCreator = (obj, queryArr, tests) => {
   if (obj.min !== '' && obj.max !== '') {
     queryArr.push(obj.min * 60, obj.max * 60);
-    callback(queryArr, `${minTimeString}$${queryArr.length -1} AND ${maxTimeString}$${queryArr.length}`);
+    tests.push(`duration BETWEEN $${queryArr.length -1} AND $${queryArr.length}`);
   }
   else if (obj.min !== '') {
     queryArr.push(obj.min * 60);
-    callback(queryArr, `${minTimeString}$${queryArr.length}`);
+    tests.push(`duration >= $${queryArr.length}`);
   }
   else if (obj.max !== '') {
     queryArr.push(obj.max * 60);
-    callback(queryArr, `${maxTimeString}$${queryArr.length}`);
-  }
-  else {
-    callback(queryArr);
+    tests.push(`duration <= $${queryArr.length}`);
   }
 };
 
-const dateQueryStringCreator = (obj, queryArr, callback) => {
-  const baseDate = '2016-01-01';
-  const selectedDatePlusNumSecondsInDay = (new Date(obj.date).getTime() + 86400000)/1000;
-  const selectedDateRangePlusNumSecondsInDay = (new Date(obj.dateRange).getTime() + 86400000)/1000;
-
-  if (obj.date !== '' && obj.dateRange !== '') {
-    queryArr.push(obj.date, selectedDateRangePlusNumSecondsInDay);
-    const string = `${dateString}$${queryArr.length - 1}${datePlusOneString}$${queryArr.length}${datePlusOneStringEnd}`;
-    callback(queryArr, string);
+const makeDateString = function(date) {
+  return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+};
+const dateQueryStringCreator = (obj, queryArr, tests) => {
+  if (obj.startDate!=null && obj.endDate!=null) {
+    queryArr.push(makeDateString(obj.startDate), makeDateString(obj.endDate));
+    tests.push(`date::date BETWEEN $${queryArr.length-1} AND $${queryArr.length}`);
   }
-  else if (obj.date === '' && obj.dateRange !== '') {
-    queryArr.push(baseDate, selectedDateRangePlusNumSecondsInDay);
-    const string = `${dateString}$${queryArr.length - 1}${datePlusOneString}$${queryArr.length}${datePlusOneStringEnd}`;
-    callback(queryArr, string);
-  }
-  else if (obj.date !== '') {
-    queryArr.push(obj.date);
-    const string = dateString + '$' + queryArr.length + datePlusOneString + selectedDatePlusNumSecondsInDay + datePlusOneStringEnd;
-    callback(queryArr, string);
-  }
-  else {
-    callback(queryArr);
+  else if (obj.startDate) {
+    // EXACT date match
+    queryArr.push(makeDateString(obj.startDate));
+    tests.push(`date::date = $${queryArr.length }`);
   }
 };
 
-const taggedCallsStringCreator = (obj, queryArr, callback) => {
+const taggedCallsStringCreator = (obj, queryArr, tests) => {
   let tagsQueryArray = [];
   if (obj.untagged === true) {
-    callback(queryArr, untaggedCalls);
+    tests.push(untaggedCalls);
   }
-  else if (obj.tags.length < 1) {
-    callback(queryArr);
-  }
-  else {
+  else if (obj.tags.length >0 ) {
     obj.tags.forEach((tag) => {
       queryArr.push(tag);
       tagsQueryArray.push('tag_name=' + '$' + queryArr.length);
     });
-    callback(queryArr, taggedCalls + tagsQueryArray.join(' OR ') + '))');
+    tests.push(taggedCalls + tagsQueryArray.join(' OR ') + '))');
   }
 };
 
@@ -146,46 +154,36 @@ const limitCallsCreator = (obj, queryArr, order) => {
  * and duration >= ('8')'
  */
 
-const createQueryString = (queryArr, obj, dateOrder, callback) => {
-  let stringArr = [];
+const createQueryString = (queryArr, obj, dateOrder) => {
+  const testArr = [];
+  const baseQuery = buildBasicSQL(obj, queryArr);
+  const individual = (!obj.isAdmin && !obj.isManager);
 
   // Must scope all requests to a company. For a normal user that will be the company to which they belong. For
   // an administrator is will the the 'adminCompany', if present. Otherwise it will again drop back to company_id.
 
-  if (obj.isAdmin!==true) {
+  if (individual) {
     queryArr.push(obj.company_id);
-    stringArr.push(`calls.company_id = $${queryArr.length}`);
-    queryArr.push(obj.contactID);
-    stringArr.push(`( participants1.contact_id=$${queryArr.length} OR participants2.contact_id=$${queryArr.length})`);
+    testArr.push(`calls.company_id = $${queryArr.length}`);
+    // queryArr.push(obj.contactID);
+    // testArr.push(`( p1.contact_id=$${queryArr.length} OR p2.contact_id=$${queryArr.length})`);
   }
-  else if (obj.adminCompany!=null && obj.adminCompany.search(/\S/)>=0) {
+  else if (obj.isAdmin && obj.adminCompany!=null && obj.adminCompany.search(/\S/)>=0) {
     queryArr.push(obj.adminCompany);
-    stringArr.push(`calls.company_id = (SELECT company_id FROM companies WHERE company_name=$${queryArr.length})`);
+    testArr.push(`calls.company_id = (SELECT company_id FROM companies WHERE company_name=$${queryArr.length})`);
   }
   else {
     // Invalid parameters - make sure the result set is empty.
-    stringArr.push('false');
+    testArr.push('false');
   }
 
-  toAndFromQueryStringCreator(obj, queryArr, (qa2, filters) => {
-    if (filters) stringArr.push(filters);
+  toAndFromQueryStringCreator(obj, queryArr, testArr);
+  minAndMaxQueryStringCreator(obj, queryArr, testArr);
+  dateQueryStringCreator(obj, queryArr, testArr);
+  taggedCallsStringCreator(obj, queryArr, testArr);
 
-    minAndMaxQueryStringCreator(obj, qa2, (qa3, filters2) => {
-      if (filters2) stringArr.push(filters2);
-
-      dateQueryStringCreator(obj, qa3, (qa4, filters3) => {
-        if (filters3) stringArr.push(filters3);
-
-        taggedCallsStringCreator(obj, qa4, (qa5, filters4) => {
-          if (filters4) stringArr.push(filters4);
-
-          var fullQueryString = queryString + ' '+stringArr.join(' AND ');
-          fullQueryString += limitCallsCreator(obj, qa5, dateOrder);
-          callback(fullQueryString, qa5);
-        });
-      });
-    });
-  });
+  var fullQueryString = baseQuery+ ' '+testArr.join(' AND ');
+  return fullQueryString + limitCallsCreator(obj, queryArr, dateOrder);
 };
 
 module.exports = {
