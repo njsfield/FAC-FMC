@@ -3,6 +3,7 @@ const pg = require('pg');
 const postgresURL = process.env.POSTGRES_URL;
 const schedule = require('node-schedule');
 const waterfall = require('async-waterfall');
+const transcribe = require('@ipcortex/meta-transcribe');
 
 //helpers
 const retrieveCompanyNames = require('./api/retrieveCompanyNames.js');
@@ -58,5 +59,6 @@ const pollPABX = () => {
     pg.end();
   });
 };
-
+console.log('starting transcribe engine');
+var t_engine = new transcribe(process.env)
 pollPABX();

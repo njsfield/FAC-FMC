@@ -226,7 +226,7 @@ ALTER TABLE tags ADD CONSTRAINT tags_companies_fk
 
 
 
-=======
+
 /****** MANAGER TABLE *******
  ****** A simple table that allows one contact_id to be identified as a 'manager' of another
  ****** contact_id. This could be recursive, subject to working out the right SQL, so:

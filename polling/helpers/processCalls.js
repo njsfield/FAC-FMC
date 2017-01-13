@@ -80,6 +80,7 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
     function (callback) {
       dbClient.query('commit', (err) => {
         callback(err);
+        });
     },
     function (callback) {
         /* Add transcription here after the commit of the recording

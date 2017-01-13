@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ipcortex/FAC-FMC#readme",
   "dependencies": {
+    "@ipcortex/meta-transcribe": "git+ssh://git@github.com/ipcortex/meta-transcribe.git",
     "async-waterfall": "^0.1.5",
     "env2": "^2.1.0",
     "eslint": "^2.11.1",
@@ -30,7 +31,6 @@
     "hapi-auth-jwt2": "^7.0.1",
     "inert": "^4.0.0",
     "jsonwebtoken": "^7.0.1",
-    "meta-transcribe": "ipcortex/meta-transcribe.git",
     "nock": "^8.0.0",
     "node-schedule": "^1.1.1",
     "pg": "^5.0.0",
