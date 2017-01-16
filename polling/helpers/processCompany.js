@@ -3,7 +3,7 @@ const calculatePollTimes = require('../api/calculatePollTimes.js');
 const waterfall = require('async-waterfall');
 const processPollTimes = require('./processPollTimes.js').processPollTimes;
 
-const processCompany = (dbClient, done, companyNamesQueue, companiesObj, startPollTime, participantsArray, cb) => {
+const processCompany = (dbClient, done, companyNamesQueue, companiesObj, startPollTime, participantsArray, transcribe, cb) => {
   const company_name = companyNamesQueue.shift();
   waterfall([
     function (callback) {
@@ -32,7 +32,7 @@ const processCompany = (dbClient, done, companyNamesQueue, companiesObj, startPo
     function (last_poll, callback) {
       const pollTimesQueue = calculatePollTimes(startPollTime, last_poll);
       // for each poll time for the company poll for the calls
-      processPollTimes(dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, callback);
+      processPollTimes(dbClient, done, company_name, companiesObj, pollTimesQueue, participantsArray, transcribe, callback);
     },
 
     function (callback) {

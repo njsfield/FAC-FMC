@@ -15,7 +15,7 @@ const {updatePollTable} = require('./helpers/updatePollTable.js');
 let companiesObj = {}; // holds all the company anmes
 let participantsArray = [];// a list of participants to later send off to the pollPABX
 
-const pollPABX = () => {
+const pollPABX = (transcribe) => {
   const startPollTime = Date.now();
 
   waterfall([
@@ -38,7 +38,7 @@ const pollPABX = () => {
     },
     // for each company poll for calls and store the details in calls, files and participants tables and adds to the partcipantsArray
     function ( dbClient, done, companyNames, callback) {
-      processCompany( dbClient, done, companyNames, companiesObj, startPollTime, participantsArray, callback);
+      processCompany( dbClient, done, companyNames, companiesObj, startPollTime, participantsArray, transcribe, callback);
     },
     // check caller details from participants array to update participants table
     function(dbClient, done, callback) {
@@ -59,6 +59,6 @@ const pollPABX = () => {
     pg.end();
   });
 };
-console.log('starting transcribe engine');
-var t_engine = new transcribe(process.env)
-pollPABX();
+
+var transcribe = new Transcribe(process.env);
+pollPABX(transcribe);

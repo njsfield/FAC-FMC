@@ -5,7 +5,7 @@ const fs = require('fs');
 const {checkFilesTable, checkCallsTable, checkParticipantsTable} = require('../db/checkTables.js');
 const retrieveWav = require('../api/retrieveWavFiles.js');
 
-const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, cb) => {
+const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, participantsArray, transcribe, cb) => {
   const thisCall = arrOfCalls.shift();
   waterfall([
     function (callback) {
