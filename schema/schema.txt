@@ -146,7 +146,7 @@ CREATE TABLE transcriptions (
     duration      INT,
     word_count    INT,
     language      VARCHAR,
-    detail        VARCHAR,
+    detail       JSONB,
     status        VARCHAR,
     is_valid      BOOL,
     CONSTRAINT transcriptions_pk PRIMARY KEY(file_id, company_id, type)
