@@ -99,7 +99,7 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
                 .then(result => {
                     var transObj = Object.assign({}, thisCall, result);
                     console.log('trying to transcribe', transObj);
-                    insertIntoTranscriptionsTable(dbClient, trabsObj, done, err1 => callback(err1));
+                    insertIntoTranscriptionsTable(dbClient, transObj, done, err1 => callback(err1));
                   },
                   err => callback('transcription error ' + err)
                 );
