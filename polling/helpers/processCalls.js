@@ -103,6 +103,9 @@ const processCalls = (dbClient, done, company_name, companiesObj, arrOfCalls, pa
                   },
                   err => callback('transcription error ' + err)
                 );
+            } else {
+              console.log('Already have a transcription for ', thisCall.filePath)
+              callback();
             }
           });
         } else {

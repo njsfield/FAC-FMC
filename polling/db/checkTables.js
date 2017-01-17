@@ -101,8 +101,8 @@ const checkLastPollTable = (dbClient, obj, done, cb) => {
 
 // Check for an existing entry in the transcriptions table and add it is it doesn't exist already
 const checkTranscriptionsTable = (dbClient, obj, done, cb) => {
-  const queryArray = [obj.company_id, obj.file_id, obj.type];
-  dbClient.query('SELECT * FROM transcriptions WHERE company_id=($1) AND file_id=($2) AND type=($3)', queryArray, (err, res) => {
+  const queryArray = [obj.company_id, obj.file_id];
+  dbClient.query('SELECT * FROM transcriptions WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
     if(err) {
       cb('checkTranscriptionsTable: ' + err);
     } else if(res.rowCount === 0) {
