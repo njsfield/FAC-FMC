@@ -1,4 +1,10 @@
-const {insertIntoParticipantsTable, insertIntoCompaniesTable, insertIntoFilesTable, insertIntoCallsTable } = require('./insertData.js');
+const {
+  insertIntoParticipantsTable,
+  insertIntoCompaniesTable,
+  insertIntoFilesTable,
+  insertIntoTranscriptionsTable,
+  insertIntoCallsTable
+} = require('./insertData.js');
 
 /**
  * Each function checks a table for specific data. What is checked for in each function
@@ -12,12 +18,12 @@ const {insertIntoParticipantsTable, insertIntoCompaniesTable, insertIntoFilesTab
 const checkCompaniesTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_name];
   dbClient.query('SELECT * FROM companies WHERE company_name=($1)', queryArray, (err, res) => {
-    if (err) {
-      cb('checkCompaniesTable: '+err);
-    } else if (res.rowCount === 0) {
+    if(err) {
+      cb('checkCompaniesTable: ' + err);
+    } else if(res.rowCount === 0) {
       insertIntoCompaniesTable(dbClient, obj, done, (err) => {
-        if (err)
-          cb("checkCompaniesTable: "+err);
+        if(err)
+          cb("checkCompaniesTable: " + err);
         else
           checkCompaniesTable(dbClient, obj, done, cb);
       });
@@ -32,9 +38,9 @@ const checkCompaniesTable = (dbClient, obj, done, cb) => {
 const checkFilesTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.file_name];
   dbClient.query('SELECT * FROM files WHERE file_name=($1)', queryArray, (err, res) => {
-    if (err) {
-      cb('checkFilesTable: '+err);
-    } else if (res.rowCount === 0) {
+    if(err) {
+      cb('checkFilesTable: ' + err);
+    } else if(res.rowCount === 0) {
       insertIntoFilesTable(dbClient, obj, done, cb);
     } else {
       cb(null, res.rows[0].file_id, res.command);
@@ -47,11 +53,11 @@ const checkFilesTable = (dbClient, obj, done, cb) => {
 const checkCallsTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id, obj.file_id];
   dbClient.query('SELECT * FROM calls WHERE company_id=($1) AND file_id=($2)', queryArray, (err, res) => {
-    if (err) {
-      cb('checkCallsTable: '+err);
-    } else if (res.rowCount === 0) {
+    if(err) {
+      cb('checkCallsTable: ' + err);
+    } else if(res.rowCount === 0) {
       insertIntoCallsTable(dbClient, obj, done, (err1) => {
-        if (err1) {
+        if(err1) {
           cb(err1);
         } else {
           checkCallsTable(dbClient, obj, done, cb);
@@ -69,10 +75,10 @@ const checkParticipantsTable = (dbClient, obj, done, cb) => {
 
   const queryArray = [obj.call_id, obj.company_id, obj.number];
   dbClient.query('SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND number=($3)', queryArray, (err, res) => {
-    if (err) {
-      cb('checkParticipantsTable: '+err);
-    } else if (res.rowCount === 0) {
-      insertIntoParticipantsTable(dbClient, obj, done, cb) ;
+    if(err) {
+      cb('checkParticipantsTable: ' + err);
+    } else if(res.rowCount === 0) {
+      insertIntoParticipantsTable(dbClient, obj, done, cb);
     } else {
       cb();
     }
@@ -83,12 +89,26 @@ const checkParticipantsTable = (dbClient, obj, done, cb) => {
 const checkLastPollTable = (dbClient, obj, done, cb) => {
   const queryArray = [obj.company_id];
   dbClient.query('select extract (epoch FROM last_poll) from last_polls WHERE company_id=($1)', queryArray, (err, res) => {
-    if (err) {
+    if(err) {
       cb(err);
-    } else if (res.rowCount === 0) {
+    } else if(res.rowCount === 0) {
       cb(null);
     } else {
       cb(null, res.rows[0].date_part * 1000);
+    }
+  });
+};
+
+// Check for an existing entry in the transcriptions table and add it is it doesn't exist already
+const checkTranscriptionsTable = (dbClient, obj, done, cb) => {
+  const queryArray = [obj.company_id, obj.file_id, obj.type];
+  dbClient.query('SELECT * FROM transcriptions WHERE company_id=($1) AND file_id=($2) AND type=($3)', queryArray, (err, res) => {
+    if(err) {
+      cb('checkTranscriptionsTable: ' + err);
+    } else if(res.rowCount === 0) {
+      cb(null);
+    } else {
+      cb(null, res.rows[0].file_id);
     }
   });
 };
@@ -98,5 +118,6 @@ module.exports = {
   checkCompaniesTable,
   checkCallsTable,
   checkParticipantsTable,
-  checkLastPollTable
+  checkLastPollTable,
+  checkTranscriptionsTable,
 };

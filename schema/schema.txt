@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS filters CASCADE;
 DROP TABLE IF EXISTS last_polls;
 DROP TABLE IF EXISTS managers;
 DROP TABLE IF EXISTS popular_tags;
+DROP TABLE IF EXISTS transcriptions;
 
 DROP SEQUENCE IF EXISTS companies_seq;
 DROP SEQUENCE IF EXISTS calls_seq;
@@ -139,14 +140,16 @@ WITHOUT OIDS;
 /* Can a transcription exist when it's file has been deleted, we say NO but may need a rethink to some point */
 CREATE TABLE transcriptions (
     file_id      BIGINT REFERENCES files ON DELETE CASCADE,
-    transcription_type VARCHAR NOT NULL,
+    company_id   BIGINT REFERENCES companies ON DELETE CASCADE,
+    type         VARCHAR NOT NULL,
     text         VARCHAR,
-    audio_length  INT,
+    duration      INT,
     word_count    INT,
+    language      VARCHAR,
     detail        VARCHAR,
     status        VARCHAR,
     is_valid      BOOL,
-    CONSTRAINT transcriptions_pk PRIMARY KEY(file_id, transcription_type)
+    CONSTRAINT transcriptions_pk PRIMARY KEY(file_id, company_id, type)
 )
 WITHOUT OIDS;
 

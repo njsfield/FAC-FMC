@@ -1,4 +1,5 @@
-const getFile_id = require('./getIds.js').getFile_id;
+const getFile_id = require('./getIds.js')
+  .getFile_id;
 
 /**
  * Each function adds data to tables. What is inserted by each function
@@ -11,8 +12,8 @@ const getFile_id = require('./getIds.js').getFile_id;
 const insertIntoCompaniesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.company_name];
   dbClient.query('INSERT INTO companies (company_name) VALUES ($1)', queryArray, (error, res) => {
-    if (error) {
-      callback('insertIntoCompaniesTable: '+error);
+    if(error) {
+      callback('insertIntoCompaniesTable: ' + error);
     } else {
       callback(null, res.command);
     }
@@ -23,11 +24,11 @@ const insertIntoCompaniesTable = (dbClient, object, done, callback) => {
 const insertIntoFilesTable = (dbClient, object, done, callback) => {
   const queryArray = [object.file_name];
   dbClient.query('INSERT INTO files (file_name) VALUES ($1)', queryArray, (error, res) => {
-    if (error) {
-      callback('insertIntoFilesTable: '+error);
+    if(error) {
+      callback('insertIntoFilesTable: ' + error);
     } else {
       getFile_id(dbClient, object, done, (err, file_id) => {
-        if (err) {
+        if(err) {
           callback(err);
         } else {
           callback(null, file_id, res.command);
@@ -40,8 +41,8 @@ const insertIntoFilesTable = (dbClient, object, done, callback) => {
 const insertIntoCallsTable = (dbClient, object, done, callback) => {
   const queryArray2 = [object.date, object.company_id, object.file_id, object.duration];
   dbClient.query('INSERT INTO calls (date, company_id, file_id, duration) VALUES ((TO_TIMESTAMP($1)), $2, $3, $4)', queryArray2, (error, response) => {
-    if (error) {
-      callback('insertIntoCallsTable: '+error);
+    if(error) {
+      callback('insertIntoCallsTable: ' + error);
     } else {
       callback(null, response);
     }
@@ -51,8 +52,8 @@ const insertIntoCallsTable = (dbClient, object, done, callback) => {
 const insertIntoParticipantsTable = (dbClient, object, done, callback) => {
   const queryArray = [object.call_id, object.company_id, object.number, object.internal, object.participant_role, object.contact_id];
   dbClient.query('INSERT INTO participants (call_id, company_id, number, internal, participant_role, contact_id) VALUES ($1, $2, $3, $4, $5, $6)', queryArray, (error, response) => {
-    if (error) {
-      callback('insertIntoParticipantsTable: '+error);
+    if(error) {
+      callback('insertIntoParticipantsTable: ' + error);
     } else {
       callback(null, response);
     }
@@ -60,10 +61,21 @@ const insertIntoParticipantsTable = (dbClient, object, done, callback) => {
 };
 
 const insertIntoLastPollTable = (dbClient, object, done, callback) => {
-  const queryArray = [object.last_poll/1000, object.company_id];
+  const queryArray = [object.last_poll / 1000, object.company_id];
   dbClient.query('INSERT INTO last_polls (last_poll, company_id) VALUES ((TO_TIMESTAMP($1) at time zone \'UTC\'), $2)', queryArray, (error, response) => {
-    if (error) {
+    if(error) {
       callback(error);
+    } else {
+      callback(null, response);
+    }
+  });
+};
+
+const insertIntoTranscriptionsTable = (dbClient, object, done, callback) => {
+  const queryArray = [object.file_id, object.company_id, object.type, object.text, object.duration, object.word_count, object.detail, object.status, true];
+  dbClient.query('INSERT INTO transcriptions (file_id, company_id, type, text, duration, word_count, detail, status, is_valid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', queryArray, (error, response) => {
+    if(error) {
+      callback('insertIntoTranscriptionsTable: ' + error);
     } else {
       callback(null, response);
     }
@@ -75,5 +87,6 @@ module.exports = {
   insertIntoFilesTable,
   insertIntoCallsTable,
   insertIntoParticipantsTable,
-  insertIntoLastPollTable
+  insertIntoLastPollTable,
+  insertIntoTranscriptionsTable
 };

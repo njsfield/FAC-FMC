@@ -7,7 +7,7 @@ FAC Find My Calls
 
 ## INSTALLATION
 
-* Make sure you have PostgreSQL installed and Node 6 onwards. 
+* Make sure you have PostgreSQL installed and Node 6 onwards.
 
 * Install the npm modules:
 
@@ -17,7 +17,7 @@ $ npm i
 
 ## SETUP
 
-* Create a config.env file in the root with 
+* Create a config.env file in the root with
 ```
 API_KEY=abcd
 JWT_KEY=abcd
@@ -26,6 +26,9 @@ POSTGRES_URL=postgres://postgresusername:postgrespassword@hostname/databasename
 POSTGRES_URL_TEST=postgres://postgresusername:postgrespassword@hostname/databasename
 NODE_TLS_REJECT_UNAUTHORIZED=0
 SAVE_AUDIO_PATH=../
+TRANSCRIBE_SPEECHMATICS_KEY=your_speechmatcis_api_key
+TRANSCRIBE_SPEECHMATICS_ID=your_speechmatics_ID
+TRANSCRIBE_SPEECHMATICS_MODEL=en-GB
 ```
 
 * The API_KEY is to be obtained from IPCortex as your access token.
@@ -34,12 +37,14 @@ SAVE_AUDIO_PATH=../
 * POSTGRES_URL is needed to run queries to the database
 * POSTGRES_URL_TEST is the url of your test database
 * NODE_TLS_REJECT_UNAUTHORIZED=0 Turns off SSL authentication for development purposes.
-* SAVE_AUDIO_PATH needs a trailing slash and is the place where you store all the .wav files. 
+* SAVE_AUDIO_PATH needs a trailing slash and is the place where you store all the .wav files.
+* TRANSCRIBE_SPEECHMATICS_KEY and ID are your Speechmatics API key, trial key can be obtained from https://app.speechmatics.com/register
+
 
 
 ## RUNNING
 
-* Start your Postgres server 
+* Start your Postgres server
 
 * Create a database called 'fmc'
 
@@ -59,11 +64,10 @@ $ npm start
 or if you have nodemon installed
 
 ```
-$ npm run startmon 
+$ npm run startmon
 ```
 
 * To run the tests, run the following in a separate terminal tab:
 ```
 npm t
 ```
-
