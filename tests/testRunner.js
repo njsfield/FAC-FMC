@@ -6,7 +6,7 @@
   const sql = fs.readFileSync(`${__dirname}/../schema/schema.txt`).toString();
 
   schema.getSchema(connectionString, sql);
-
+  console.log("---------------- HERE ---------------");
   //require in files
 
   //test server flow

@@ -1,12 +1,10 @@
 /* global jQuery */
 (function($) {
-  $('#date').datepicker({
-    dateFormat: 'yy-mm-dd',
-    dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  });
-  $('#dateRange').datepicker({
+  $('#date,#dateRange').datepicker({
     dateFormat: 'yy-mm-dd',
     dayNamesMin: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    immediateUpdates: true,
+    startView: 1
   });
 
   var dateRangeCheckbox = $('#date_range_checkbox');
@@ -30,14 +28,12 @@
     dateRangeCheckbox.on('change', showRange);
 
     function toggleRealSelect(list) {
-      var p = $('#'+list.prop('id')+'_id');
       if (list.hasClass('hidden')) {
         list.removeClass('hidden').focus();
       }
       else {
         // Already shown so needs to be hidden
         list.addClass('hidden');
-        //p.focus();
       }
     }
     function openRealSelect(ev) {
@@ -81,8 +77,6 @@
       });
       $('.sel_target').on('change blur', function(ev) {
         var t = $(ev.currentTarget);
-        var v = t.val();
-        var name = t.html();
         var p = $('#'+t.prop('id')+'_id');
         t.addClass('hidden');
         p.val($('option:selected',t).text());

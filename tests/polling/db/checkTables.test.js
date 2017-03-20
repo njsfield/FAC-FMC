@@ -52,7 +52,6 @@ databaseTest('test the checkTables functions', (t) => {
         const expected1 = undefined;
         t.deepEqual(actual1, expected1, 'data exists in participants table');
         done();
-
       });
     });
 
@@ -95,10 +94,10 @@ const dataObj = {
   participantsT: {
     company_id: 100,
     call_id: 100,
-    contact_id: 3222,
     internal: true,
-    number: 100,
     participant_role: 'callee',
+    number: 100,
+    contact_id: 3222,
     hidden: false
   },
   tagsT: {
