@@ -66,15 +66,18 @@ const checkCallsTable = (dbClient, obj, done, cb) => {
 // if participants exist in the participants table it returns null
 // if participants dont, it returns the number
 const checkParticipantsTable = (dbClient, obj, done, cb) => {
-
   const queryArray = [obj.call_id, obj.company_id, obj.number];
+  console.log("TEST PARTICIPANTS TABLE INSERT", queryArray);
   dbClient.query('SELECT * FROM participants WHERE call_id=($1) AND company_id=($2) AND number=($3)', queryArray, (err, res) => {
     if (err) {
+      console.log("SQL REQ (ERROR): ",err)
       cb('checkParticipantsTable: '+err);
     } else if (res.rowCount === 0) {
+      console.log("SQL REQ NO SUCH ROW - INSERT: ",obj);
       insertIntoParticipantsTable(dbClient, obj, done, cb) ;
     } else {
-      cb();
+      console.log("SQL REQ ROW EXISTS: ",res.rows);
+      cb(null, res.rows[0].participant_id);
     }
   });
 };
